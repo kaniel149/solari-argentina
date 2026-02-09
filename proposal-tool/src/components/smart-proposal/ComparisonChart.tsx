@@ -22,8 +22,9 @@ export function ComparisonChart({ currentBill, solarBill, monthlySavings }: Comp
     { name: 'Con Solar', value: solarBill, fill: '#10b981' },
   ];
 
-  const renderLabel = (props: { x?: number; y?: number; width?: number; value?: number }) => {
-    const { x = 0, y = 0, width = 0, value = 0 } = props;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const renderLabel = (props: any) => {
+    const { x = 0, y = 0, width = 0, value = 0 } = props as { x?: number; y?: number; width?: number; value?: number };
     return (
       <text
         x={x + width / 2}

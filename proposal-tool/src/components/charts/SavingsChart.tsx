@@ -60,8 +60,8 @@ export function SavingsChart({ data, investmentUsd, paybackYears }: SavingsChart
               backdropFilter: 'blur(10px)',
               color: '#e2e8f0',
             }}
-            formatter={(value: number, name: string) => [
-              formatUsd(value),
+            formatter={(value: number | undefined, name: string | undefined) => [
+              formatUsd(value ?? 0),
               name === 'ahorro' ? 'Ahorro acumulado' : 'Posición neta',
             ]}
           />

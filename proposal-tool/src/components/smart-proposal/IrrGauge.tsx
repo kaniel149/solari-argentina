@@ -28,8 +28,6 @@ export function IrrGauge({ irr, maxIrr = 50 }: IrrGaugeProps) {
   const centerY = size / 2 + 10; // slight offset down
 
   // Arc from 180deg (left) to 0deg (right) — semicircle
-  const startAngle = Math.PI; // 180 degrees
-  const endAngle = 0; // 0 degrees
   const circumference = Math.PI * radius;
 
   const dashOffset = useTransform(progress, [0, 1], [circumference, 0]);

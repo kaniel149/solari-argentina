@@ -12,7 +12,7 @@ import { academyTopics } from '../data/academy';
 const STORAGE_KEY = 'solari-academy-completed';
 
 export default function AcademyPage() {
-  const { t, language } = useTranslation();
+  const { t } = useTranslation();
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('all');
   const [difficulty, setDifficulty] = useState('all');

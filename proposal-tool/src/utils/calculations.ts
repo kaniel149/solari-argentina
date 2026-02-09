@@ -6,8 +6,6 @@ import type {
   FinancialAnalysis,
   EnvironmentalImpact,
   YearProjection,
-  SolarPanel,
-  Inverter,
 } from '../types';
 import { getRecommendedPanel, getRecommendedInverter, installationCosts } from '../data/equipment';
 

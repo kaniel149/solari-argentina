@@ -69,7 +69,7 @@ export function CostBreakdownChart({ breakdown }: CostBreakdownChartProps) {
                 borderRadius: '12px',
                 color: '#e2e8f0',
               }}
-              formatter={(value: number) => [formatUsd(value)]}
+              formatter={(value: number | undefined) => [formatUsd(value ?? 0)]}
             />
           </PieChart>
         </ResponsiveContainer>

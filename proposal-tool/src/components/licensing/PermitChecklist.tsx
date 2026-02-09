@@ -22,7 +22,7 @@ const phaseConfig = {
 } as const;
 
 export function PermitChecklist() {
-  const { t, language } = useTranslation();
+  const { language } = useTranslation();
   const [checked, setChecked] = useState<Set<string>>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);

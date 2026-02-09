@@ -54,8 +54,8 @@ export function ProductionChart({ monthlyProduction, monthlyConsumption }: Produ
               backdropFilter: 'blur(10px)',
               color: '#e2e8f0',
             }}
-            formatter={(value: number, name: string) => [
-              `${formatNumber(value)} kWh`,
+            formatter={(value: number | undefined, name: string | undefined) => [
+              `${formatNumber(value ?? 0)} kWh`,
               name === 'produccion' ? 'Producción solar' : 'Consumo',
             ]}
           />
