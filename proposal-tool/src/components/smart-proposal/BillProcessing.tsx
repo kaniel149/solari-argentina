@@ -1,0 +1,70 @@
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { GlassCard } from '../ui/GlassCard';
+import { useTranslation } from '../../i18n';
+
+interface BillProcessingProps {
+  onComplete: () => void;
+}
+
+const steps = [
+  { emoji: '\uD83D\uDCF7', keyEn: 'Reading bill...', keyHe: 'קורא חשבון...' },
+  { emoji: '\uD83E\uDD16', keyEn: 'Extracting data...', keyHe: 'מחלץ נתונים...' },
+  { emoji: '\u2705', keyEn: 'Complete!', keyHe: 'הושלם!' },
+];
+
+export function BillProcessing({ onComplete }: BillProcessingProps) {
+  const { language } = useTranslation();
+  const [currentStep, setCurrentStep] = useState(0);
+
+  useEffect(() => {
+    if (currentStep < steps.length - 1) {
+      const timer = setTimeout(() => setCurrentStep((s) => s + 1), 800);
+      return () => clearTimeout(timer);
+    } else {
+      const timer = setTimeout(onComplete, 600);
+      return () => clearTimeout(timer);
+    }
+  }, [currentStep, onComplete]);
+
+  return (
+    <GlassCard
+      variant="accent"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="max-w-sm mx-auto text-center py-12"
+    >
+      <div className="space-y-6">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentStep}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}
+            className="flex flex-col items-center gap-3"
+          >
+            <span className="text-4xl">{steps[currentStep].emoji}</span>
+            <p className="text-white text-lg font-medium">
+              {language === 'he' ? steps[currentStep].keyHe : steps[currentStep].keyEn}
+            </p>
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Progress dots */}
+        <div className="flex items-center justify-center gap-2">
+          {steps.map((_, i) => (
+            <div
+              key={i}
+              className={`
+                w-2 h-2 rounded-full transition-all duration-300
+                ${i <= currentStep ? 'bg-solar-400 scale-100' : 'bg-white/20 scale-75'}
+              `}
+            />
+          ))}
+        </div>
+      </div>
+    </GlassCard>
+  );
+}
