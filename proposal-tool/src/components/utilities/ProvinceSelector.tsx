@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Zap, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useTranslation } from '../../i18n';
+import { useTranslation, type TranslationKey } from '../../i18n';
 import { provinces, regionNames } from '../../data/provinces';
 import { utilityGuides } from '../../data/utilities';
 import { SearchInput, Badge, GlassCard } from '../ui';
@@ -89,7 +89,7 @@ export function ProvinceSelector() {
                         <h4 className="font-medium text-white text-sm">{province.name}</h4>
                       </div>
                       <Badge variant={statusVariant[status]} size="sm">
-                        {t(`utilities.status.${status}` as any)}
+                        {t(`utilities.status.${status}` as TranslationKey)}
                       </Badge>
                     </div>
 

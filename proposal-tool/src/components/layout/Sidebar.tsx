@@ -18,7 +18,7 @@ import {
   Sun,
   Sparkles,
 } from 'lucide-react';
-import { useTranslation } from '../../i18n';
+import { useTranslation, type TranslationKey } from '../../i18n';
 import { LanguageToggle } from './LanguageToggle';
 
 interface NavItem {
@@ -114,7 +114,7 @@ export function Sidebar() {
           className={({ isActive }) =>
             `flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all ${
               isActive
-                ? 'bg-solar-500/20 text-solar-400'
+                ? 'bg-solar-500/20 text-solar-400 border-s-2 border-solar-500'
                 : 'text-dark-400 hover:text-white hover:bg-white/5'
             }`
           }
@@ -145,7 +145,7 @@ export function Sidebar() {
                   exit={{ opacity: 0 }}
                   className="px-3 mb-2 text-[10px] font-bold uppercase tracking-widest text-dark-600"
                 >
-                  {t(section.titleKey as keyof typeof t)}
+                  {t(section.titleKey as TranslationKey)}
                 </motion.p>
               )}
             </AnimatePresence>
@@ -154,11 +154,11 @@ export function Sidebar() {
                 <NavLink
                   key={item.path}
                   to={item.path}
-                  title={collapsed ? t(item.labelKey as keyof typeof t) : undefined}
+                  title={collapsed ? t(item.labelKey as TranslationKey) : undefined}
                   className={({ isActive }) =>
                     `flex items-center gap-3 px-3 py-2 rounded-xl transition-all ${
                       isActive || location.pathname.startsWith(item.path + '/')
-                        ? 'bg-solar-500/20 text-solar-400'
+                        ? 'bg-solar-500/20 text-solar-400 border-s-2 border-solar-500'
                         : 'text-dark-400 hover:text-white hover:bg-white/5'
                     }`
                   }
@@ -172,7 +172,7 @@ export function Sidebar() {
                         exit={{ opacity: 0 }}
                         className="text-sm font-medium whitespace-nowrap"
                       >
-                        {t(item.labelKey as keyof typeof t)}
+                        {t(item.labelKey as TranslationKey)}
                       </motion.span>
                     )}
                   </AnimatePresence>
@@ -197,7 +197,7 @@ export function Sidebar() {
         ) : (
           <>
             <PanelLeftClose className="w-5 h-5" />
-            <span className="text-xs">Collapse</span>
+            <span className="text-xs">{t('common.collapse')}</span>
           </>
         )}
       </button>

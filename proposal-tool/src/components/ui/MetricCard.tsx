@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import type { ReactNode } from 'react';
+import { fadeUp, transition } from '../../utils/animations';
 
 interface MetricCardProps {
   icon: ReactNode;
@@ -13,8 +14,9 @@ interface MetricCardProps {
 export function MetricCard({ icon, value, label, sublabel, trend, className = '' }: MetricCardProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
+      initial={fadeUp.initial}
+      animate={fadeUp.animate}
+      transition={transition.default}
       className={`glass rounded-xl p-4 ${className}`}
     >
       <div className="flex items-start justify-between mb-3">

@@ -43,6 +43,10 @@ export const he: Translations = {
   'common.hours': 'שעות',
   'common.days': 'ימים',
   'common.weeks': 'שבועות',
+  'common.collapse': 'כווץ',
+  'common.more': 'עוד',
+  'common.tryAgain': 'נסה שוב',
+  'common.error': 'שגיאה',
 
   // Difficulty
   'difficulty.beginner': 'מתחיל',
@@ -229,4 +233,11 @@ export const he: Translations = {
   'smartProposal.utility': 'חברת חשמל',
   'smartProposal.address': 'כתובת',
   'smartProposal.province': 'מחוז',
+  'smartProposal.confidence.high': 'גבוהה',
+  'smartProposal.confidence.medium': 'בינונית',
+  'smartProposal.confidence.low': 'נמוכה',
+
+  // Errors
+  'errors.somethingWentWrong': 'משהו השתבש',
+  'errors.pageError': 'העמוד נתקל בשגיאה',
 };

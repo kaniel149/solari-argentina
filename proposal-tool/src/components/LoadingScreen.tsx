@@ -1,21 +1,23 @@
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import { useTranslation } from '../i18n';
 
 interface LoadingScreenProps {
   onComplete: () => void;
 }
 
 const steps = [
-  { icon: '🛰️', text: 'Analizando radiación solar de tu zona...' },
-  { icon: '📊', text: 'Calculando tu consumo energético...' },
-  { icon: '⚡', text: 'Diseñando el sistema óptimo...' },
-  { icon: '🔧', text: 'Seleccionando equipamiento...' },
-  { icon: '💰', text: 'Calculando ahorro y retorno de inversión...' },
-  { icon: '🌱', text: 'Estimando impacto ambiental...' },
-  { icon: '📋', text: 'Generando tu propuesta personalizada...' },
+  { icon: '\ud83d\udef0\ufe0f', en: 'Analyzing solar radiation in your area...', he: '\u05de\u05e0\u05ea\u05d7 \u05e7\u05e8\u05d9\u05e0\u05ea \u05e9\u05de\u05e9 \u05d1\u05d0\u05d6\u05d5\u05e8 \u05e9\u05dc\u05da...' },
+  { icon: '\ud83d\udcca', en: 'Calculating your energy consumption...', he: '\u05de\u05d7\u05e9\u05d1 \u05d0\u05ea \u05e6\u05e8\u05d9\u05db\u05ea \u05d4\u05d0\u05e0\u05e8\u05d2\u05d9\u05d4 \u05e9\u05dc\u05da...' },
+  { icon: '\u26a1', en: 'Designing the optimal system...', he: '\u05de\u05ea\u05db\u05e0\u05df \u05d0\u05ea \u05d4\u05de\u05e2\u05e8\u05db\u05ea \u05d4\u05d0\u05d5\u05e4\u05d8\u05d9\u05de\u05dc\u05d9\u05ea...' },
+  { icon: '\ud83d\udd27', en: 'Selecting equipment...', he: '\u05d1\u05d5\u05d7\u05e8 \u05e6\u05d9\u05d5\u05d3...' },
+  { icon: '\ud83d\udcb0', en: 'Calculating savings & ROI...', he: '\u05de\u05d7\u05e9\u05d1 \u05d7\u05d9\u05e1\u05db\u05d5\u05df \u05d5\u05d4\u05d7\u05d6\u05e8 \u05d4\u05e9\u05e7\u05e2\u05d4...' },
+  { icon: '\ud83c\udf31', en: 'Estimating environmental impact...', he: '\u05de\u05e2\u05e8\u05d9\u05da \u05d4\u05e9\u05e4\u05e2\u05d4 \u05e1\u05d1\u05d9\u05d1\u05ea\u05d9\u05ea...' },
+  { icon: '\ud83d\udccb', en: 'Generating your personalized proposal...', he: '\u05de\u05d9\u05d9\u05e6\u05e8 \u05d0\u05ea \u05d4\u05d4\u05e6\u05e2\u05d4 \u05d4\u05de\u05d5\u05ea\u05d0\u05de\u05ea \u05d0\u05d9\u05e9\u05d9\u05ea \u05e9\u05dc\u05da...' },
 ];
 
 export function LoadingScreen({ onComplete }: LoadingScreenProps) {
+  const { language } = useTranslation();
   const [currentStep, setCurrentStep] = useState(0);
   const [progress, setProgress] = useState(0);
 
@@ -123,7 +125,7 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
               {i < currentStep ? '✅' : step.icon}
             </motion.span>
             <span className={`text-sm ${i <= currentStep ? 'text-white' : 'text-dark-600'}`}>
-              {step.text}
+              {language === 'he' ? step.he : step.en}
             </span>
           </motion.div>
         ))}

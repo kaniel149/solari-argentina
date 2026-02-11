@@ -3,7 +3,7 @@ import { Zap, FileText, DollarSign, Lightbulb, AlertTriangle, Phone, Mail, Globe
 import { PageHeader } from '../components/layout/PageHeader';
 import { GlassCard, Badge, SectionHeader, InfoRow } from '../components/ui';
 import { ConnectionTimeline } from '../components/utilities';
-import { useTranslation } from '../i18n';
+import { useTranslation, type TranslationKey } from '../i18n';
 import { getUtilityGuide } from '../data/utilities';
 
 export default function UtilityDetailPage() {
@@ -43,7 +43,7 @@ export default function UtilityDetailPage() {
         backTo="/utilities"
         actions={
           <Badge variant={statusVariant[guide.netMeteringStatus]} size="md">
-            {t(`utilities.status.${guide.netMeteringStatus}` as any)}
+            {t(`utilities.status.${guide.netMeteringStatus}` as TranslationKey)}
           </Badge>
         }
       />

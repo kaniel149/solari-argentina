@@ -1,23 +1,25 @@
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import { useTranslation } from '../../i18n';
 
 interface SmartLoadingScreenProps {
   onComplete: () => void;
 }
 
 const steps = [
-  { icon: '\ud83d\udcf8', text: 'Procesando imagen de factura...' },
-  { icon: '\ud83e\udd16', text: 'IA analizando consumo...' },
-  { icon: '\ud83d\udccd', text: 'Detectando parametros de ubicacion...' },
-  { icon: '\ud83d\udef0\ufe0f', text: 'Analizando radiacion solar...' },
-  { icon: '\u26a1', text: 'Disenando sistema optimo...' },
-  { icon: '\ud83d\udd27', text: 'Seleccionando equipamiento...' },
-  { icon: '\ud83d\udcb0', text: 'Calculando ROI y financiamiento...' },
-  { icon: '\ud83c\udf31', text: 'Estimando impacto ambiental...' },
-  { icon: '\u2728', text: 'Generando propuesta premium...' },
+  { icon: '\ud83d\udcf8', en: 'Processing bill image...', he: '\u05de\u05e2\u05d1\u05d3 \u05ea\u05de\u05d5\u05e0\u05ea \u05d7\u05e9\u05d1\u05d5\u05df...' },
+  { icon: '\ud83e\udd16', en: 'AI analyzing consumption...', he: 'AI \u05de\u05e0\u05ea\u05d7 \u05e6\u05e8\u05d9\u05db\u05d4...' },
+  { icon: '\ud83d\udccd', en: 'Detecting location parameters...', he: '\u05de\u05d6\u05d4\u05d4 \u05e4\u05e8\u05de\u05d8\u05e8\u05d9 \u05de\u05d9\u05e7\u05d5\u05dd...' },
+  { icon: '\ud83d\udef0\ufe0f', en: 'Analyzing solar radiation...', he: '\u05de\u05e0\u05ea\u05d7 \u05e7\u05e8\u05d9\u05e0\u05ea \u05e9\u05de\u05e9...' },
+  { icon: '\u26a1', en: 'Designing optimal system...', he: '\u05de\u05ea\u05db\u05e0\u05df \u05de\u05e2\u05e8\u05db\u05ea \u05d0\u05d5\u05e4\u05d8\u05d9\u05de\u05dc\u05d9\u05ea...' },
+  { icon: '\ud83d\udd27', en: 'Selecting equipment...', he: '\u05d1\u05d5\u05d7\u05e8 \u05e6\u05d9\u05d5\u05d3...' },
+  { icon: '\ud83d\udcb0', en: 'Calculating ROI & financing...', he: '\u05de\u05d7\u05e9\u05d1 \u05d4\u05d7\u05d6\u05e8 \u05d4\u05e9\u05e7\u05e2\u05d4 \u05d5\u05de\u05d9\u05de\u05d5\u05df...' },
+  { icon: '\ud83c\udf31', en: 'Estimating environmental impact...', he: '\u05de\u05e2\u05e8\u05d9\u05da \u05d4\u05e9\u05e4\u05e2\u05d4 \u05e1\u05d1\u05d9\u05d1\u05ea\u05d9\u05ea...' },
+  { icon: '\u2728', en: 'Generating premium proposal...', he: '\u05de\u05d9\u05d9\u05e6\u05e8 \u05d4\u05e6\u05e2\u05ea \u05de\u05d7\u05d9\u05e8 \u05e4\u05e8\u05d9\u05de\u05d9\u05d5\u05dd...' },
 ];
 
 export function SmartLoadingScreen({ onComplete }: SmartLoadingScreenProps) {
+  const { language } = useTranslation();
   const [currentStep, setCurrentStep] = useState(0);
   const [progress, setProgress] = useState(0);
 
@@ -122,7 +124,7 @@ export function SmartLoadingScreen({ onComplete }: SmartLoadingScreenProps) {
               {i < currentStep ? '\u2705' : step.icon}
             </motion.span>
             <span className={`text-sm ${i <= currentStep ? 'text-white' : 'text-dark-600'}`}>
-              {step.text}
+              {language === 'he' ? step.he : step.en}
             </span>
           </motion.div>
         ))}

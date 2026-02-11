@@ -2,18 +2,20 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GlassCard } from '../ui/GlassCard';
 import { useTranslation } from '../../i18n';
+import { fadeUp, transition } from '../../utils/animations';
 
 interface BillProcessingProps {
   onComplete: () => void;
+  onCancel?: () => void;
 }
 
 const steps = [
-  { emoji: '\uD83D\uDCF7', keyEn: 'Reading bill...', keyHe: 'קורא חשבון...' },
-  { emoji: '\uD83E\uDD16', keyEn: 'Extracting data...', keyHe: 'מחלץ נתונים...' },
-  { emoji: '\u2705', keyEn: 'Complete!', keyHe: 'הושלם!' },
+  { emoji: '\uD83D\uDCF7', keyEn: 'Reading bill...', keyHe: '\u05E7\u05D5\u05E8\u05D0 \u05D7\u05E9\u05D1\u05D5\u05DF...' },
+  { emoji: '\uD83E\uDD16', keyEn: 'Extracting data...', keyHe: '\u05DE\u05D7\u05DC\u05E5 \u05E0\u05EA\u05D5\u05E0\u05D9\u05DD...' },
+  { emoji: '\u2705', keyEn: 'Complete!', keyHe: '\u05D4\u05D5\u05E9\u05DC\u05DD!' },
 ];
 
-export function BillProcessing({ onComplete }: BillProcessingProps) {
+export function BillProcessing({ onComplete, onCancel }: BillProcessingProps) {
   const { language } = useTranslation();
   const [currentStep, setCurrentStep] = useState(0);
 
@@ -30,9 +32,8 @@ export function BillProcessing({ onComplete }: BillProcessingProps) {
   return (
     <GlassCard
       variant="accent"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
+      {...fadeUp}
+      transition={transition.slow}
       className="max-w-sm mx-auto text-center py-12"
     >
       <div className="space-y-6">
@@ -42,7 +43,7 @@ export function BillProcessing({ onComplete }: BillProcessingProps) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3 }}
+            transition={transition.default}
             className="flex flex-col items-center gap-3"
           >
             <span className="text-4xl">{steps[currentStep].emoji}</span>
@@ -64,6 +65,15 @@ export function BillProcessing({ onComplete }: BillProcessingProps) {
             />
           ))}
         </div>
+
+        {onCancel && (
+          <button
+            onClick={onCancel}
+            className="text-sm text-white/50 hover:text-white/80 transition-colors"
+          >
+            Cancelar
+          </button>
+        )}
       </div>
     </GlassCard>
   );

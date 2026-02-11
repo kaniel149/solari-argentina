@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { GlassCard } from '../ui/GlassCard';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
@@ -17,7 +17,8 @@ interface BillReviewProps {
 }
 
 export function BillReview({ data, onChange, onConfirm, onBack }: BillReviewProps) {
-  const { t } = useTranslation();
+  const { t, isRTL } = useTranslation();
+  const BackArrow = isRTL ? ArrowRight : ArrowLeft;
 
   // Auto-detect province from utility if not set
   useEffect(() => {
@@ -40,10 +41,10 @@ export function BillReview({ data, onChange, onConfirm, onBack }: BillReviewProp
       : 'danger';
 
   const confidenceLabel = data.confidence > 0.7
-    ? 'High'
+    ? t('smartProposal.confidence.high')
     : data.confidence >= 0.4
-      ? 'Medium'
-      : 'Low';
+      ? t('smartProposal.confidence.medium')
+      : t('smartProposal.confidence.low');
 
   return (
     <GlassCard
@@ -125,7 +126,7 @@ export function BillReview({ data, onChange, onConfirm, onBack }: BillReviewProp
         <Button
           variant="ghost"
           size="md"
-          icon={<ArrowLeft className="w-4 h-4" />}
+          icon={<BackArrow className="w-4 h-4" />}
           onClick={onBack}
         >
           {t('common.back')}

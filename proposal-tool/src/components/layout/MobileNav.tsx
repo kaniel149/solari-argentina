@@ -71,7 +71,7 @@ export function MobileNav() {
               "
             >
               <div className="flex items-center justify-between px-4 py-3 border-b border-white/5">
-                <span className="text-sm font-semibold text-white">More</span>
+                <span className="text-sm font-semibold text-white">{t('common.more')}</span>
                 <button
                   onClick={() => setShowMore(false)}
                   className="p-1 text-dark-400 hover:text-white cursor-pointer"
@@ -112,7 +112,7 @@ export function MobileNav() {
       <nav className="
         fixed bottom-0 inset-x-0 z-30 md:hidden
         glass-strong border-t border-white/5
-        pb-safe
+        pb-[env(safe-area-inset-bottom)]
       ">
         <div className="flex items-center justify-around h-14">
           {mainTabs.map((tab) => {
@@ -147,7 +147,7 @@ export function MobileNav() {
             `}
           >
             <MoreHorizontal className="w-5 h-5" />
-            <span className="text-[10px] font-medium">More</span>
+            <span className="text-[10px] font-medium">{t('common.more')}</span>
           </button>
         </div>
       </nav>

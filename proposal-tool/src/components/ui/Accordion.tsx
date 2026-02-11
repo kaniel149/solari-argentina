@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
+import { transition } from '../../utils/animations';
 
 interface AccordionItem {
   id: string;
@@ -53,7 +54,7 @@ export function Accordion({
               <span className="flex-1 font-medium text-sm">{item.title}</span>
               <motion.div
                 animate={{ rotate: isOpen ? 180 : 0 }}
-                transition={{ duration: 0.2 }}
+                transition={transition.fast}
               >
                 <ChevronDown className="w-4 h-4 text-dark-500" />
               </motion.div>
@@ -64,7 +65,7 @@ export function Accordion({
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: 'auto', opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.25, ease: 'easeInOut' }}
+                  transition={transition.default}
                   className="overflow-hidden"
                 >
                   <div className="px-4 pb-4 pt-1 text-sm text-dark-400 border-t border-white/5">

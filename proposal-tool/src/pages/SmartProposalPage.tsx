@@ -1,5 +1,6 @@
-import { useState, useCallback } from 'react';
-import { AnimatePresence } from 'framer-motion';
+import { useState, useCallback, useRef } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { AlertTriangle } from 'lucide-react';
 import { PageHeader } from '../components/layout/PageHeader';
 import {
   BillUpload,
@@ -9,6 +10,7 @@ import {
   SmartLoadingScreen,
   PremiumProposal,
 } from '../components/smart-proposal';
+import { ToastContainer, useToast } from '../components/ui/Toast';
 import { provinces } from '../data/provinces';
 import { detectProvinceFromUtility } from '../data/utilityMapping';
 import { analyzeBill } from '../services/billAnalysisService';
@@ -30,6 +32,7 @@ type SubStep = 'upload' | 'processing' | 'review';
 
 export default function SmartProposalPage() {
   const { t } = useTranslation();
+  const { toasts, addToast, removeToast } = useToast();
 
   // Step state
   const [step, setStep] = useState<SmartStep>('upload');
@@ -47,27 +50,41 @@ export default function SmartProposalPage() {
     confidence: 0,
   });
   const [proposal, setProposal] = useState<SmartProposal | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  // AbortController for cancellation
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   // Handle file upload — AI analysis
   const handleFileSelected = useCallback(async (file: File) => {
     setUploadSubStep('processing');
+    setErrorMessage(null);
+    setIsProcessing(true);
+
+    // Create abort controller for cancellation
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
 
     try {
-      const base64 = await compressImage(file);
-      setBillImage(base64);
+      const imageResult = await compressImage(file);
+
+      if (imageResult.error || !imageResult.data) {
+        setErrorMessage(imageResult.error || 'Error al procesar la imagen.');
+        addToast('error', imageResult.error || 'Error al procesar la imagen.');
+        setUploadSubStep('upload');
+        setIsProcessing(false);
+        return;
+      }
+
+      setBillImage(imageResult.data);
 
       // Try AI analysis
-      const result = await analyzeBill(base64);
+      const result = await analyzeBill(imageResult.data, controller.signal);
 
-      if (result && result.confidence > 0.2) {
-        // Auto-detect province from utility if not set
-        if (result.utility && !result.province) {
-          const detected = detectProvinceFromUtility(result.utility);
-          if (detected) result.province = detected;
-        }
-        setExtractedData(result);
-      } else {
-        // AI failed — go straight to manual entry with empty form
+      if (result.error) {
+        setErrorMessage(`IA no disponible: ${result.error} Ingrese los datos manualmente.`);
+        addToast('warning', 'IA no disponible — ingrese los datos manualmente.');
         setExtractedData({
           customerName: '',
           address: '',
@@ -77,9 +94,35 @@ export default function SmartProposalPage() {
           province: '',
           confidence: 0,
         });
+      } else if (result.data && result.data.confidence > 0.5) {
+        // Auto-detect province from utility if not set
+        if (result.data.utility && !result.data.province) {
+          const detected = detectProvinceFromUtility(result.data.utility);
+          if (detected) result.data.province = detected;
+        }
+        setExtractedData(result.data);
+        addToast('success', 'Factura analizada correctamente.');
+      } else {
+        // Low confidence — show warning
+        if (result.data) {
+          setExtractedData(result.data);
+          addToast('warning', 'Baja confianza en el análisis. Verifique los datos.');
+        } else {
+          setExtractedData({
+            customerName: '',
+            address: '',
+            utility: '',
+            monthlyKwh: 0,
+            monthlyBillArs: 0,
+            province: '',
+            confidence: 0,
+          });
+          addToast('warning', 'No se pudo analizar la factura. Ingrese los datos manualmente.');
+        }
       }
     } catch {
-      // On any error, just go to review with empty data
+      setErrorMessage('Error inesperado al procesar la factura.');
+      addToast('error', 'Error inesperado. Ingrese los datos manualmente.');
       setExtractedData({
         customerName: '',
         address: '',
@@ -91,8 +134,21 @@ export default function SmartProposalPage() {
       });
     }
 
+    setIsProcessing(false);
+    abortControllerRef.current = null;
     setUploadSubStep('review');
-  }, []);
+  }, [addToast]);
+
+  // Cancel processing
+  const handleCancelProcessing = useCallback(() => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+    }
+    setIsProcessing(false);
+    setUploadSubStep('upload');
+    addToast('info', 'Análisis cancelado.');
+  }, [addToast]);
 
   // Handle manual entry
   const handleManualEntry = useCallback((data: {
@@ -112,6 +168,7 @@ export default function SmartProposalPage() {
       province: detectedProvince || '',
       confidence: 1, // manual = full confidence
     });
+    setErrorMessage(null);
     setUploadSubStep('review');
   }, []);
 
@@ -122,8 +179,15 @@ export default function SmartProposalPage() {
 
   // Handle bill data confirmed → go to location
   const handleBillConfirmed = useCallback(() => {
+    // Validate kWh and ARS before proceeding
+    if (extractedData.monthlyKwh <= 0 && extractedData.monthlyBillArs <= 0) {
+      setErrorMessage('Ingrese el consumo mensual (kWh) o el monto de la factura (ARS).');
+      addToast('error', 'Complete el consumo o monto de factura antes de continuar.');
+      return;
+    }
+    setErrorMessage(null);
     setStep('location');
-  }, []);
+  }, [extractedData, addToast]);
 
   // Handle location submitted → generate proposal
   const handleLocationSubmit = useCallback((locationData: {
@@ -191,6 +255,8 @@ export default function SmartProposalPage() {
     // Generate AI narrative in background
     generateNarrative(smartProposal).then((narrative) => {
       setProposal((prev) => prev ? { ...prev, aiNarrative: narrative } : prev);
+    }).catch(() => {
+      // Fallback narrative is already handled inside generateNarrative
     });
   }, [extractedData, billImage]);
 
@@ -204,6 +270,7 @@ export default function SmartProposalPage() {
     setStep('upload');
     setUploadSubStep('upload');
     setBillImage(null);
+    setErrorMessage(null);
     setExtractedData({
       customerName: '',
       address: '',
@@ -233,6 +300,21 @@ export default function SmartProposalPage() {
         />
       )}
 
+      {/* Inline error alert */}
+      <AnimatePresence>
+        {errorMessage && step === 'upload' && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="mx-auto max-w-2xl mb-4 px-4 py-3 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-start gap-3"
+          >
+            <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+            <p className="text-sm text-amber-200">{errorMessage}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <AnimatePresence mode="wait">
         {/* Step 1: Bill Upload + Processing + Review */}
         {step === 'upload' && (
@@ -250,6 +332,7 @@ export default function SmartProposalPage() {
                 <BillProcessing
                   key="processing"
                   onComplete={handleProcessingComplete}
+                  onCancel={isProcessing ? handleCancelProcessing : undefined}
                 />
               )}
 
@@ -259,7 +342,10 @@ export default function SmartProposalPage() {
                   data={extractedData}
                   onChange={setExtractedData}
                   onConfirm={handleBillConfirmed}
-                  onBack={() => setUploadSubStep('upload')}
+                  onBack={() => {
+                    setUploadSubStep('upload');
+                    setErrorMessage(null);
+                  }}
                 />
               )}
             </AnimatePresence>
@@ -294,6 +380,9 @@ export default function SmartProposalPage() {
           />
         )}
       </AnimatePresence>
+
+      {/* Toast notifications */}
+      <ToastContainer toasts={toasts} onRemove={removeToast} />
     </div>
   );
 }

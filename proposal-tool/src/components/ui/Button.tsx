@@ -3,7 +3,7 @@ import { type ReactNode } from 'react';
 
 interface ButtonProps extends HTMLMotionProps<'button'> {
   children: ReactNode;
-  variant?: 'primary' | 'secondary' | 'ghost' | 'amber';
+  variant?: 'primary' | 'secondary' | 'ghost' | 'amber' | 'danger';
   size?: 'sm' | 'md' | 'lg';
   icon?: ReactNode;
   loading?: boolean;
@@ -30,6 +30,8 @@ export function Button({
       'bg-transparent text-dark-400 hover:text-white hover:bg-white/5',
     amber:
       'bg-gradient-to-r from-amber-500 to-amber-600 text-white hover:from-amber-400 hover:to-amber-500 shadow-lg shadow-amber-500/20',
+    danger:
+      'bg-gradient-to-r from-rose-500 to-rose-600 text-white hover:from-rose-400 hover:to-rose-500 shadow-lg shadow-rose-500/20',
   };
 
   const sizes = {

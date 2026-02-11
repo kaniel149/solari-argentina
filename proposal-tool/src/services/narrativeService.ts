@@ -5,7 +5,10 @@ import { generateFallbackNarrative } from '../data/narrativeTemplates';
  * Generate an AI-powered executive narrative in Spanish.
  * Falls back to template-based narrative if API is unavailable.
  */
-export async function generateNarrative(proposal: Proposal): Promise<string> {
+export async function generateNarrative(
+  proposal: Proposal,
+  signal?: AbortSignal
+): Promise<string> {
   try {
     const response = await fetch('/api/generate-narrative', {
       method: 'POST',
@@ -22,6 +25,7 @@ export async function generateNarrative(proposal: Proposal): Promise<string> {
         co2Avoided: proposal.environmental.annualCo2AvoidedKg,
         coverage: proposal.production.coveragePercentage,
       }),
+      signal,
     });
 
     if (!response.ok) {

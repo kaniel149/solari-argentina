@@ -1,7 +1,9 @@
 import { motion } from 'framer-motion';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import type { ReactNode } from 'react';
+import { fadeDown, transition } from '../../utils/animations';
+import { useTranslation } from '../../i18n';
 
 interface PageHeaderProps {
   title: string;
@@ -13,11 +15,14 @@ interface PageHeaderProps {
 
 export function PageHeader({ title, subtitle, backTo, actions, className = '' }: PageHeaderProps) {
   const navigate = useNavigate();
+  const { t, isRTL } = useTranslation();
+  const BackArrow = isRTL ? ArrowRight : ArrowLeft;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
+      initial={fadeDown.initial}
+      animate={fadeDown.animate}
+      transition={transition.default}
       className={`mb-8 ${className}`}
     >
       {backTo && (
@@ -25,8 +30,8 @@ export function PageHeader({ title, subtitle, backTo, actions, className = '' }:
           onClick={() => navigate(backTo)}
           className="flex items-center gap-1.5 text-sm text-dark-400 hover:text-white mb-3 transition-colors cursor-pointer"
         >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Back</span>
+          <BackArrow className="w-4 h-4" />
+          <span>{t('common.back')}</span>
         </button>
       )}
       <div className="flex items-start justify-between gap-4">

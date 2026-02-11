@@ -43,6 +43,10 @@ export const en: Translations = {
   'common.hours': 'hours',
   'common.days': 'days',
   'common.weeks': 'weeks',
+  'common.collapse': 'Collapse',
+  'common.more': 'More',
+  'common.tryAgain': 'Try Again',
+  'common.error': 'Error',
 
   // Difficulty
   'difficulty.beginner': 'Beginner',
@@ -229,4 +233,11 @@ export const en: Translations = {
   'smartProposal.utility': 'Utility Company',
   'smartProposal.address': 'Address',
   'smartProposal.province': 'Province',
+  'smartProposal.confidence.high': 'High',
+  'smartProposal.confidence.medium': 'Medium',
+  'smartProposal.confidence.low': 'Low',
+
+  // Errors
+  'errors.somethingWentWrong': 'Something went wrong',
+  'errors.pageError': 'This page encountered an error',
 };

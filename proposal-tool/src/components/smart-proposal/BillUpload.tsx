@@ -5,6 +5,7 @@ import { GlassCard } from '../ui/GlassCard';
 import { Button } from '../ui/Button';
 import { useTranslation } from '../../i18n';
 import { getImagePreviewUrl } from '../../utils/imageUtils';
+import { fadeIn, fadeUp, scaleIn, transition } from '../../utils/animations';
 
 interface BillUploadProps {
   onFileSelected: (file: File) => void;
@@ -72,9 +73,8 @@ export function BillUpload({ onFileSelected, onManualEntry }: BillUploadProps) {
   return (
     <GlassCard
       variant="accent"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
+      {...fadeUp}
+      transition={transition.slow}
       className="max-w-lg mx-auto"
     >
       <div className="text-center mb-6">
@@ -90,9 +90,7 @@ export function BillUpload({ onFileSelected, onManualEntry }: BillUploadProps) {
         {!showManual ? (
           <motion.div
             key="upload"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            {...fadeIn}
           >
             {/* Drop zone */}
             {!preview ? (
@@ -145,8 +143,7 @@ export function BillUpload({ onFileSelected, onManualEntry }: BillUploadProps) {
             ) : (
               /* Preview */
               <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
+                {...scaleIn}
                 className="relative rounded-2xl overflow-hidden border border-white/10"
               >
                 <img
@@ -156,7 +153,7 @@ export function BillUpload({ onFileSelected, onManualEntry }: BillUploadProps) {
                 />
                 <button
                   onClick={(e) => { e.stopPropagation(); clearFile(); }}
-                  className="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/60 backdrop-blur-sm
+                  className="absolute top-2 end-2 w-8 h-8 rounded-full bg-black/60 backdrop-blur-sm
                     flex items-center justify-center text-white/70 hover:text-white
                     transition-colors cursor-pointer"
                 >
@@ -193,9 +190,7 @@ export function BillUpload({ onFileSelected, onManualEntry }: BillUploadProps) {
           /* Manual entry form */
           <motion.div
             key="manual"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            {...fadeIn}
             className="space-y-4"
           >
             <div>

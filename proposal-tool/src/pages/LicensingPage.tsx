@@ -47,7 +47,7 @@ export default function LicensingPage() {
       />
 
       {activeTab === 'overview' && <LicensingOverview />}
-      {activeTab === 'permits' && <LicensingOverview />}
+      {activeTab === 'permits' && <PermitChecklist />}
       {activeTab === 'provincial' && <ProvinceStatusTable />}
       {activeTab === 'checklist' && <PermitChecklist />}
     </div>

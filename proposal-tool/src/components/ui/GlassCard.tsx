@@ -3,7 +3,7 @@ import { type ReactNode } from 'react';
 
 interface GlassCardProps extends HTMLMotionProps<'div'> {
   children: ReactNode;
-  variant?: 'default' | 'strong' | 'accent' | 'highlight';
+  variant?: 'default' | 'subtle' | 'elevated' | 'solid' | 'strong' | 'accent' | 'highlight';
   hover?: boolean;
   glow?: boolean;
   className?: string;
@@ -19,6 +19,9 @@ export function GlassCard({
 }: GlassCardProps) {
   const variants = {
     default: 'glass',
+    subtle: 'glass-subtle',
+    elevated: 'glass-elevated',
+    solid: 'bg-[var(--surface-1)] border border-[var(--border-default)]',
     strong: 'glass-strong',
     accent: 'glass border-solar-500/20',
     highlight: 'glass border-amber-500/20',
@@ -29,7 +32,7 @@ export function GlassCard({
       className={`
         ${variants[variant]}
         rounded-2xl p-6
-        ${hover ? 'transition-all duration-300 hover:border-solar-400/30 hover:shadow-lg hover:shadow-solar-500/5' : ''}
+        ${hover ? 'transition-all duration-200 hover:border-solar-400/30 hover:shadow-lg hover:shadow-solar-500/5' : ''}
         ${glow ? 'solar-glow' : ''}
         ${className}
       `}

@@ -288,7 +288,7 @@ export function PremiumProposal({ proposal, onRestart, onDownloadPdf }: PremiumP
           <GlassCard variant="strong" className="mb-6">
             <div className="flex flex-col md:flex-row items-center justify-around gap-8">
               <IrrGauge irr={financial.irr} />
-              <div className="text-center md:text-left">
+              <div className="text-center md:text-start">
                 <p className="text-sm text-dark-400 mb-1">En 25 anos, tu sistema generara un ahorro total de</p>
                 <p className="text-4xl font-bold gradient-text">
                   {formatUsd(financial.yearlyProjection[24]?.cumulativeSavings || 0)}
@@ -396,7 +396,7 @@ export function PremiumProposal({ proposal, onRestart, onDownloadPdf }: PremiumP
           <ProposalSectionHeader number={7} icon="\ud83d\udccb" title="Proceso de instalacion" subtitle="De la propuesta al encendido" />
           <GlassCard variant="strong" className="mb-10">
             <div className="relative">
-              <div className="absolute left-6 top-8 bottom-8 w-px bg-gradient-to-b from-solar-500 via-amber-500 to-emerald-500" />
+              <div className="absolute start-6 top-8 bottom-8 w-px bg-gradient-to-b from-solar-500 via-amber-500 to-emerald-500" />
               <div className="space-y-8">
                 {[
                   { week: 'Semana 1', title: 'Visita tecnica', desc: 'Un ingeniero visita tu propiedad para evaluar el techo, tomar medidas y verificar la instalacion electrica.' },

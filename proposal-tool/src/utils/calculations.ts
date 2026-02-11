@@ -14,7 +14,7 @@ import { getRecommendedPanel, getRecommendedInverter, installationCosts } from '
 // Argentina-specific calculations
 // ============================================
 
-const EXCHANGE_RATE = 1440; // ARS per USD (blue/MEP rate Feb 2026)
+const DEFAULT_EXCHANGE_RATE = 1440; // ARS per USD (blue/MEP rate Feb 2026)
 const SYSTEM_DEGRADATION = 0.005; // 0.5% per year
 const TARIFF_INCREASE_RATE = 0.08; // 8% annual USD-equivalent tariff increase
 const DISCOUNT_RATE = 0.10; // 10% for NPV
@@ -47,7 +47,14 @@ const monthlyFractions = [
 ];
 
 export function getExchangeRate(): number {
-  return EXCHANGE_RATE;
+  try {
+    const stored = localStorage.getItem('solari_exchange_rate');
+    if (stored) {
+      const parsed = parseFloat(stored);
+      if (!isNaN(parsed) && parsed > 0) return parsed;
+    }
+  } catch { /* localStorage unavailable */ }
+  return DEFAULT_EXCHANGE_RATE;
 }
 
 /**
@@ -186,11 +193,11 @@ export function calculateFinancials(
   const tariff = input.systemType === 'residential'
     ? province.residentialTariff
     : province.commercialTariff;
-  const currentTariffUsd = (tariff.energyCharge * (1 + tariff.taxRate)) / EXCHANGE_RATE;
+  const currentTariffUsd = (tariff.energyCharge * (1 + tariff.taxRate)) / DEFAULT_EXCHANGE_RATE;
 
   // Annual savings year 1
   const annualSavingsUsd = production.annualProductionKwh * currentTariffUsd;
-  const annualSavingsArs = annualSavingsUsd * EXCHANGE_RATE;
+  const annualSavingsArs = annualSavingsUsd * DEFAULT_EXCHANGE_RATE;
 
   // 25-year projection
   const projection: YearProjection[] = [];
@@ -240,11 +247,11 @@ export function calculateFinancials(
 
   return {
     systemCostUsd: Math.round(totalCostUsd),
-    systemCostArs: Math.round(totalCostUsd * EXCHANGE_RATE),
+    systemCostArs: Math.round(totalCostUsd * DEFAULT_EXCHANGE_RATE),
     installationCostUsd: Math.round(laborCost),
     permitsCostUsd: Math.round(permitsCost),
     totalInvestmentUsd: Math.round(totalCostUsd),
-    totalInvestmentArs: Math.round(totalCostUsd * EXCHANGE_RATE),
+    totalInvestmentArs: Math.round(totalCostUsd * DEFAULT_EXCHANGE_RATE),
     costBreakdown: {
       panels: Math.round(panelsCost),
       inverter: Math.round(inverterCost),

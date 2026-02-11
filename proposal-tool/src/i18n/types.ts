@@ -43,6 +43,10 @@ export interface Translations {
   'common.hours': string;
   'common.days': string;
   'common.weeks': string;
+  'common.collapse': string;
+  'common.more': string;
+  'common.tryAgain': string;
+  'common.error': string;
 
   // Difficulty
   'difficulty.beginner': string;
@@ -229,6 +233,13 @@ export interface Translations {
   'smartProposal.utility': string;
   'smartProposal.address': string;
   'smartProposal.province': string;
+  'smartProposal.confidence.high': string;
+  'smartProposal.confidence.medium': string;
+  'smartProposal.confidence.low': string;
+
+  // Errors
+  'errors.somethingWentWrong': string;
+  'errors.pageError': string;
 }
 
 export type TranslationKey = keyof Translations;

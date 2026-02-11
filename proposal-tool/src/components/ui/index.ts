@@ -10,3 +10,5 @@ export { Checklist } from './Checklist';
 export { SectionHeader } from './SectionHeader';
 export { InfoRow } from './InfoRow';
 export { MetricCard } from './MetricCard';
+export { ToastContainer, useToast } from './Toast';
+export { ErrorBoundary } from './ErrorBoundary';

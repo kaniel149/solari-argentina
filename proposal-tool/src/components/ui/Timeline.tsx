@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
+import { transition } from '../../utils/animations';
 
 interface TimelineStep {
   id: string | number;
@@ -46,7 +47,7 @@ export function Timeline({ steps, className = '' }: TimelineProps) {
             key={step.id}
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: index * 0.05, duration: 0.3 }}
+            transition={{ delay: index * 0.05, ...transition.default }}
             className="flex gap-4"
           >
             {/* Dot + Line */}
