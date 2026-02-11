@@ -14,7 +14,7 @@ export default function NotFoundPage() {
         className="text-center"
       >
         <div className="text-6xl font-bold gradient-text mb-4">404</div>
-        <p className="text-dark-400 mb-6">Page not found</p>
+        <p className="text-zinc-400 mb-6">Page not found</p>
         <Button
           onClick={() => navigate('/')}
           icon={<Home className="w-4 h-4" />}

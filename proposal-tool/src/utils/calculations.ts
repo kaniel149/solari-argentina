@@ -91,9 +91,9 @@ export function designSystem(
   const requiredKwp = annualConsumption /
     (province.solarIrradiation * 365 * PERFORMANCE_RATIO * orientationFactor);
 
-  // Cap at 90% coverage for residential (grid dependency)
+  // Cap at 95% coverage for residential (grid dependency)
   const targetKwp = input.systemType === 'residential'
-    ? Math.min(requiredKwp, requiredKwp * 0.95)
+    ? requiredKwp * 0.95
     : Math.min(requiredKwp, 500); // 500 kWp max for commercial DG
 
   // Select equipment

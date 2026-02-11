@@ -36,32 +36,19 @@ export async function exportProposalToPdf(
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
     const pdf = new jsPDF('p', 'mm', 'a4');
+    const imgData = canvas.toDataURL('image/jpeg', 0.92);
     let heightLeft = imgHeight;
     let position = 0;
 
     // First page
-    pdf.addImage(
-      canvas.toDataURL('image/jpeg', 0.92),
-      'JPEG',
-      0,
-      position,
-      imgWidth,
-      imgHeight
-    );
+    pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
     heightLeft -= pageHeight;
 
     // Additional pages
     while (heightLeft > 0) {
       position -= pageHeight;
       pdf.addPage();
-      pdf.addImage(
-        canvas.toDataURL('image/jpeg', 0.92),
-        'JPEG',
-        0,
-        position,
-        imgWidth,
-        imgHeight
-      );
+      pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
       heightLeft -= pageHeight;
     }
 

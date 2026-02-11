@@ -17,7 +17,7 @@ import {
   ClipboardList,
   Wrench,
 } from 'lucide-react';
-import { useTranslation } from '../../i18n';
+import { useTranslation, type TranslationKey } from '../../i18n';
 
 const mainTabs = [
   { path: '/', labelKey: 'nav.dashboard', icon: LayoutDashboard },
@@ -97,7 +97,7 @@ export function MobileNav() {
                     >
                       <Icon className="w-5 h-5" />
                       <span className="text-[10px] font-medium text-center leading-tight">
-                        {t(item.labelKey as keyof typeof t)}
+                        {t(item.labelKey as TranslationKey)}
                       </span>
                     </NavLink>
                   );
@@ -133,7 +133,7 @@ export function MobileNav() {
               >
                 <Icon className="w-5 h-5" />
                 <span className="text-[10px] mt-0.5 font-medium">
-                  {t(tab.labelKey as keyof typeof t)}
+                  {t(tab.labelKey as TranslationKey)}
                 </span>
               </NavLink>
             );

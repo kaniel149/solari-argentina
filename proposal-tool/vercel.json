@@ -2,6 +2,9 @@
   "functions": {
     "api/analyze-bill.ts": {
       "maxDuration": 30
+    },
+    "api/generate-narrative.ts": {
+      "maxDuration": 30
     }
   },
   "rewrites": [
