@@ -15,21 +15,24 @@ interface TabsProps {
 
 export function Tabs({ tabs, activeTab, onTabChange, className = '' }: TabsProps) {
   return (
-    <div className={`flex gap-1 p-1 glass rounded-xl overflow-x-auto ${className}`}>
+    <div className={`flex gap-0 border-b border-zinc-800 overflow-x-auto ${className}`}>
       {tabs.map((tab) => (
         <button
           key={tab.id}
           onClick={() => onTabChange(tab.id)}
           className={`
-            relative flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium
-            whitespace-nowrap transition-colors cursor-pointer
-            ${activeTab === tab.id ? 'text-white' : 'text-dark-400 hover:text-dark-200'}
+            relative flex items-center gap-2 px-4 py-2.5 text-sm font-medium
+            whitespace-nowrap transition-colors cursor-pointer border-b-2
+            ${activeTab === tab.id
+              ? 'text-zinc-50 border-sky-500'
+              : 'text-zinc-500 hover:text-zinc-300 border-transparent'
+            }
           `}
         >
           {activeTab === tab.id && (
             <motion.div
               layoutId="activeTab"
-              className="absolute inset-0 bg-solar-500/20 rounded-lg border border-solar-500/30"
+              className="absolute bottom-0 left-0 right-0 h-0.5 bg-sky-500"
               transition={{ type: 'spring', duration: 0.4, bounce: 0.15 }}
             />
           )}

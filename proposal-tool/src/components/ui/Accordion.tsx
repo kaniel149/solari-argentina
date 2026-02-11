@@ -38,25 +38,25 @@ export function Accordion({
   };
 
   return (
-    <div className={`space-y-2 ${className}`}>
+    <div className={`divide-y divide-zinc-800/50 ${className}`}>
       {items.map((item) => {
         const isOpen = openItems.has(item.id);
         return (
-          <div key={item.id} className="glass rounded-xl overflow-hidden">
+          <div key={item.id}>
             <button
               onClick={() => toggleItem(item.id)}
               className="
-                w-full flex items-center gap-3 px-4 py-3.5 text-start
-                text-dark-200 hover:text-white transition-colors cursor-pointer
+                w-full flex items-center gap-3 px-4 py-3 text-start
+                text-zinc-200 hover:text-zinc-50 transition-colors cursor-pointer
               "
             >
-              {item.icon && <span className="flex-shrink-0 text-solar-400">{item.icon}</span>}
+              {item.icon && <span className="flex-shrink-0 text-sky-400">{item.icon}</span>}
               <span className="flex-1 font-medium text-sm">{item.title}</span>
               <motion.div
                 animate={{ rotate: isOpen ? 180 : 0 }}
                 transition={transition.fast}
               >
-                <ChevronDown className="w-4 h-4 text-dark-500" />
+                <ChevronDown className="w-4 h-4 text-zinc-500" />
               </motion.div>
             </button>
             <AnimatePresence initial={false}>
@@ -68,7 +68,7 @@ export function Accordion({
                   transition={transition.default}
                   className="overflow-hidden"
                 >
-                  <div className="px-4 pb-4 pt-1 text-sm text-dark-400 border-t border-white/5">
+                  <div className="px-4 pb-4 pt-1 text-sm text-zinc-400 leading-relaxed">
                     {item.content}
                   </div>
                 </motion.div>

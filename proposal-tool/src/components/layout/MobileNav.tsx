@@ -66,15 +66,15 @@ export function MobileNav() {
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
               className="
                 fixed bottom-0 inset-x-0 z-50 md:hidden
-                glass-strong rounded-t-2xl pb-safe
+                bg-zinc-900 rounded-t-2xl pb-safe
                 max-h-[70vh] overflow-y-auto
               "
             >
-              <div className="flex items-center justify-between px-4 py-3 border-b border-white/5">
+              <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06]">
                 <span className="text-sm font-semibold text-white">{t('common.more')}</span>
                 <button
                   onClick={() => setShowMore(false)}
-                  className="p-1 text-dark-400 hover:text-white cursor-pointer"
+                  className="p-1 text-zinc-500 hover:text-zinc-300 cursor-pointer"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -91,8 +91,8 @@ export function MobileNav() {
                       to={item.path}
                       onClick={() => setShowMore(false)}
                       className={`
-                        flex flex-col items-center gap-1.5 p-3 rounded-xl transition-all
-                        ${isActive ? 'bg-solar-500/20 text-solar-400' : 'text-dark-400 hover:bg-white/5'}
+                        flex flex-col items-center gap-1.5 p-3 rounded-md transition-colors duration-150
+                        ${isActive ? 'bg-zinc-800/80 text-sky-400' : 'text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800/50'}
                       `}
                     >
                       <Icon className="w-5 h-5" />
@@ -111,7 +111,7 @@ export function MobileNav() {
       {/* Bottom nav bar */}
       <nav className="
         fixed bottom-0 inset-x-0 z-30 md:hidden
-        glass-strong border-t border-white/5
+        bg-zinc-950 border-t border-white/[0.06]
         pb-[env(safe-area-inset-bottom)]
       ">
         <div className="flex items-center justify-around h-14">
@@ -128,11 +128,11 @@ export function MobileNav() {
                 className={`
                   flex flex-col items-center gap-0.5 px-3 py-1.5
                   transition-colors
-                  ${isActive ? 'text-solar-400' : 'text-dark-500'}
+                  ${isActive ? 'text-sky-400' : 'text-zinc-600'}
                 `}
               >
                 <Icon className="w-5 h-5" />
-                <span className="text-[10px] font-medium">
+                <span className="text-[10px] mt-0.5 font-medium">
                   {t(tab.labelKey as keyof typeof t)}
                 </span>
               </NavLink>
@@ -143,11 +143,11 @@ export function MobileNav() {
             className={`
               flex flex-col items-center gap-0.5 px-3 py-1.5
               transition-colors cursor-pointer
-              ${isMoreActive ? 'text-solar-400' : 'text-dark-500'}
+              ${isMoreActive ? 'text-sky-400' : 'text-zinc-600'}
             `}
           >
             <MoreHorizontal className="w-5 h-5" />
-            <span className="text-[10px] font-medium">{t('common.more')}</span>
+            <span className="text-[10px] mt-0.5 font-medium">{t('common.more')}</span>
           </button>
         </div>
       </nav>

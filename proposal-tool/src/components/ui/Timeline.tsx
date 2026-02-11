@@ -18,19 +18,19 @@ interface TimelineProps {
 
 const statusColors = {
   completed: {
-    dot: 'bg-emerald-500 border-emerald-500/30',
-    line: 'bg-emerald-500/40',
-    text: 'text-dark-300',
+    dot: 'bg-sky-500',
+    line: 'bg-zinc-800',
+    text: 'text-zinc-300',
   },
   current: {
-    dot: 'bg-solar-500 border-solar-500/30 ring-4 ring-solar-500/20',
-    line: 'bg-dark-700',
-    text: 'text-white',
+    dot: 'bg-amber-500 ring-4 ring-amber-500/20',
+    line: 'bg-zinc-800',
+    text: 'text-zinc-50',
   },
   upcoming: {
-    dot: 'bg-dark-700 border-dark-600',
-    line: 'bg-dark-700',
-    text: 'text-dark-400',
+    dot: 'bg-zinc-700',
+    line: 'bg-zinc-800',
+    text: 'text-zinc-500',
   },
 };
 
@@ -54,20 +54,16 @@ export function Timeline({ steps, className = '' }: TimelineProps) {
             <div className="flex flex-col items-center">
               <div
                 className={`
-                  w-8 h-8 rounded-full border-2 flex items-center justify-center flex-shrink-0
+                  w-2.5 h-2.5 rounded-full flex-shrink-0 mt-1.5
                   ${colors.dot}
                 `}
               >
-                {status === 'completed' ? (
-                  <Check className="w-4 h-4 text-white" />
-                ) : step.icon ? (
-                  <span className="text-xs">{step.icon}</span>
-                ) : (
-                  <span className="text-xs font-bold text-white/70">{index + 1}</span>
+                {status === 'completed' && (
+                  <Check className="w-2.5 h-2.5 text-white" />
                 )}
               </div>
               {!isLast && (
-                <div className={`w-0.5 flex-1 min-h-8 ${colors.line}`} />
+                <div className={`w-px flex-1 min-h-8 ${colors.line}`} />
               )}
             </div>
 
@@ -76,13 +72,13 @@ export function Timeline({ steps, className = '' }: TimelineProps) {
               <div className="flex items-center gap-2">
                 <h4 className={`font-medium text-sm ${colors.text}`}>{step.title}</h4>
                 {step.duration && (
-                  <span className="text-xs text-dark-500 bg-dark-800 px-2 py-0.5 rounded-full">
+                  <span className="text-xs text-zinc-600 bg-zinc-800 px-2 py-0.5 rounded-md">
                     {step.duration}
                   </span>
                 )}
               </div>
               {step.description && (
-                <p className="mt-1 text-sm text-dark-500 leading-relaxed">{step.description}</p>
+                <p className="mt-1 text-sm text-zinc-600 leading-relaxed">{step.description}</p>
               )}
             </div>
           </motion.div>

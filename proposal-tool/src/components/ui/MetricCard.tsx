@@ -1,6 +1,4 @@
-import { motion } from 'framer-motion';
 import type { ReactNode } from 'react';
-import { fadeUp, transition } from '../../utils/animations';
 
 interface MetricCardProps {
   icon: ReactNode;
@@ -13,29 +11,27 @@ interface MetricCardProps {
 
 export function MetricCard({ icon, value, label, sublabel, trend, className = '' }: MetricCardProps) {
   return (
-    <motion.div
-      initial={fadeUp.initial}
-      animate={fadeUp.animate}
-      transition={transition.default}
-      className={`glass rounded-xl p-4 ${className}`}
+    <div
+      className={`bg-zinc-900 border border-white/[0.09] rounded-xl p-5 ${className}`}
     >
       <div className="flex items-start justify-between mb-3">
-        <span className="text-solar-400">{icon}</span>
+        <span className="text-sky-400">{icon}</span>
         {trend && (
           <span
-            className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+            className={`text-xs font-medium flex items-center gap-0.5 ${
               trend.positive
-                ? 'bg-emerald-500/15 text-emerald-400'
-                : 'bg-rose-500/15 text-rose-400'
+                ? 'text-emerald-400'
+                : 'text-rose-400'
             }`}
           >
+            <span>{trend.positive ? '\u2191' : '\u2193'}</span>
             {trend.value}
           </span>
         )}
       </div>
-      <div className="text-2xl font-bold text-white">{value}</div>
-      <div className="text-sm text-dark-400 mt-1">{label}</div>
-      {sublabel && <div className="text-xs text-dark-500 mt-0.5">{sublabel}</div>}
-    </motion.div>
+      <div className="text-2xl font-bold text-zinc-50 tracking-tight">{value}</div>
+      <div className="text-sm text-zinc-500 mt-1">{label}</div>
+      {sublabel && <div className="text-xs text-zinc-600 mt-0.5">{sublabel}</div>}
+    </div>
   );
 }

@@ -20,12 +20,12 @@ export function SectionHeader({ icon, title, subtitle, action, className = '' }:
     >
       <div className="flex items-start gap-3">
         {icon && (
-          <span className="text-solar-400 mt-0.5 flex-shrink-0">{icon}</span>
+          <span className="mt-0.5 flex-shrink-0">{icon}</span>
         )}
         <div>
-          <h3 className="text-lg font-semibold text-white">{title}</h3>
+          <h3 className="text-lg font-semibold text-zinc-100 tracking-tight">{title}</h3>
           {subtitle && (
-            <p className="text-sm text-dark-400 mt-1">{subtitle}</p>
+            <p className="text-sm text-zinc-500 mt-1">{subtitle}</p>
           )}
         </div>
       </div>

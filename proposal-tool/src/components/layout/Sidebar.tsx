@@ -36,33 +36,33 @@ const navSections: NavSection[] = [
   {
     titleKey: 'nav.learn',
     items: [
-      { path: '/academy', labelKey: 'nav.academy', icon: <GraduationCap className="w-5 h-5" /> },
-      { path: '/value-chain', labelKey: 'nav.valueChain', icon: <GitBranch className="w-5 h-5" /> },
+      { path: '/academy', labelKey: 'nav.academy', icon: <GraduationCap className="w-4 h-4" /> },
+      { path: '/value-chain', labelKey: 'nav.valueChain', icon: <GitBranch className="w-4 h-4" /> },
     ],
   },
   {
     titleKey: 'nav.operate',
     items: [
-      { path: '/suppliers', labelKey: 'nav.suppliers', icon: <Factory className="w-5 h-5" /> },
-      { path: '/meetings', labelKey: 'nav.meetings', icon: <Users className="w-5 h-5" /> },
-      { path: '/utilities', labelKey: 'nav.utilities', icon: <Zap className="w-5 h-5" /> },
-      { path: '/licensing', labelKey: 'nav.licensing', icon: <FileCheck className="w-5 h-5" /> },
-      { path: '/installers', labelKey: 'nav.installers', icon: <Wrench className="w-5 h-5" /> },
+      { path: '/suppliers', labelKey: 'nav.suppliers', icon: <Factory className="w-4 h-4" /> },
+      { path: '/meetings', labelKey: 'nav.meetings', icon: <Users className="w-4 h-4" /> },
+      { path: '/utilities', labelKey: 'nav.utilities', icon: <Zap className="w-4 h-4" /> },
+      { path: '/licensing', labelKey: 'nav.licensing', icon: <FileCheck className="w-4 h-4" /> },
+      { path: '/installers', labelKey: 'nav.installers', icon: <Wrench className="w-4 h-4" /> },
     ],
   },
   {
     titleKey: 'nav.sell',
     items: [
-      { path: '/acquisition', labelKey: 'nav.acquisition', icon: <Megaphone className="w-5 h-5" /> },
-      { path: '/smart-proposal', labelKey: 'nav.smartProposal', icon: <Sparkles className="w-5 h-5" /> },
-      { path: '/proposal', labelKey: 'nav.proposal', icon: <Calculator className="w-5 h-5" /> },
-      { path: '/planner', labelKey: 'nav.planner', icon: <ClipboardList className="w-5 h-5" /> },
+      { path: '/acquisition', labelKey: 'nav.acquisition', icon: <Megaphone className="w-4 h-4" /> },
+      { path: '/smart-proposal', labelKey: 'nav.smartProposal', icon: <Sparkles className="w-4 h-4" /> },
+      { path: '/proposal', labelKey: 'nav.proposal', icon: <Calculator className="w-4 h-4" /> },
+      { path: '/planner', labelKey: 'nav.planner', icon: <ClipboardList className="w-4 h-4" /> },
     ],
   },
 ];
 
 export function Sidebar() {
-  const { t } = useTranslation();
+  const { t, isRTL } = useTranslation();
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(() => {
     return localStorage.getItem('solari-sidebar-collapsed') === 'true';
@@ -74,18 +74,18 @@ export function Sidebar() {
 
   return (
     <motion.aside
-      animate={{ width: collapsed ? 64 : 280 }}
-      transition={{ duration: 0.3, ease: 'easeInOut' }}
+      animate={{ width: collapsed ? 52 : 240 }}
+      transition={{ duration: 0.2, ease: 'easeInOut' }}
       className="
         hidden md:flex flex-col h-screen sticky top-0
-        glass-strong border-e border-white/5
+        bg-zinc-950 border-e border-white/[0.06]
         overflow-hidden z-30
       "
     >
       {/* Logo */}
-      <div className="flex items-center gap-3 px-4 py-5 border-b border-white/5">
-        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-solar-500 to-amber-500 flex items-center justify-center flex-shrink-0">
-          <Sun className="w-5 h-5 text-white" />
+      <div className="flex items-center gap-2.5 px-3 py-4 border-b border-white/[0.06]">
+        <div className="w-7 h-7 rounded-md bg-zinc-800 flex items-center justify-center flex-shrink-0">
+          <Sun className="w-4 h-4 text-zinc-300" />
         </div>
         <AnimatePresence>
           {!collapsed && (
@@ -93,7 +93,7 @@ export function Sidebar() {
               initial={{ opacity: 0, width: 0 }}
               animate={{ opacity: 1, width: 'auto' }}
               exit={{ opacity: 0, width: 0 }}
-              className="text-lg font-bold gradient-text whitespace-nowrap overflow-hidden"
+              className="text-base font-semibold text-zinc-100 whitespace-nowrap overflow-hidden"
             >
               Solari
             </motion.span>
@@ -102,7 +102,7 @@ export function Sidebar() {
       </div>
 
       {/* Language Toggle */}
-      <div className="px-3 py-2 border-b border-white/5">
+      <div className="px-2 py-2 border-b border-white/[0.06]">
         <LanguageToggle collapsed={collapsed} />
       </div>
 
@@ -111,22 +111,23 @@ export function Sidebar() {
         {/* Dashboard */}
         <NavLink
           to="/"
+          title={collapsed ? t('nav.dashboard') : undefined}
           className={({ isActive }) =>
-            `flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all ${
+            `flex items-center gap-2.5 px-3 py-1.5 rounded-md transition-colors duration-150 ${
               isActive
-                ? 'bg-solar-500/20 text-solar-400 border-s-2 border-solar-500'
-                : 'text-dark-400 hover:text-white hover:bg-white/5'
+                ? `text-zinc-50 bg-zinc-800/80 ${isRTL ? 'border-e-2' : 'border-s-2'} border-sky-500`
+                : 'text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800/50'
             }`
           }
         >
-          <LayoutDashboard className="w-5 h-5 flex-shrink-0" />
+          <LayoutDashboard className="w-4 h-4 flex-shrink-0" />
           <AnimatePresence>
             {!collapsed && (
               <motion.span
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="text-sm font-medium whitespace-nowrap"
+                className="text-sm whitespace-nowrap"
               >
                 {t('nav.dashboard')}
               </motion.span>
@@ -143,7 +144,7 @@ export function Sidebar() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="px-3 mb-2 text-[10px] font-bold uppercase tracking-widest text-dark-600"
+                  className="px-3 mb-1 text-[10px] font-medium uppercase tracking-[0.08em] text-zinc-600"
                 >
                   {t(section.titleKey as TranslationKey)}
                 </motion.p>
@@ -156,10 +157,10 @@ export function Sidebar() {
                   to={item.path}
                   title={collapsed ? t(item.labelKey as TranslationKey) : undefined}
                   className={({ isActive }) =>
-                    `flex items-center gap-3 px-3 py-2 rounded-xl transition-all ${
+                    `flex items-center gap-2.5 px-3 py-1.5 rounded-md transition-colors duration-150 ${
                       isActive || location.pathname.startsWith(item.path + '/')
-                        ? 'bg-solar-500/20 text-solar-400 border-s-2 border-solar-500'
-                        : 'text-dark-400 hover:text-white hover:bg-white/5'
+                        ? `text-zinc-50 bg-zinc-800/80 ${isRTL ? 'border-e-2' : 'border-s-2'} border-sky-500`
+                        : 'text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800/50'
                     }`
                   }
                 >
@@ -170,7 +171,7 @@ export function Sidebar() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="text-sm font-medium whitespace-nowrap"
+                        className="text-sm whitespace-nowrap"
                       >
                         {t(item.labelKey as TranslationKey)}
                       </motion.span>
@@ -187,16 +188,16 @@ export function Sidebar() {
       <button
         onClick={() => setCollapsed(!collapsed)}
         className="
-          flex items-center justify-center gap-2 px-4 py-3
-          border-t border-white/5 text-dark-500 hover:text-white
+          flex items-center justify-center gap-2 px-3 py-3
+          border-t border-white/[0.06] text-zinc-600 hover:text-zinc-400
           transition-colors cursor-pointer
         "
       >
         {collapsed ? (
-          <PanelLeft className="w-5 h-5" />
+          <PanelLeft className="w-4 h-4" />
         ) : (
           <>
-            <PanelLeftClose className="w-5 h-5" />
+            <PanelLeftClose className="w-4 h-4" />
             <span className="text-xs">{t('common.collapse')}</span>
           </>
         )}

@@ -18,17 +18,17 @@ const icons: Record<ToastType, typeof CheckCircle> = {
 };
 
 const colors: Record<ToastType, string> = {
-  success: 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300',
-  error: 'bg-red-500/15 border-red-500/30 text-red-300',
-  warning: 'bg-amber-500/15 border-amber-500/30 text-amber-300',
-  info: 'bg-blue-500/15 border-blue-500/30 text-blue-300',
+  success: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400',
+  error: 'bg-rose-500/10 border-rose-500/20 text-rose-400',
+  warning: 'bg-amber-500/10 border-amber-500/20 text-amber-400',
+  info: 'bg-sky-500/10 border-sky-500/20 text-sky-400',
 };
 
 const iconColors: Record<ToastType, string> = {
   success: 'text-emerald-400',
-  error: 'text-red-400',
+  error: 'text-rose-400',
   warning: 'text-amber-400',
-  info: 'text-blue-400',
+  info: 'text-sky-400',
 };
 
 export function useToast() {
@@ -70,13 +70,13 @@ export function ToastContainer({
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, x: 80, scale: 0.95 }}
               transition={{ duration: 0.2 }}
-              className={`flex items-start gap-3 px-4 py-3 rounded-xl border backdrop-blur-xl ${colors[toast.type]}`}
+              className={`flex items-start gap-3 px-4 py-3 rounded-lg border text-sm ${colors[toast.type]}`}
             >
               <Icon className={`w-5 h-5 mt-0.5 shrink-0 ${iconColors[toast.type]}`} />
-              <p className="text-sm flex-1">{toast.message}</p>
+              <p className="flex-1">{toast.message}</p>
               <button
                 onClick={() => onRemove(toast.id)}
-                className="shrink-0 opacity-60 hover:opacity-100 transition-opacity"
+                className="shrink-0 opacity-60 hover:opacity-100 transition-opacity cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>

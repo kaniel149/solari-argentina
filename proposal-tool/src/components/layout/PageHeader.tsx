@@ -1,8 +1,6 @@
-import { motion } from 'framer-motion';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import type { ReactNode } from 'react';
-import { fadeDown, transition } from '../../utils/animations';
 import { useTranslation } from '../../i18n';
 
 interface PageHeaderProps {
@@ -19,16 +17,11 @@ export function PageHeader({ title, subtitle, backTo, actions, className = '' }:
   const BackArrow = isRTL ? ArrowRight : ArrowLeft;
 
   return (
-    <motion.div
-      initial={fadeDown.initial}
-      animate={fadeDown.animate}
-      transition={transition.default}
-      className={`mb-8 ${className}`}
-    >
+    <div className={`mb-6 ${className}`}>
       {backTo && (
         <button
           onClick={() => navigate(backTo)}
-          className="flex items-center gap-1.5 text-sm text-dark-400 hover:text-white mb-3 transition-colors cursor-pointer"
+          className="flex items-center gap-1.5 text-sm text-zinc-500 hover:text-zinc-300 mb-3 transition-colors cursor-pointer"
         >
           <BackArrow className="w-4 h-4" />
           <span>{t('common.back')}</span>
@@ -36,13 +29,13 @@ export function PageHeader({ title, subtitle, backTo, actions, className = '' }:
       )}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold gradient-text">{title}</h1>
+          <h1 className="text-xl font-semibold text-zinc-50 tracking-tight">{title}</h1>
           {subtitle && (
-            <p className="text-dark-400 mt-2 max-w-2xl text-sm sm:text-base">{subtitle}</p>
+            <p className="text-sm text-zinc-500 mt-0.5 max-w-2xl">{subtitle}</p>
           )}
         </div>
-        {actions && <div className="flex-shrink-0">{actions}</div>}
+        {actions && <div className="flex-shrink-0 flex gap-2">{actions}</div>}
       </div>
-    </motion.div>
+    </div>
   );
 }

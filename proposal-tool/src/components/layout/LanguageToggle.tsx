@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { useTranslation } from '../../i18n';
 
 interface LanguageToggleProps {
@@ -10,22 +9,20 @@ export function LanguageToggle({ collapsed = false, className = '' }: LanguageTo
   const { language, toggleLanguage } = useTranslation();
 
   return (
-    <motion.button
+    <button
       onClick={toggleLanguage}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
       className={`
-        flex items-center gap-2 rounded-lg transition-all cursor-pointer
-        text-dark-400 hover:text-white hover:bg-white/5
-        ${collapsed ? 'p-2 justify-center' : 'px-3 py-2'}
+        flex items-center gap-2 rounded-md transition-colors duration-150 cursor-pointer
+        text-zinc-500 hover:text-zinc-300 bg-zinc-800/50 hover:bg-zinc-800
+        ${collapsed ? 'p-1.5 justify-center' : 'px-2.5 py-1.5'}
         ${className}
       `}
       title={language === 'en' ? 'Switch to Hebrew' : 'Switch to English'}
     >
-      <span className="text-sm">{language === 'en' ? '🇺🇸' : '🇮🇱'}</span>
+      <span className="text-xs">{language === 'en' ? '🇺🇸' : '🇮🇱'}</span>
       {!collapsed && (
         <span className="text-xs font-medium">{language === 'en' ? 'EN' : 'עב'}</span>
       )}
-    </motion.button>
+    </button>
   );
 }

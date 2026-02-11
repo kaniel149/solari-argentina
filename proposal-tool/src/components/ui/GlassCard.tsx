@@ -18,22 +18,21 @@ export function GlassCard({
   ...props
 }: GlassCardProps) {
   const variants = {
-    default: 'glass',
-    subtle: 'glass-subtle',
-    elevated: 'glass-elevated',
-    solid: 'bg-[var(--surface-1)] border border-[var(--border-default)]',
-    strong: 'glass-strong',
-    accent: 'glass border-solar-500/20',
-    highlight: 'glass border-amber-500/20',
+    default: 'bg-zinc-900 border border-white/[0.09]',
+    subtle: 'bg-zinc-900/50 border border-white/[0.06]',
+    elevated: 'bg-zinc-800 border border-white/[0.12] shadow-lg shadow-black/20',
+    solid: 'bg-zinc-900 border border-white/[0.09]',
+    strong: 'bg-zinc-800 border border-sky-500/15 shadow-lg',
+    accent: 'bg-zinc-900 border border-sky-500/20',
+    highlight: 'bg-zinc-900 border border-amber-500/20',
   };
 
   return (
     <motion.div
       className={`
         ${variants[variant]}
-        rounded-2xl p-6
-        ${hover ? 'transition-all duration-200 hover:border-solar-400/30 hover:shadow-lg hover:shadow-solar-500/5' : ''}
-        ${glow ? 'solar-glow' : ''}
+        rounded-xl p-5
+        ${hover ? 'hover:border-white/[0.15] transition-colors duration-200' : ''}
         ${className}
       `}
       {...props}

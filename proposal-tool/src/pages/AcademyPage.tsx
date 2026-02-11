@@ -98,9 +98,9 @@ export default function AcademyPage() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="glass rounded-2xl p-12 text-center mt-6"
+          className="bg-zinc-900 border border-white/[0.09] rounded-xl p-12 text-center mt-6"
         >
-          <p className="text-dark-400">{t('common.none')}</p>
+          <p className="text-zinc-400">{t('common.none')}</p>
         </motion.div>
       )}
     </div>

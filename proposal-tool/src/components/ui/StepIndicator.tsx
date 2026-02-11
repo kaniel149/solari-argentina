@@ -24,21 +24,21 @@ export function StepIndicator({ currentStep, steps }: StepIndicatorProps) {
             <motion.div
               className={`
                 flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium
-                transition-all duration-300
+                transition-colors duration-200
                 ${isActive
-                  ? 'bg-solar-500/20 text-solar-300 border border-solar-500/30'
+                  ? 'bg-sky-500/15 text-sky-400 border border-sky-500/25'
                   : isCompleted
-                    ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                    : 'bg-dark-800/50 text-dark-500 border border-dark-700/30'
+                    ? 'bg-zinc-800 text-zinc-400 border border-zinc-700'
+                    : 'bg-zinc-900 text-zinc-600 border border-zinc-800'
                 }
               `}
               animate={{ scale: isActive ? 1.05 : 1 }}
             >
-              <span>{isCompleted ? '✓' : step.icon}</span>
+              <span>{isCompleted ? '\u2713' : step.icon}</span>
               <span className="hidden sm:inline">{step.label}</span>
             </motion.div>
             {index < steps.length - 1 && (
-              <div className={`w-8 h-px ${isCompleted ? 'bg-emerald-500/30' : 'bg-dark-700/30'}`} />
+              <div className={`w-8 h-px ${isCompleted ? 'bg-sky-500/30' : 'bg-zinc-800'}`} />
             )}
           </div>
         );

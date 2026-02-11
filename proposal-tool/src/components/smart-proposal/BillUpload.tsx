@@ -1,16 +1,32 @@
 import { useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Upload, Camera, FileText, X, ChevronRight } from 'lucide-react';
-import { GlassCard } from '../ui/GlassCard';
 import { Button } from '../ui/Button';
 import { useTranslation } from '../../i18n';
 import { getImagePreviewUrl, isPdfFile } from '../../utils/imageUtils';
-import { fadeIn, fadeUp, scaleIn, transition } from '../../utils/animations';
 
 interface BillUploadProps {
   onFileSelected: (file: File) => void;
   onManualEntry: (data: { customerName: string; utility: string; monthlyBillArs: number; monthlyKwh: number }) => void;
 }
+
+const fadeIn = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  exit: { opacity: 0 },
+};
+
+const fadeUp = {
+  initial: { opacity: 0, y: 8 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -8 },
+};
+
+const scaleIn = {
+  initial: { opacity: 0, scale: 0.96 },
+  animate: { opacity: 1, scale: 1 },
+  exit: { opacity: 0, scale: 0.96 },
+};
 
 export function BillUpload({ onFileSelected, onManualEntry }: BillUploadProps) {
   const { t } = useTranslation();
@@ -75,17 +91,16 @@ export function BillUpload({ onFileSelected, onManualEntry }: BillUploadProps) {
   }, [manual, onManualEntry]);
 
   return (
-    <GlassCard
-      variant="accent"
+    <motion.div
       {...fadeUp}
-      transition={transition.slow}
-      className="max-w-lg mx-auto"
+      transition={{ duration: 0.3 }}
+      className="bg-zinc-900 border border-white/[0.09] rounded-xl p-6 max-w-lg mx-auto"
     >
       <div className="text-center mb-6">
-        <h2 className="text-xl font-bold text-white mb-1">
+        <h2 className="text-lg font-semibold text-zinc-50 mb-1">
           {t('smartProposal.uploadBill')}
         </h2>
-        <p className="text-dark-400 text-sm">
+        <p className="text-zinc-500 text-sm">
           {t('smartProposal.dragDrop')}
         </p>
       </div>
@@ -104,12 +119,12 @@ export function BillUpload({ onFileSelected, onManualEntry }: BillUploadProps) {
                 onDrop={handleDrop}
                 onClick={() => fileInputRef.current?.click()}
                 className={`
-                  relative border-2 border-dashed rounded-2xl p-10
+                  relative border-2 border-dashed rounded-xl p-8
                   flex flex-col items-center justify-center gap-4
-                  cursor-pointer transition-all duration-300
+                  cursor-pointer transition-all duration-200
                   ${dragActive
-                    ? 'border-solar-400 bg-solar-500/10'
-                    : 'border-solar-500/30 hover:border-solar-400/50 hover:bg-white/[0.02]'
+                    ? 'border-sky-500/50 bg-sky-500/[0.02]'
+                    : 'border-zinc-700 hover:border-zinc-600 hover:bg-zinc-800/40'
                   }
                 `}
               >
@@ -123,50 +138,50 @@ export function BillUpload({ onFileSelected, onManualEntry }: BillUploadProps) {
                 />
 
                 <motion.div
-                  animate={dragActive ? { scale: 1.1, y: -4 } : { scale: 1, y: 0 }}
+                  animate={dragActive ? { scale: 1.05, y: -2 } : { scale: 1, y: 0 }}
                   className="flex items-center gap-3"
                 >
-                  <div className="w-12 h-12 rounded-xl bg-solar-500/15 flex items-center justify-center">
-                    <Upload className="w-6 h-6 text-solar-400" />
+                  <div className="w-10 h-10 rounded-lg bg-zinc-800 flex items-center justify-center">
+                    <Upload className="w-5 h-5 text-zinc-500" />
                   </div>
-                  <div className="w-12 h-12 rounded-xl bg-amber-500/15 flex items-center justify-center">
-                    <Camera className="w-6 h-6 text-amber-400" />
+                  <div className="w-10 h-10 rounded-lg bg-zinc-800 flex items-center justify-center">
+                    <Camera className="w-5 h-5 text-zinc-500" />
                   </div>
-                  <div className="w-12 h-12 rounded-xl bg-emerald-500/15 flex items-center justify-center">
-                    <FileText className="w-6 h-6 text-emerald-400" />
+                  <div className="w-10 h-10 rounded-lg bg-zinc-800 flex items-center justify-center">
+                    <FileText className="w-5 h-5 text-zinc-500" />
                   </div>
                 </motion.div>
 
                 <div className="text-center">
-                  <p className="text-white/70 text-sm">
+                  <p className="text-zinc-400 text-sm">
                     {t('smartProposal.dragDrop')}
                   </p>
-                  <p className="text-dark-500 text-xs mt-1">JPG, PNG, HEIC, PDF</p>
+                  <p className="text-zinc-600 text-xs mt-1">JPG, PNG, HEIC, PDF</p>
                 </div>
               </div>
             ) : (
               /* Preview */
               <motion.div
                 {...scaleIn}
-                className="relative rounded-2xl overflow-hidden border border-white/10"
+                className="relative rounded-xl overflow-hidden border border-white/[0.09]"
               >
                 {isPdf ? (
-                  <div className="w-full h-48 bg-black/30 flex flex-col items-center justify-center gap-3">
-                    <FileText className="w-12 h-12 text-rose-400" />
-                    <p className="text-white/70 text-sm font-medium">{selectedFile?.name}</p>
-                    <p className="text-dark-500 text-xs">PDF • {selectedFile ? Math.round(selectedFile.size / 1024) + ' KB' : ''}</p>
+                  <div className="w-full h-48 bg-zinc-800 flex flex-col items-center justify-center gap-3">
+                    <FileText className="w-10 h-10 text-zinc-500" />
+                    <p className="text-zinc-300 text-sm font-medium">{selectedFile?.name}</p>
+                    <p className="text-zinc-600 text-xs">PDF {selectedFile ? Math.round(selectedFile.size / 1024) + ' KB' : ''}</p>
                   </div>
                 ) : (
                   <img
                     src={preview!}
                     alt="Bill preview"
-                    className="w-full max-h-64 object-contain bg-black/30"
+                    className="w-full max-h-64 object-contain bg-zinc-800"
                   />
                 )}
                 <button
                   onClick={(e) => { e.stopPropagation(); clearFile(); }}
-                  className="absolute top-2 end-2 w-8 h-8 rounded-full bg-black/60 backdrop-blur-sm
-                    flex items-center justify-center text-white/70 hover:text-white
+                  className="absolute top-2 end-2 w-8 h-8 rounded-full bg-zinc-900/80
+                    flex items-center justify-center text-zinc-400 hover:text-zinc-200
                     transition-colors cursor-pointer"
                 >
                   <X className="w-4 h-4" />
@@ -188,14 +203,12 @@ export function BillUpload({ onFileSelected, onManualEntry }: BillUploadProps) {
                 </Button>
               )}
 
-              <Button
-                variant="ghost"
-                size="sm"
-                fullWidth
+              <button
                 onClick={() => setShowManual(true)}
+                className="text-sm text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer py-1"
               >
                 {t('smartProposal.manualEntry')}
-              </Button>
+              </button>
             </div>
           </motion.div>
         ) : (
@@ -206,21 +219,21 @@ export function BillUpload({ onFileSelected, onManualEntry }: BillUploadProps) {
             className="space-y-4"
           >
             <div>
-              <label className="block text-sm text-dark-300 mb-1">
+              <label className="block text-sm text-zinc-300 mb-1">
                 {t('smartProposal.customerName')}
               </label>
               <input
                 type="text"
                 value={manual.customerName}
                 onChange={(e) => setManual((p) => ({ ...p, customerName: e.target.value }))}
-                className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10
-                  text-white placeholder-dark-500 focus:outline-none focus:border-solar-500/50
+                className="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-white/[0.09]
+                  text-sm text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-zinc-600
                   transition-colors"
               />
             </div>
 
             <div>
-              <label className="block text-sm text-dark-300 mb-1">
+              <label className="block text-sm text-zinc-300 mb-1">
                 {t('smartProposal.utility')}
               </label>
               <input
@@ -228,36 +241,36 @@ export function BillUpload({ onFileSelected, onManualEntry }: BillUploadProps) {
                 value={manual.utility}
                 onChange={(e) => setManual((p) => ({ ...p, utility: e.target.value }))}
                 placeholder="EDENOR, EDESUR, EPEC..."
-                className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10
-                  text-white placeholder-dark-500 focus:outline-none focus:border-solar-500/50
+                className="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-white/[0.09]
+                  text-sm text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-zinc-600
                   transition-colors"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-sm text-dark-300 mb-1">
+                <label className="block text-sm text-zinc-300 mb-1">
                   {t('smartProposal.monthlyBill')} (ARS)
                 </label>
                 <input
                   type="number"
                   value={manual.monthlyBillArs || ''}
                   onChange={(e) => setManual((p) => ({ ...p, monthlyBillArs: Number(e.target.value) }))}
-                  className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10
-                    text-white placeholder-dark-500 focus:outline-none focus:border-solar-500/50
+                  className="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-white/[0.09]
+                    text-sm text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-zinc-600
                     transition-colors"
                 />
               </div>
               <div>
-                <label className="block text-sm text-dark-300 mb-1">
+                <label className="block text-sm text-zinc-300 mb-1">
                   {t('smartProposal.consumption')} (kWh)
                 </label>
                 <input
                   type="number"
                   value={manual.monthlyKwh || ''}
                   onChange={(e) => setManual((p) => ({ ...p, monthlyKwh: Number(e.target.value) }))}
-                  className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10
-                    text-white placeholder-dark-500 focus:outline-none focus:border-solar-500/50
+                  className="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-white/[0.09]
+                    text-sm text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-zinc-600
                     transition-colors"
                 />
               </div>
@@ -284,6 +297,6 @@ export function BillUpload({ onFileSelected, onManualEntry }: BillUploadProps) {
           </motion.div>
         )}
       </AnimatePresence>
-    </GlassCard>
+    </motion.div>
   );
 }

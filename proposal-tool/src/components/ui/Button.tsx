@@ -23,30 +23,28 @@ export function Button({
 }: ButtonProps) {
   const variants = {
     primary:
-      'bg-gradient-to-r from-solar-500 to-solar-600 text-white hover:from-solar-400 hover:to-solar-500 shadow-lg shadow-solar-500/20',
+      'bg-sky-500 hover:bg-sky-400 text-white',
     secondary:
-      'glass text-solar-300 hover:text-white hover:border-solar-400/30',
+      'bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-white/[0.09]',
     ghost:
-      'bg-transparent text-dark-400 hover:text-white hover:bg-white/5',
+      'bg-transparent hover:bg-zinc-800/50 text-zinc-400 hover:text-zinc-200',
     amber:
-      'bg-gradient-to-r from-amber-500 to-amber-600 text-white hover:from-amber-400 hover:to-amber-500 shadow-lg shadow-amber-500/20',
+      'bg-amber-500/10 hover:bg-amber-500/15 text-amber-400 border border-amber-500/20',
     danger:
-      'bg-gradient-to-r from-rose-500 to-rose-600 text-white hover:from-rose-400 hover:to-rose-500 shadow-lg shadow-rose-500/20',
+      'bg-rose-500/10 hover:bg-rose-500/15 text-rose-400 border border-rose-500/20',
   };
 
   const sizes = {
-    sm: 'px-4 py-2 text-sm rounded-lg gap-1.5',
-    md: 'px-6 py-3 text-base rounded-xl gap-2',
-    lg: 'px-8 py-4 text-lg rounded-xl gap-2.5',
+    sm: 'px-3 py-1.5 text-xs rounded-lg gap-1.5',
+    md: 'px-4 py-2 text-sm rounded-lg gap-2',
+    lg: 'px-5 py-2.5 text-sm rounded-lg gap-2',
   };
 
   return (
     <motion.button
-      whileHover={{ scale: disabled ? 1 : 1.02 }}
-      whileTap={{ scale: disabled ? 1 : 0.98 }}
       className={`
-        inline-flex items-center justify-center font-semibold
-        transition-all duration-200 cursor-pointer
+        inline-flex items-center justify-center font-medium
+        transition-colors duration-150 cursor-pointer
         disabled:opacity-50 disabled:cursor-not-allowed
         ${variants[variant]}
         ${sizes[size]}
