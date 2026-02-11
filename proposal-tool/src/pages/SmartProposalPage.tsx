@@ -70,8 +70,8 @@ export default function SmartProposalPage() {
       const imageResult = await compressImage(file);
 
       if (imageResult.error || !imageResult.data) {
-        setErrorMessage(imageResult.error || 'Error al procesar la imagen.');
-        addToast('error', imageResult.error || 'Error al procesar la imagen.');
+        setErrorMessage(imageResult.error || 'Error al procesar el archivo.');
+        addToast('error', imageResult.error || 'Error al procesar el archivo.');
         setUploadSubStep('upload');
         setIsProcessing(false);
         return;
@@ -79,8 +79,8 @@ export default function SmartProposalPage() {
 
       setBillImage(imageResult.data);
 
-      // Try AI analysis
-      const result = await analyzeBill(imageResult.data, controller.signal);
+      // Try AI analysis — pass mediaType for PDF support
+      const result = await analyzeBill(imageResult.data, controller.signal, imageResult.mediaType || undefined);
 
       if (result.error) {
         setErrorMessage(`IA no disponible: ${result.error} Ingrese los datos manualmente.`);

@@ -4,7 +4,7 @@ import { Upload, Camera, FileText, X, ChevronRight } from 'lucide-react';
 import { GlassCard } from '../ui/GlassCard';
 import { Button } from '../ui/Button';
 import { useTranslation } from '../../i18n';
-import { getImagePreviewUrl } from '../../utils/imageUtils';
+import { getImagePreviewUrl, isPdfFile } from '../../utils/imageUtils';
 import { fadeIn, fadeUp, scaleIn, transition } from '../../utils/animations';
 
 interface BillUploadProps {
@@ -26,9 +26,13 @@ export function BillUpload({ onFileSelected, onManualEntry }: BillUploadProps) {
     monthlyKwh: 0,
   });
 
+  const [isPdf, setIsPdf] = useState(false);
+
   const handleFile = useCallback((file: File) => {
     setSelectedFile(file);
-    setPreview(getImagePreviewUrl(file));
+    const pdf = isPdfFile(file);
+    setIsPdf(pdf);
+    setPreview(pdf ? 'pdf' : getImagePreviewUrl(file));
   }, []);
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
@@ -48,7 +52,7 @@ export function BillUpload({ onFileSelected, onManualEntry }: BillUploadProps) {
     e.stopPropagation();
     setDragActive(false);
     const file = e.dataTransfer.files?.[0];
-    if (file && file.type.startsWith('image/')) {
+    if (file && (file.type.startsWith('image/') || file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf'))) {
       handleFile(file);
     }
   }, [handleFile]);
@@ -112,7 +116,7 @@ export function BillUpload({ onFileSelected, onManualEntry }: BillUploadProps) {
                 <input
                   ref={fileInputRef}
                   type="file"
-                  accept="image/*"
+                  accept="image/*,.pdf,application/pdf"
                   capture="environment"
                   onChange={handleInputChange}
                   className="hidden"
@@ -137,7 +141,7 @@ export function BillUpload({ onFileSelected, onManualEntry }: BillUploadProps) {
                   <p className="text-white/70 text-sm">
                     {t('smartProposal.dragDrop')}
                   </p>
-                  <p className="text-dark-500 text-xs mt-1">JPG, PNG, HEIC</p>
+                  <p className="text-dark-500 text-xs mt-1">JPG, PNG, HEIC, PDF</p>
                 </div>
               </div>
             ) : (
@@ -146,11 +150,19 @@ export function BillUpload({ onFileSelected, onManualEntry }: BillUploadProps) {
                 {...scaleIn}
                 className="relative rounded-2xl overflow-hidden border border-white/10"
               >
-                <img
-                  src={preview}
-                  alt="Bill preview"
-                  className="w-full max-h-64 object-contain bg-black/30"
-                />
+                {isPdf ? (
+                  <div className="w-full h-48 bg-black/30 flex flex-col items-center justify-center gap-3">
+                    <FileText className="w-12 h-12 text-rose-400" />
+                    <p className="text-white/70 text-sm font-medium">{selectedFile?.name}</p>
+                    <p className="text-dark-500 text-xs">PDF • {selectedFile ? Math.round(selectedFile.size / 1024) + ' KB' : ''}</p>
+                  </div>
+                ) : (
+                  <img
+                    src={preview!}
+                    alt="Bill preview"
+                    className="w-full max-h-64 object-contain bg-black/30"
+                  />
+                )}
                 <button
                   onClick={(e) => { e.stopPropagation(); clearFile(); }}
                   className="absolute top-2 end-2 w-8 h-8 rounded-full bg-black/60 backdrop-blur-sm

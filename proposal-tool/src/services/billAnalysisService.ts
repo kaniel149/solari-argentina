@@ -12,13 +12,14 @@ export interface BillAnalysisResponse {
  */
 export async function analyzeBill(
   imageBase64: string,
-  signal?: AbortSignal
+  signal?: AbortSignal,
+  mediaType?: string
 ): Promise<BillAnalysisResponse> {
   try {
     const response = await fetch('/api/analyze-bill', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ image: imageBase64 }),
+      body: JSON.stringify({ image: imageBase64, mediaType: mediaType || 'image/jpeg' }),
       signal,
     });
 

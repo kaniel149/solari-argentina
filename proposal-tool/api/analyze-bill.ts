@@ -1,7 +1,9 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 const VALID_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/heic'];
-const MAX_BODY_SIZE = 4 * 1024 * 1024; // 4MB base64
+const VALID_PDF_TYPE = 'application/pdf';
+const ALL_VALID_TYPES = [...VALID_IMAGE_TYPES, VALID_PDF_TYPE];
+const MAX_BODY_SIZE = 6 * 1024 * 1024; // 6MB base64 (PDFs can be larger)
 
 function parseJsonFromText(text: string): Record<string, unknown> | null {
   // 1. Try direct JSON.parse
@@ -52,18 +54,39 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(400).json({ error: 'Image too large. Maximum 4MB base64 payload.', code: 'INVALID_IMAGE' });
   }
 
-  // Validate image media type if provided
+  // Validate media type if provided
   const resolvedMediaType = mediaType || 'image/jpeg';
-  if (!VALID_IMAGE_TYPES.includes(resolvedMediaType)) {
+  if (!ALL_VALID_TYPES.includes(resolvedMediaType)) {
     return res.status(400).json({
-      error: `Invalid image format. Supported: ${VALID_IMAGE_TYPES.join(', ')}`,
+      error: `Invalid format. Supported: ${ALL_VALID_TYPES.join(', ')}`,
       code: 'INVALID_IMAGE',
     });
   }
 
+  const isPdf = resolvedMediaType === VALID_PDF_TYPE;
+
   try {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 30000);
+
+    // Build content block — PDF uses "document" type, images use "image" type
+    const fileContent = isPdf
+      ? {
+          type: 'document' as const,
+          source: {
+            type: 'base64' as const,
+            media_type: 'application/pdf' as const,
+            data: image,
+          },
+        }
+      : {
+          type: 'image' as const,
+          source: {
+            type: 'base64' as const,
+            media_type: resolvedMediaType as 'image/jpeg' | 'image/png' | 'image/webp' | 'image/gif',
+            data: image,
+          },
+        };
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -80,14 +103,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           {
             role: 'user',
             content: [
-              {
-                type: 'image',
-                source: {
-                  type: 'base64',
-                  media_type: resolvedMediaType,
-                  data: image,
-                },
-              },
+              fileContent,
               {
                 type: 'text',
                 text: `Analyze this Argentine electricity bill (factura de luz). Extract the following information and return ONLY valid JSON (no markdown, no explanation):
