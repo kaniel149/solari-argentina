@@ -9,9 +9,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed', code: 'METHOD_NOT_ALLOWED' });
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {
-    return res.status(500).json({ error: 'ANTHROPIC_API_KEY not configured', code: 'MISSING_API_KEY' });
+    return res.status(500).json({ error: 'GROQ_API_KEY not configured', code: 'MISSING_API_KEY' });
   }
 
   // Validate request body
@@ -40,17 +40,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 30000);
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
+        'Authorization': `Bearer ${apiKey}`,
       },
       signal: controller.signal,
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'llama-3.3-70b-versatile',
         max_tokens: 512,
+        temperature: 0.7,
         messages: [
           {
             role: 'user',
@@ -83,12 +83,12 @@ Requirements:
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Anthropic API error:', response.status, errorText);
+      console.error('Groq API error:', response.status, errorText);
       return res.status(500).json({ error: 'Narrative generation failed', code: 'PARSE_ERROR' });
     }
 
     const data = await response.json();
-    const narrative = data.content?.[0]?.text || '';
+    const narrative = data.choices?.[0]?.message?.content || '';
     return res.status(200).json({ narrative });
   } catch (error: unknown) {
     if (error instanceof Error && error.name === 'AbortError') {
