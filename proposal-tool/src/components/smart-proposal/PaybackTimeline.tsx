@@ -64,7 +64,7 @@ export function PaybackTimeline({ paybackYears, totalInvestmentUsd, totalSavings
         {/* Year labels */}
         <div className="flex justify-between mt-3">
           {yearMarks.map((year) => (
-            <span key={year} className="text-xs text-dark-500">
+            <span key={year} className="text-xs text-slate-500">
               {year}
             </span>
           ))}
@@ -74,16 +74,16 @@ export function PaybackTimeline({ paybackYears, totalInvestmentUsd, totalSavings
       {/* Summary row */}
       <div className="flex justify-between items-center pt-4 border-t border-white/5">
         <div className="text-center">
-          <p className="text-xs text-dark-400">Inversion</p>
+          <p className="text-xs text-slate-400">Inversion</p>
           <p className="text-lg font-bold text-amber-400">{formatUsd(totalInvestmentUsd)}</p>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-8 h-px bg-dark-600" />
-          <span className="text-dark-500 text-sm">→</span>
+          <span className="text-slate-500 text-sm">→</span>
           <div className="w-8 h-px bg-dark-600" />
         </div>
         <div className="text-center">
-          <p className="text-xs text-dark-400">Ahorro total en 25 anos</p>
+          <p className="text-xs text-slate-400">Ahorro total en 25 anos</p>
           <p className="text-lg font-bold text-emerald-400">{formatUsd(totalSavings25Years)}</p>
         </div>
       </div>

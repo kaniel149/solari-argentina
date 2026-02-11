@@ -198,67 +198,77 @@ export default function SmartProposalPage() {
     orientation: 'north' | 'northeast' | 'northwest' | 'east' | 'west';
     budgetTier: 'economy' | 'standard' | 'premium';
   }) => {
-    // Determine province — prefer location-detected, fallback to bill-detected
-    const provinceId = locationData.province || extractedData.province;
-    const prov = provinces.find((p) => p.id === provinceId);
+    try {
+      // Determine province — prefer location-detected, fallback to bill-detected
+      const provinceId = locationData.province || extractedData.province;
+      const prov = provinces.find((p) => p.id === provinceId);
 
-    if (!prov) {
-      alert('No se pudo detectar la provincia. Por favor, seleccione una ubicación en Argentina.');
-      return;
+      if (!prov) {
+        addToast('error', 'No se pudo detectar la provincia. Seleccione una ubicación en Argentina.');
+        return;
+      }
+
+      const exchangeRate = getExchangeRate();
+      const monthlyKwh = extractedData.monthlyKwh ||
+        estimateConsumption(extractedData.monthlyBillArs, prov, 'residential');
+
+      if (monthlyKwh <= 0) {
+        addToast('error', 'El consumo mensual debe ser mayor a 0 kWh.');
+        return;
+      }
+
+      const input: CustomerInput = {
+        province: provinceId,
+        city: extractedData.address || '',
+        monthlyBillArs: extractedData.monthlyBillArs,
+        monthlyConsumptionKwh: monthlyKwh,
+        systemType: 'residential',
+        roofType: locationData.roofType,
+        roofOrientation: locationData.orientation,
+        budgetTier: locationData.budgetTier,
+        financingPreference: 'undecided',
+        customerName: extractedData.customerName,
+      };
+
+      const system = designSystem(monthlyKwh, prov, input);
+      const production = calculateProduction(system, prov, locationData.orientation, monthlyKwh);
+      const financial = calculateFinancials(system, production, prov, input);
+      const environmental = calculateEnvironmental(production);
+
+      const validUntil = new Date();
+      validUntil.setDate(validUntil.getDate() + 30);
+
+      const smartProposal: SmartProposal = {
+        id: crypto.randomUUID(),
+        createdAt: new Date().toISOString(),
+        customerInput: input,
+        province: prov,
+        system,
+        production,
+        financial,
+        environmental,
+        exchangeRate,
+        validUntil: validUntil.toLocaleDateString('es-AR'),
+        // Smart Proposal extras
+        billImage: billImage || undefined,
+        coordinates: { lat: locationData.lat, lng: locationData.lng },
+        extractedBill: extractedData,
+      };
+
+      setProposal(smartProposal);
+      setStep('loading');
+
+      // Generate AI narrative in background
+      generateNarrative(smartProposal).then((narrative) => {
+        setProposal((prev) => prev ? { ...prev, aiNarrative: narrative } : prev);
+      }).catch(() => {
+        // Fallback narrative is already handled inside generateNarrative
+      });
+    } catch (err) {
+      console.error('Error generating proposal:', err);
+      addToast('error', 'Error al generar la propuesta. Verifique los datos e intente nuevamente.');
     }
-
-    const exchangeRate = getExchangeRate();
-    const monthlyKwh = extractedData.monthlyKwh ||
-      estimateConsumption(extractedData.monthlyBillArs, prov, 'residential');
-
-    const input: CustomerInput = {
-      province: provinceId,
-      city: extractedData.address || '',
-      monthlyBillArs: extractedData.monthlyBillArs,
-      monthlyConsumptionKwh: monthlyKwh,
-      systemType: 'residential',
-      roofType: locationData.roofType,
-      roofOrientation: locationData.orientation,
-      budgetTier: locationData.budgetTier,
-      financingPreference: 'undecided',
-      customerName: extractedData.customerName,
-    };
-
-    const system = designSystem(monthlyKwh, prov, input);
-    const production = calculateProduction(system, prov, locationData.orientation, monthlyKwh);
-    const financial = calculateFinancials(system, production, prov, input);
-    const environmental = calculateEnvironmental(production);
-
-    const validUntil = new Date();
-    validUntil.setDate(validUntil.getDate() + 30);
-
-    const smartProposal: SmartProposal = {
-      id: crypto.randomUUID(),
-      createdAt: new Date().toISOString(),
-      customerInput: input,
-      province: prov,
-      system,
-      production,
-      financial,
-      environmental,
-      exchangeRate,
-      validUntil: validUntil.toLocaleDateString('es-AR'),
-      // Smart Proposal extras
-      billImage: billImage || undefined,
-      coordinates: { lat: locationData.lat, lng: locationData.lng },
-      extractedBill: extractedData,
-    };
-
-    setProposal(smartProposal);
-    setStep('loading');
-
-    // Generate AI narrative in background
-    generateNarrative(smartProposal).then((narrative) => {
-      setProposal((prev) => prev ? { ...prev, aiNarrative: narrative } : prev);
-    }).catch(() => {
-      // Fallback narrative is already handled inside generateNarrative
-    });
-  }, [extractedData, billImage]);
+  }, [extractedData, billImage, addToast]);
 
   // Handle loading complete → show proposal
   const handleLoadingComplete = useCallback(() => {

@@ -8,6 +8,7 @@ import {
   LabelList,
 } from 'recharts';
 import { motion } from 'framer-motion';
+import { ArrowDownRight, DollarSign } from 'lucide-react';
 import { formatArs } from '../../utils/calculations';
 
 interface ComparisonChartProps {
@@ -47,14 +48,14 @@ export function ComparisonChart({ currentBill, solarBill, monthlySavings }: Comp
       className="mb-10"
     >
       <div className="flex items-center gap-4 mb-6">
-        <div className="w-12 h-12 rounded-xl animated-border p-[1px]">
-          <div className="w-full h-full rounded-xl bg-dark-900 flex items-center justify-center text-xl">
-            📉
+        <div className="relative">
+          <div className="w-12 h-12 rounded-xl bg-zinc-800 border border-zinc-700/40 flex items-center justify-center">
+            <ArrowDownRight className="w-5 h-5 text-emerald-400" />
           </div>
         </div>
         <div>
-          <h2 className="text-2xl font-bold text-white">Comparación de factura</h2>
-          <p className="text-sm text-dark-400">Tu factura antes y despues de instalar solar</p>
+          <h2 className="text-2xl font-bold text-white">Comparacion de factura</h2>
+          <p className="text-sm text-slate-400">Tu factura antes y despues de instalar solar</p>
         </div>
       </div>
 
@@ -90,12 +91,12 @@ export function ComparisonChart({ currentBill, solarBill, monthlySavings }: Comp
           transition={{ delay: 0.4, duration: 0.5 }}
           className="flex items-center justify-center gap-3 mt-4 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20"
         >
-          <span className="text-2xl">💰</span>
+          <DollarSign className="w-6 h-6 text-emerald-400" />
           <div className="text-center">
-            <p className="text-sm text-dark-400">Ahorro mensual estimado</p>
+            <p className="text-sm text-slate-400">Ahorro mensual estimado</p>
             <p className="text-2xl font-bold text-emerald-400">{formatArs(monthlySavings)}</p>
           </div>
-          <span className="text-2xl">↓</span>
+          <ArrowDownRight className="w-6 h-6 text-emerald-400" />
         </motion.div>
       </div>
     </motion.div>

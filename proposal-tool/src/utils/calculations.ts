@@ -147,12 +147,14 @@ export function calculateProduction(
     (fraction) => Math.round(annualProduction * fraction)
   );
 
-  const coveragePercentage = Math.min(
-    100,
-    (annualProduction / (monthlyConsumptionKwh * 12)) * 100
-  );
+  const annualConsumption = monthlyConsumptionKwh * 12;
+  const coveragePercentage = annualConsumption > 0
+    ? Math.min(100, (annualProduction / annualConsumption) * 100)
+    : 0;
 
-  const specificYield = annualProduction / system.systemSizeKwp;
+  const specificYield = system.systemSizeKwp > 0
+    ? annualProduction / system.systemSizeKwp
+    : 0;
 
   return {
     monthlyProductionKwh: monthlyProduction,
