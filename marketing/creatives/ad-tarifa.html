@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080, initial-scale=1">
+<title>Solaris Argentina — Tarifas</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1080px; height: 1920px;
+    background: #0A0A0A;
+    font-family: 'DM Sans', sans-serif;
+    color: #FEFDFB;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .bg {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(180deg, rgba(11,61,46,0.1) 0%, transparent 30%),
+      linear-gradient(0deg, rgba(212,168,67,0.08) 0%, transparent 20%);
+  }
+
+  .watermark {
+    position: absolute;
+    top: 45%; left: 50%;
+    transform: translate(-50%, -50%) rotate(-30deg);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 90px; font-weight: 700;
+    letter-spacing: 20px; text-transform: uppercase;
+    color: rgba(254,253,251,0.015);
+    white-space: nowrap; z-index: 0; pointer-events: none;
+  }
+
+  .content {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column;
+    align-items: center;
+    height: 100%; padding: 80px 70px;
+    text-align: center;
+  }
+
+  .energia-badge {
+    font-size: 16px; font-weight: 500;
+    letter-spacing: 3px; text-transform: uppercase;
+    color: rgba(212,168,67,0.6);
+    border: 1px solid rgba(212,168,67,0.3);
+    padding: 8px 16px;
+    margin-bottom: 60px;
+    align-self: flex-end;
+  }
+
+  .alert-icon {
+    width: 80px; height: 80px;
+    border: 3px solid rgba(220,100,100,0.6);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 40px; font-weight: 900;
+    color: rgba(220,100,100,0.8);
+    margin-bottom: 40px;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(220,100,100,0.3); }
+    50% { box-shadow: 0 0 0 20px rgba(220,100,100,0); }
+  }
+
+  .headline {
+    font-family: 'Playfair Display', serif;
+    font-size: 56px; font-weight: 900;
+    line-height: 1.2; color: #FEFDFB;
+    margin-bottom: 20px;
+    max-width: 800px;
+  }
+
+  .headline em {
+    font-style: normal;
+    color: rgba(220,100,100,0.9);
+  }
+
+  .sub-headline {
+    font-size: 28px; font-weight: 400;
+    color: rgba(254,253,251,0.5);
+    margin-bottom: 70px;
+  }
+
+  /* Rising bar chart */
+  .chart {
+    display: flex; align-items: flex-end;
+    gap: 24px;
+    height: 450px;
+    margin-bottom: 70px;
+    padding: 0 20px;
+  }
+
+  .bar-group {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 12px;
+  }
+
+  .bar {
+    width: 90px;
+    border-radius: 8px 8px 0 0;
+    position: relative;
+    animation: grow 1.5s ease-out forwards;
+    transform-origin: bottom;
+  }
+
+  @keyframes grow {
+    from { transform: scaleY(0); }
+    to { transform: scaleY(1); }
+  }
+
+  .bar-1 { height: 120px; background: linear-gradient(180deg, rgba(11,61,46,0.6), rgba(11,61,46,0.3)); animation-delay: 0s; }
+  .bar-2 { height: 180px; background: linear-gradient(180deg, rgba(11,61,46,0.7), rgba(11,61,46,0.3)); animation-delay: 0.15s; }
+  .bar-3 { height: 230px; background: linear-gradient(180deg, rgba(180,140,40,0.5), rgba(180,140,40,0.2)); animation-delay: 0.3s; }
+  .bar-4 { height: 290px; background: linear-gradient(180deg, rgba(200,120,50,0.6), rgba(200,120,50,0.2)); animation-delay: 0.45s; }
+  .bar-5 { height: 340px; background: linear-gradient(180deg, rgba(210,90,60,0.6), rgba(210,90,60,0.2)); animation-delay: 0.6s; }
+  .bar-6 { height: 400px; background: linear-gradient(180deg, rgba(220,60,60,0.7), rgba(220,60,60,0.2)); animation-delay: 0.75s; border: 1px solid rgba(220,60,60,0.3); }
+  .bar-7 {
+    height: 450px;
+    background: linear-gradient(180deg, rgba(220,40,40,0.8), rgba(220,40,40,0.3));
+    animation-delay: 0.9s;
+    border: 1px solid rgba(220,40,40,0.4);
+  }
+  .bar-7::after {
+    content: '?';
+    position: absolute; top: -50px; left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Playfair Display', serif;
+    font-size: 36px; font-weight: 900;
+    color: rgba(220,60,60,0.8);
+  }
+
+  .bar-label {
+    font-size: 16px; font-weight: 500;
+    color: rgba(254,253,251,0.35);
+    letter-spacing: 1px;
+  }
+
+  .bar-value {
+    position: absolute; top: -36px; left: 50%;
+    transform: translateX(-50%);
+    font-size: 16px; font-weight: 700;
+    color: rgba(254,253,251,0.5);
+    white-space: nowrap;
+  }
+
+  .solution-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 44px; font-weight: 700;
+    color: #D4A843;
+    line-height: 1.3;
+    margin-bottom: 16px;
+    text-shadow: 0 0 40px rgba(212,168,67,0.3);
+    max-width: 750px;
+  }
+
+  .solution-sub {
+    font-size: 24px;
+    color: rgba(254,253,251,0.5);
+    margin-bottom: 80px;
+  }
+
+  .cta-button {
+    padding: 28px 64px;
+    background: linear-gradient(135deg, #0B3D2E, #0d4a37);
+    border: 1px solid rgba(212,168,67,0.3);
+    border-radius: 12px;
+    font-size: 26px; font-weight: 700;
+    color: #D4A843;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 50px;
+  }
+
+  .swipe-up {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 8px;
+    animation: bounce 1.5s ease-in-out infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+
+  .swipe-arrow {
+    width: 0; height: 0;
+    border-left: 16px solid transparent;
+    border-right: 16px solid transparent;
+    border-bottom: 20px solid rgba(212,168,67,0.5);
+  }
+
+  .swipe-text {
+    font-size: 16px; font-weight: 500;
+    color: rgba(254,253,251,0.3);
+    letter-spacing: 3px; text-transform: uppercase;
+  }
+
+  .bottom-brand {
+    position: absolute; bottom: 36px; left: 0; right: 0;
+    text-align: center;
+    font-size: 18px; font-weight: 700;
+    letter-spacing: 6px; text-transform: uppercase;
+    color: rgba(254,253,251,0.15); z-index: 3;
+  }
+</style>
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="watermark">SOLARIS ARGENTINA</div>
+
+  <div class="content">
+    <div class="energia-badge">Energía Propia</div>
+
+    <div class="alert-icon">!</div>
+
+    <div class="headline">Las tarifas eléctricas <em>suben</em> cada trimestre</div>
+    <div class="sub-headline">¿Cuánto más va a pagar?</div>
+
+    <div class="chart">
+      <div class="bar-group">
+        <div class="bar bar-1"><span class="bar-value"></span></div>
+        <div class="bar-label">2021</div>
+      </div>
+      <div class="bar-group">
+        <div class="bar bar-2"><span class="bar-value"></span></div>
+        <div class="bar-label">2022</div>
+      </div>
+      <div class="bar-group">
+        <div class="bar bar-3"><span class="bar-value"></span></div>
+        <div class="bar-label">2023</div>
+      </div>
+      <div class="bar-group">
+        <div class="bar bar-4"><span class="bar-value"></span></div>
+        <div class="bar-label">2024</div>
+      </div>
+      <div class="bar-group">
+        <div class="bar bar-5"><span class="bar-value"></span></div>
+        <div class="bar-label">2025</div>
+      </div>
+      <div class="bar-group">
+        <div class="bar bar-6"><span class="bar-value"></span></div>
+        <div class="bar-label">2026</div>
+      </div>
+      <div class="bar-group">
+        <div class="bar bar-7"></div>
+        <div class="bar-label">2027</div>
+      </div>
+    </div>
+
+    <div class="solution-text">Fije su costo de energía con solar</div>
+    <div class="solution-sub">Proteja su empresa de la inflación energética</div>
+
+    <div class="cta-button">Solicitar estimación gratuita</div>
+
+    <div class="swipe-up">
+      <div class="swipe-arrow"></div>
+      <div class="swipe-text">Más info</div>
+    </div>
+  </div>
+
+  <div class="bottom-brand">Solaris Argentina</div>
+</body>
+</html>

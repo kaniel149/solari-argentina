@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Acuerdo de Confidencialidad — Solaris Argentina</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --forest: #0B3D2E;
+    --gold: #D4A843;
+    --cream: #FEFDFB;
+    --text: #1a1a1a;
+    --muted: #5a5a5a;
+    --border: #e0ddd8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11pt;
+    line-height: 1.7;
+    color: var(--cream);
+    background: var(--forest);
+  }
+  .container {
+    max-width: 210mm;
+    margin: 0 auto;
+    background: var(--cream);
+    color: var(--text);
+    padding: 50px 60px;
+    min-height: 100vh;
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px solid var(--forest);
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+  }
+  .header-brand h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: var(--forest);
+    letter-spacing: 1px;
+  }
+  .header-brand .tagline {
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+  .header-meta {
+    text-align: right;
+    font-size: 10px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .doc-title {
+    text-align: center;
+    margin: 30px 0 40px;
+  }
+  .doc-title h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: var(--forest);
+    letter-spacing: 1px;
+  }
+  .doc-title .subtitle {
+    font-size: 12px;
+    color: var(--gold);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+  .clause {
+    margin-bottom: 24px;
+    page-break-inside: avoid;
+  }
+  .clause-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--forest);
+    margin-bottom: 6px;
+  }
+  .clause-title {
+    font-weight: 600;
+    color: var(--forest);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 4px;
+  }
+  .clause p, .clause li {
+    font-size: 10.5pt;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .clause ul, .clause ol {
+    padding-left: 24px;
+    margin-bottom: 10px;
+  }
+  .clause li { margin-bottom: 4px; }
+  .fill {
+    display: inline-block;
+    min-width: 180px;
+    border-bottom: 1.5px solid var(--gold);
+    padding: 2px 8px;
+    color: var(--muted);
+    font-style: italic;
+    font-size: 10pt;
+  }
+  .fill-short { min-width: 80px; }
+  .fill-long { min-width: 300px; }
+  .signatures {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 60px;
+    padding-top: 30px;
+    border-top: 2px solid var(--forest);
+  }
+  .sig-block {
+    width: 45%;
+    text-align: center;
+  }
+  .sig-line {
+    border-top: 1px solid var(--text);
+    margin-top: 80px;
+    padding-top: 8px;
+    font-size: 10pt;
+    color: var(--muted);
+  }
+  .footer {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+  .print-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: var(--forest);
+    color: var(--cream);
+    border: none;
+    padding: 14px 28px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    cursor: pointer;
+    border-radius: 4px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    transition: all 0.2s;
+    z-index: 100;
+  }
+  .print-btn:hover { background: var(--gold); color: var(--forest); }
+  @media print {
+    body { background: white; }
+    .container { padding: 20mm 25mm; box-shadow: none; }
+    .print-btn { display: none; }
+    @page { margin: 15mm; size: A4; }
+  }
+  @media (max-width: 800px) {
+    .container { padding: 24px 20px; }
+    .header { flex-direction: column; text-align: center; gap: 12px; }
+    .header-meta { text-align: center; }
+    .signatures { flex-direction: column; gap: 40px; }
+    .sig-block { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<button class="print-btn" onclick="window.print()">IMPRIMIR</button>
+
+<div class="container">
+
+  <div class="header">
+    <div class="header-brand">
+      <h1>SOLARIS ARGENTINA</h1>
+      <div class="tagline">Energía Propia</div>
+    </div>
+    <div class="header-meta">
+      NDA N.º <span class="fill fill-short">&nbsp;</span><br>
+      Fecha: <span class="fill fill-short">&nbsp;</span>
+    </div>
+  </div>
+
+  <div class="doc-title">
+    <h2>Acuerdo de Confidencialidad Mutuo</h2>
+    <div class="subtitle">Non-Disclosure Agreement (NDA)</div>
+  </div>
+
+  <!-- PARTES -->
+  <div class="clause">
+    <div class="clause-number">CLÁUSULA PRIMERA</div>
+    <div class="clause-title">Partes</div>
+    <p>En la Ciudad Autónoma de Buenos Aires, a los <span class="fill fill-short">&nbsp;</span> días del mes de <span class="fill fill-short">&nbsp;</span> de <span class="fill fill-short">&nbsp;</span>, entre:</p>
+    <p><strong>PARTE A:</strong> SOLARIS ARGENTINA S.A.S., CUIT <span class="fill">&nbsp;</span>, con domicilio en <span class="fill fill-long">&nbsp;</span>, Ciudad Autónoma de Buenos Aires, representada por Kaniel Tordjman, en su carácter de CEO y Fundador (en adelante, <strong>"SOLARIS"</strong>);</p>
+    <p><strong>PARTE B:</strong> <span class="fill fill-long">&nbsp;</span>, CUIT/DNI <span class="fill">&nbsp;</span>, con domicilio en <span class="fill fill-long">&nbsp;</span>, representada por <span class="fill fill-long">&nbsp;</span>, en su carácter de <span class="fill">&nbsp;</span> (en adelante, la <strong>"Contraparte"</strong>);</p>
+    <p>Conjuntamente denominadas las <strong>"Partes"</strong>.</p>
+  </div>
+
+  <!-- OBJETO -->
+  <div class="clause">
+    <div class="clause-number">CLÁUSULA SEGUNDA</div>
+    <div class="clause-title">Objeto y Alcance</div>
+    <p>2.1. El presente Acuerdo tiene por objeto proteger la información confidencial que las Partes intercambien en el marco de: <span class="fill fill-long">&nbsp;</span> (el <strong>"Propósito"</strong>).</p>
+    <p>2.2. Las Partes se comprometen mutuamente a mantener la más estricta confidencialidad respecto de toda Información Confidencial revelada por la otra Parte.</p>
+  </div>
+
+  <!-- DEFINICIÓN -->
+  <div class="clause">
+    <div class="clause-number">CLÁUSULA TERCERA</div>
+    <div class="clause-title">Información Confidencial</div>
+    <p>3.1. Se entenderá por <strong>"Información Confidencial"</strong> toda información técnica, comercial, financiera, estratégica, de negocio o de cualquier otra naturaleza, divulgada por una Parte (la <strong>"Parte Reveladora"</strong>) a la otra (la <strong>"Parte Receptora"</strong>), ya sea de forma oral, escrita, electrónica, visual o por cualquier otro medio, incluyendo sin limitación:</p>
+    <ul>
+      <li>Datos técnicos, diseños, planos, especificaciones de sistemas fotovoltaicos</li>
+      <li>Información financiera, precios, costos, márgenes, proyecciones</li>
+      <li>Estrategias comerciales, listas de clientes, bases de datos</li>
+      <li>Software, algoritmos, know-how, procesos propietarios</li>
+      <li>Negociaciones, acuerdos y términos contractuales</li>
+    </ul>
+    <p>3.2. <strong>Excepciones.</strong> No se considerará Información Confidencial aquella que:</p>
+    <ul>
+      <li>Sea o se convierta en información de dominio público sin culpa de la Parte Receptora;</li>
+      <li>La Parte Receptora pueda demostrar que ya obraba en su poder legítimamente antes de la divulgación;</li>
+      <li>Sea recibida lícitamente de un tercero sin obligación de confidencialidad;</li>
+      <li>Sea desarrollada independientemente por la Parte Receptora sin uso de la Información Confidencial;</li>
+      <li>Deba ser revelada por orden judicial o requerimiento de autoridad competente, previa notificación a la Parte Reveladora.</li>
+    </ul>
+  </div>
+
+  <!-- OBLIGACIONES -->
+  <div class="clause">
+    <div class="clause-number">CLÁUSULA CUARTA</div>
+    <div class="clause-title">Obligaciones de Confidencialidad</div>
+    <p>4.1. La Parte Receptora se obliga a:</p>
+    <ul>
+      <li>Utilizar la Información Confidencial exclusivamente para el Propósito definido;</li>
+      <li>No divulgar, publicar ni comunicar la Información Confidencial a terceros sin consentimiento previo y por escrito de la Parte Reveladora;</li>
+      <li>Limitar el acceso a la Información Confidencial a aquellos empleados, asesores o colaboradores que necesiten conocerla para el Propósito, quienes deberán estar sujetos a obligaciones de confidencialidad no menos restrictivas que las aquí previstas;</li>
+      <li>Proteger la Información Confidencial con el mismo grado de cuidado que aplica a su propia información confidencial, y en ningún caso con un grado menor al razonable;</li>
+      <li>Notificar inmediatamente a la Parte Reveladora ante cualquier uso no autorizado o divulgación de la Información Confidencial.</li>
+    </ul>
+  </div>
+
+  <!-- PLAZO -->
+  <div class="clause">
+    <div class="clause-number">CLÁUSULA QUINTA</div>
+    <div class="clause-title">Plazo</div>
+    <p>5.1. El presente Acuerdo entrará en vigencia en la fecha de su firma y permanecerá vigente por un plazo de tres (3) años.</p>
+    <p>5.2. Las obligaciones de confidencialidad subsistirán por un plazo adicional de dos (2) años contados desde la terminación o expiración del presente Acuerdo.</p>
+  </div>
+
+  <!-- DEVOLUCIÓN -->
+  <div class="clause">
+    <div class="clause-number">CLÁUSULA SEXTA</div>
+    <div class="clause-title">Devolución y Destrucción</div>
+    <p>6.1. A solicitud de la Parte Reveladora o al término del presente Acuerdo, la Parte Receptora deberá, a elección de la Parte Reveladora: (a) devolver toda la Información Confidencial recibida, incluyendo copias; o (b) destruir dicha información y certificar por escrito su destrucción.</p>
+    <p>6.2. La Parte Receptora podrá conservar una copia de archivo únicamente cuando así lo exija la normativa legal o regulatoria aplicable.</p>
+  </div>
+
+  <!-- PROPIEDAD INTELECTUAL -->
+  <div class="clause">
+    <div class="clause-number">CLÁUSULA SÉPTIMA</div>
+    <div class="clause-title">Propiedad Intelectual</div>
+    <p>7.1. El presente Acuerdo no confiere a la Parte Receptora licencia, derecho ni interés alguno sobre la propiedad intelectual, patentes, marcas, derechos de autor u otros derechos de la Parte Reveladora.</p>
+    <p>7.2. Toda Información Confidencial permanecerá como propiedad exclusiva de la Parte Reveladora.</p>
+  </div>
+
+  <!-- INDEMNIZACIÓN -->
+  <div class="clause">
+    <div class="clause-number">CLÁUSULA OCTAVA</div>
+    <div class="clause-title">Responsabilidad e Indemnización</div>
+    <p>8.1. La Parte que incumpla las obligaciones de confidencialidad será responsable por todos los daños y perjuicios que dicho incumplimiento ocasione a la otra Parte, conforme a los artículos 1716 y siguientes del Código Civil y Comercial de la Nación.</p>
+    <p>8.2. Las Partes reconocen que la violación de este Acuerdo podría causar daños irreparables, por lo que la Parte afectada tendrá derecho a solicitar medidas cautelares además de cualquier otro recurso disponible.</p>
+  </div>
+
+  <!-- DISPOSICIONES GENERALES -->
+  <div class="clause">
+    <div class="clause-number">CLÁUSULA NOVENA</div>
+    <div class="clause-title">Disposiciones Generales</div>
+    <p>9.1. <strong>Ley aplicable:</strong> El presente Acuerdo se regirá por las leyes de la República Argentina.</p>
+    <p>9.2. <strong>Jurisdicción:</strong> Para toda controversia derivada del presente Acuerdo, las Partes se someten a la jurisdicción exclusiva de los Tribunales Nacionales en lo Comercial de la Ciudad Autónoma de Buenos Aires, renunciando a cualquier otro fuero que pudiera corresponderles.</p>
+    <p>9.3. <strong>Acuerdo íntegro:</strong> El presente constituye el acuerdo íntegro entre las Partes en relación con la materia aquí tratada.</p>
+    <p>9.4. <strong>Modificaciones:</strong> Toda modificación deberá constar por escrito y ser firmada por ambas Partes.</p>
+    <p>9.5. <strong>Cesión:</strong> Ninguna de las Partes podrá ceder sus derechos u obligaciones bajo el presente Acuerdo sin el consentimiento previo y por escrito de la otra Parte.</p>
+    <p>9.6. <strong>Independencia de cláusulas:</strong> La nulidad de cualquier disposición no afectará la validez de las restantes.</p>
+  </div>
+
+  <div class="clause">
+    <p>En prueba de conformidad, las Partes firman el presente Acuerdo en dos (2) ejemplares de un mismo tenor y a un solo efecto.</p>
+  </div>
+
+  <div class="signatures">
+    <div class="sig-block">
+      <div class="sig-line">
+        <strong>Por SOLARIS ARGENTINA S.A.S.</strong><br>
+        Kaniel Tordjman<br>
+        Presidente
+      </div>
+    </div>
+    <div class="sig-block">
+      <div class="sig-line">
+        <strong>Por LA CONTRAPARTE</strong><br>
+        <span class="fill">&nbsp;</span><br>
+        <span class="fill fill-short">&nbsp;</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    SOLARIS ARGENTINA S.A.S. &nbsp;·&nbsp; ENERGÍA PROPIA &nbsp;·&nbsp; BUENOS AIRES, ARGENTINA
+  </div>
+
+</div>
+
+</body>
+</html>

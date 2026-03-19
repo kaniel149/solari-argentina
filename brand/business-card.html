@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tarjeta de Presentación — Kaniel Tordjman — Solaris Argentina</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --forest: #0B3D2E;
+    --gold: #D4A843;
+    --cream: #FEFDFB;
+    --text: #1a1a1a;
+    --muted: #5a5a5a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #f0ede8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 40px 20px;
+    gap: 40px;
+  }
+
+  .label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: -24px;
+  }
+
+  /* Card dimensions: 90mm x 55mm */
+  .card {
+    width: 90mm;
+    height: 55mm;
+    border-radius: 3px;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.1);
+    position: relative;
+  }
+
+  /* ===== FRONT ===== */
+  .card-front {
+    background: var(--forest);
+    color: var(--cream);
+    padding: 18px 22px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    position: relative;
+  }
+
+  .card-front::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 40%;
+    height: 100%;
+    background: linear-gradient(135deg, transparent 0%, rgba(212, 168, 67, 0.06) 100%);
+    pointer-events: none;
+  }
+
+  .front-top {
+    position: relative;
+    z-index: 1;
+  }
+
+  .front-top .name {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: var(--cream);
+  }
+
+  .front-top .title {
+    font-size: 8.5px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-top: 3px;
+    font-weight: 500;
+  }
+
+  .front-divider {
+    width: 32px;
+    height: 1.5px;
+    background: var(--gold);
+    margin: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .front-bottom {
+    position: relative;
+    z-index: 1;
+  }
+
+  .front-bottom .company {
+    font-family: 'Playfair Display', serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: var(--cream);
+  }
+
+  .front-bottom .contact {
+    margin-top: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .front-bottom .contact span {
+    font-size: 7.5px;
+    color: rgba(254, 253, 251, 0.7);
+    letter-spacing: 0.3px;
+  }
+
+  .front-bottom .contact a {
+    color: rgba(254, 253, 251, 0.7);
+    text-decoration: none;
+  }
+
+  .front-tagline {
+    position: absolute;
+    bottom: 18px;
+    right: 22px;
+    font-size: 6.5px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0.6;
+    z-index: 1;
+  }
+
+  /* ===== BACK ===== */
+  .card-back {
+    background: var(--cream);
+    color: var(--text);
+    padding: 18px 22px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    position: relative;
+  }
+
+  .card-back::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--gold);
+  }
+
+  .back-top {
+    padding-left: 12px;
+  }
+
+  .back-top .brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--forest);
+    letter-spacing: 0.5px;
+  }
+
+  .back-top .tagline-back {
+    font-size: 7px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-top: 2px;
+  }
+
+  .back-desc {
+    padding-left: 12px;
+    font-size: 7.5px;
+    line-height: 1.6;
+    color: var(--muted);
+    max-width: 55mm;
+  }
+
+  .back-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-left: 12px;
+  }
+
+  .back-bottom .web {
+    font-size: 7px;
+    letter-spacing: 1px;
+    color: var(--forest);
+    font-weight: 500;
+  }
+
+  .qr-placeholder {
+    width: 22mm;
+    height: 22mm;
+    border: 1.5px dashed var(--gold);
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 6px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* Print */
+  .print-btn {
+    background: var(--forest);
+    color: var(--cream);
+    border: none;
+    padding: 12px 24px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+  .print-btn:hover { background: var(--gold); color: var(--forest); }
+
+  @media print {
+    body { background: white; padding: 10mm; }
+    .label, .print-btn { display: none; }
+    .card { box-shadow: none; border: 0.5px solid #ccc; }
+    @page { margin: 10mm; }
+  }
+</style>
+</head>
+<body>
+
+<div class="label">FRENTE</div>
+
+<div class="card">
+  <div class="card-front">
+    <div class="front-top">
+      <div class="name">Kaniel Tordjman</div>
+      <div class="title">Presidente (Chairman)</div>
+    </div>
+    <div class="front-divider"></div>
+    <div class="front-bottom">
+      <div class="company">Solaris Argentina</div>
+      <div class="contact">
+        <span>k@kanielt.com</span>
+        <span>+54 XX XXXX-XXXX</span>
+        <span>kanielt.com</span>
+      </div>
+    </div>
+    <div class="front-tagline">Energía Propia</div>
+  </div>
+</div>
+
+<div class="label">DORSO</div>
+
+<div class="card">
+  <div class="card-back">
+    <div class="back-top">
+      <div class="brand">Solaris Argentina</div>
+      <div class="tagline-back">Energía Propia</div>
+    </div>
+    <div class="back-desc">
+      Soluciones de energía solar fotovoltaica<br>
+      para techos comerciales e industriales.<br>
+      Sin inversión inicial. Ahorro desde el día uno.
+    </div>
+    <div class="back-bottom">
+      <div class="web">kanielt.com<br>Buenos Aires, Argentina</div>
+      <div class="qr-placeholder">QR Code</div>
+    </div>
+  </div>
+</div>
+
+<button class="print-btn" onclick="window.print()">IMPRIMIR TARJETA</button>
+
+</body>
+</html>

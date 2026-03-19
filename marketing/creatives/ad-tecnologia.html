@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080, initial-scale=1">
+<title>Solaris Argentina — Solar OS</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1080px; height: 1080px;
+    background: #0A0A0A;
+    font-family: 'DM Sans', sans-serif;
+    color: #FEFDFB;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at 50% 30%, rgba(11,61,46,0.15) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 80%, rgba(212,168,67,0.06) 0%, transparent 50%);
+  }
+
+  .watermark {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) rotate(-30deg);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 100px; font-weight: 700;
+    letter-spacing: 20px; text-transform: uppercase;
+    color: rgba(254,253,251,0.015);
+    white-space: nowrap; z-index: 0; pointer-events: none;
+  }
+
+  .content {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column;
+    align-items: center;
+    height: 100%; padding: 50px 60px;
+    text-align: center;
+  }
+
+  .top-row {
+    display: flex; justify-content: space-between;
+    align-items: center; width: 100%;
+    margin-bottom: 30px;
+  }
+
+  .solar-os-logo {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 20px; font-weight: 700;
+    color: #D4A843;
+    letter-spacing: 2px;
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .solar-os-logo .dot {
+    width: 10px; height: 10px;
+    background: #D4A843;
+    border-radius: 50%;
+    box-shadow: 0 0 12px rgba(212,168,67,0.6);
+  }
+
+  .energia-badge {
+    font-size: 14px; font-weight: 500;
+    letter-spacing: 3px; text-transform: uppercase;
+    color: rgba(212,168,67,0.6);
+    border: 1px solid rgba(212,168,67,0.3);
+    padding: 6px 14px;
+  }
+
+  .headline {
+    font-family: 'Playfair Display', serif;
+    font-size: 46px; font-weight: 900;
+    color: #FEFDFB; line-height: 1.2;
+    margin-bottom: 14px;
+  }
+
+  .sub-headline {
+    font-size: 22px; font-weight: 400;
+    color: rgba(254,253,251,0.5);
+    margin-bottom: 36px;
+  }
+
+  /* Dashboard mockup */
+  .dashboard {
+    width: 100%; max-width: 900px;
+    background: rgba(254,253,251,0.03);
+    border: 1px solid rgba(254,253,251,0.08);
+    border-radius: 16px;
+    padding: 30px;
+    margin-bottom: 36px;
+  }
+
+  .dash-header {
+    display: flex; justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(254,253,251,0.06);
+  }
+
+  .dash-title {
+    font-size: 18px; font-weight: 700;
+    color: rgba(254,253,251,0.7);
+  }
+
+  .dash-status {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 14px; font-weight: 500;
+    color: rgba(80,200,140,0.9);
+  }
+
+  .dash-status .live-dot {
+    width: 8px; height: 8px;
+    background: rgba(80,200,140,0.9);
+    border-radius: 50%;
+    animation: blink 1.5s ease-in-out infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .dash-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .dash-card {
+    background: rgba(254,253,251,0.03);
+    border: 1px solid rgba(254,253,251,0.06);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: left;
+  }
+
+  .dash-card-label {
+    font-size: 13px; font-weight: 500;
+    color: rgba(254,253,251,0.35);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .dash-card-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px; font-weight: 900;
+  }
+
+  .dash-card-value.green { color: rgba(80,200,140,0.9); }
+  .dash-card-value.gold { color: #D4A843; }
+  .dash-card-value.pearl { color: #FEFDFB; }
+
+  .dash-card-unit {
+    font-size: 14px; font-weight: 400;
+    color: rgba(254,253,251,0.3);
+  }
+
+  /* Mini chart in dashboard */
+  .mini-chart {
+    display: flex; align-items: flex-end;
+    gap: 4px; height: 50px;
+    margin-top: 10px;
+  }
+
+  .mini-bar {
+    width: 100%; border-radius: 3px 3px 0 0;
+    background: rgba(11,61,46,0.5);
+  }
+
+  .mini-bar:nth-child(odd) { background: rgba(212,168,67,0.4); }
+
+  .features {
+    font-size: 22px; font-weight: 500;
+    color: rgba(254,253,251,0.6);
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+  }
+
+  .features span { color: rgba(254,253,251,0.2); margin: 0 8px; }
+
+  .tech-badge {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 20px; font-weight: 700;
+    color: #D4A843;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+
+  .tech-origin {
+    font-size: 16px; font-weight: 400;
+    color: rgba(254,253,251,0.35);
+    letter-spacing: 1px;
+  }
+
+  .bottom-bar {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    display: flex; align-items: center; justify-content: center;
+    padding: 30px;
+    background: linear-gradient(0deg, rgba(11,61,46,0.3) 0%, transparent 100%);
+    z-index: 3;
+  }
+
+  .brand-bottom {
+    font-size: 20px; font-weight: 700;
+    letter-spacing: 5px; text-transform: uppercase;
+    color: rgba(254,253,251,0.25);
+  }
+</style>
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="watermark">SOLARIS ARGENTINA</div>
+
+  <div class="content">
+    <div class="top-row">
+      <div class="solar-os-logo">
+        <div class="dot"></div>
+        SOLAR OS
+      </div>
+      <div class="energia-badge">Energía Propia</div>
+    </div>
+
+    <div class="headline">Monitoreo 24/7 de<br>su sistema solar</div>
+    <div class="sub-headline">Control total desde cualquier dispositivo</div>
+
+    <div class="dashboard">
+      <div class="dash-header">
+        <div class="dash-title">Panel de Control — Sistema Solar 85kWp</div>
+        <div class="dash-status">
+          <div class="live-dot"></div>
+          EN VIVO
+        </div>
+      </div>
+
+      <div class="dash-grid">
+        <div class="dash-card">
+          <div class="dash-card-label">Producción Hoy</div>
+          <div class="dash-card-value green">342</div>
+          <div class="dash-card-unit">kWh generados</div>
+          <div class="mini-chart">
+            <div class="mini-bar" style="height:30%"></div>
+            <div class="mini-bar" style="height:45%"></div>
+            <div class="mini-bar" style="height:60%"></div>
+            <div class="mini-bar" style="height:80%"></div>
+            <div class="mini-bar" style="height:95%"></div>
+            <div class="mini-bar" style="height:100%"></div>
+            <div class="mini-bar" style="height:90%"></div>
+            <div class="mini-bar" style="height:70%"></div>
+          </div>
+        </div>
+        <div class="dash-card">
+          <div class="dash-card-label">Ahorro Mensual</div>
+          <div class="dash-card-value gold">$847K</div>
+          <div class="dash-card-unit">ARS ahorrados</div>
+        </div>
+        <div class="dash-card">
+          <div class="dash-card-label">Estado</div>
+          <div class="dash-card-value pearl" style="font-size:24px;">●  Óptimo</div>
+          <div class="dash-card-unit">0 alertas activas</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="features">
+      Alertas en tiempo real <span>·</span> Reportes mensuales <span>·</span> Control total
+    </div>
+
+    <div class="tech-badge">SOLAR OS — Tecnología Israelí</div>
+    <div class="tech-origin">Plataforma de gestión inteligente</div>
+  </div>
+
+  <div class="bottom-bar">
+    <div class="brand-bottom">Solaris Argentina</div>
+  </div>
+</body>
+</html>

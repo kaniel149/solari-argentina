@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solaris Argentina — Generador de Propuestas</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--green:#0B3D2E;--gold:#D4A843;--pearl:#FEFDFB;--dark:#0A0A0A;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'DM Sans',sans-serif;background:var(--dark);color:#fff;min-height:100vh;}
+  .app{max-width:900px;margin:0 auto;padding:30px 20px;}
+  h1{font-family:'Playfair Display',serif;font-size:28px;color:var(--pearl);text-align:center;margin-bottom:6px;}
+  .sub{text-align:center;color:var(--gold);font-size:12px;letter-spacing:4px;margin-bottom:30px;}
+  
+  .tabs{display:flex;gap:0;margin-bottom:30px;border-bottom:2px solid rgba(255,255,255,0.06);}
+  .tab{flex:1;padding:12px;text-align:center;cursor:pointer;font-weight:600;color:#666;border-bottom:3px solid transparent;transition:all .3s;}
+  .tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+  .tab:hover{color:var(--pearl);}
+  
+  .step{display:none;}
+  .step.active{display:block;}
+  
+  .form-group{margin-bottom:20px;}
+  label{display:block;font-size:13px;color:#999;margin-bottom:6px;font-weight:500;}
+  input,select,textarea{width:100%;padding:12px 16px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#fff;font-family:'DM Sans';font-size:14px;outline:none;transition:border .3s;}
+  input:focus,select:focus,textarea:focus{border-color:var(--gold);}
+  select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23999' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;}
+  select option{background:#1a1a1a;color:#fff;}
+  textarea{min-height:80px;resize:vertical;}
+  
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media(max-width:600px){.row{grid-template-columns:1fr;}}
+  
+  .btn{display:inline-block;padding:12px 28px;background:var(--gold);color:var(--dark);border:none;border-radius:8px;font-weight:700;font-size:14px;cursor:pointer;font-family:'DM Sans';transition:all .2s;}
+  .btn:hover{background:#E8C76B;transform:translateY(-1px);}
+  .btn-outline{background:transparent;border:2px solid var(--gold);color:var(--gold);}
+  .btn-outline:hover{background:var(--gold);color:var(--dark);}
+  .btn-row{display:flex;gap:12px;margin-top:20px;justify-content:flex-end;}
+  
+  .preview-frame{background:#fff;color:#333;border-radius:8px;overflow:hidden;margin-top:20px;}
+  .preview-header{background:linear-gradient(135deg,var(--green),#1a6b4a);padding:30px;color:var(--pearl);}
+  .preview-header h2{font-family:'Playfair Display',serif;font-size:24px;}
+  .preview-header .tagline{font-size:10px;color:var(--gold);letter-spacing:4px;margin-top:4px;}
+  .preview-body{padding:30px;font-size:13px;line-height:1.8;}
+  .preview-body h3{font-family:'Playfair Display',serif;font-size:16px;color:var(--green);margin:20px 0 8px;border-bottom:2px solid var(--gold);padding-bottom:4px;}
+  .preview-body table{width:100%;border-collapse:collapse;margin:10px 0;}
+  .preview-body th{background:var(--green);color:#fff;padding:8px 12px;text-align:left;font-size:12px;}
+  .preview-body td{padding:6px 12px;border-bottom:1px solid #E5E7EB;font-size:12px;}
+  .preview-footer{background:var(--green);color:var(--pearl);padding:12px 30px;display:flex;justify-content:space-between;font-size:10px;}
+  .preview-footer .gold{color:var(--gold);}
+  
+  .info-box{background:rgba(212,168,67,0.1);border:1px solid rgba(212,168,67,0.3);border-radius:8px;padding:14px;font-size:12px;color:var(--gold);margin-bottom:20px;}
+</style>
+</head>
+<body>
+<div class="app">
+
+<h1>Generador de Propuestas</h1>
+<div class="sub">SOLARIS ARGENTINA</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showStep(0)">1. Cliente</div>
+  <div class="tab" onclick="showStep(1)">2. Sistema</div>
+  <div class="tab" onclick="showStep(2)">3. Financiero</div>
+  <div class="tab" onclick="showStep(3)">4. Preview</div>
+</div>
+
+<!-- STEP 1: Client -->
+<div class="step active" id="step0">
+  <div class="row">
+    <div class="form-group"><label>Empresa</label><input id="company" placeholder="Nombre de la empresa"></div>
+    <div class="form-group"><label>Contacto</label><input id="contact" placeholder="Nombre del contacto"></div>
+  </div>
+  <div class="row">
+    <div class="form-group"><label>Cargo</label><input id="role" placeholder="Gerente General, etc."></div>
+    <div class="form-group"><label>Email</label><input id="email" placeholder="email@empresa.com"></div>
+  </div>
+  <div class="row">
+    <div class="form-group"><label>Sector</label>
+      <select id="sector">
+        <option value="Industrial">Industrial / Manufactura</option>
+        <option value="Agroindustrial">Agroindustrial</option>
+        <option value="Comercial">Comercial / Retail</option>
+        <option value="Logístico">Logístico / Almacén</option>
+        <option value="Hotelero">Hotelero / Hospitality</option>
+        <option value="Inmobiliario">Inmobiliario</option>
+        <option value="Otro">Otro</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Ubicación</label>
+      <select id="location">
+        <option value="Buenos Aires" data-irr="4.5">Buenos Aires</option>
+        <option value="Córdoba" data-irr="5.0">Córdoba</option>
+        <option value="Mendoza" data-irr="5.5">Mendoza / San Juan</option>
+        <option value="Río Negro" data-irr="4.8">Río Negro</option>
+        <option value="Santa Fe" data-irr="4.7">Santa Fe</option>
+        <option value="NOA" data-irr="5.8">NOA (Salta/Jujuy/Tucumán)</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-group"><label>Notas adicionales</label><textarea id="notes" placeholder="Información relevante sobre el proyecto..."></textarea></div>
+  <div class="btn-row"><button class="btn" onclick="showStep(1)">Siguiente →</button></div>
+</div>
+
+<!-- STEP 2: System -->
+<div class="step" id="step1">
+  <div class="row">
+    <div class="form-group"><label>Potencia del sistema (kWp)</label><input type="number" id="systemSize" value="100" onchange="calculate()"></div>
+    <div class="form-group"><label>Superficie de techo disponible (m²)</label><input type="number" id="roofArea" value="500" onchange="calculate()"></div>
+  </div>
+  <div class="row">
+    <div class="form-group"><label>Paneles</label>
+      <select id="panels"><option value="Jinko JKM715N (715W)">Jinko JKM715N (715W)</option><option value="LONGi Hi-MO 7 (580W)">LONGi Hi-MO 7 (580W)</option><option value="Canadian Solar HiKu7 (670W)">Canadian Solar HiKu7 (670W)</option></select>
+    </div>
+    <div class="form-group"><label>Inversores</label>
+      <select id="inverters"><option value="Sineng SN50PT/SN100PT">Sineng SN50PT/SN100PT</option><option value="Huawei SUN2000">Huawei SUN2000</option><option value="Solis S5-GR3P">Solis S5-GR3P</option></select>
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group"><label>Consumo mensual actual (kWh)</label><input type="number" id="consumption" value="20000" onchange="calculate()"></div>
+    <div class="form-group"><label>Tarifa eléctrica actual (USD/kWh)</label><input type="number" id="tariff" value="0.15" step="0.01" onchange="calculate()"></div>
+  </div>
+  <div class="form-group"><label>Tipo de instalación</label>
+    <select id="installType"><option value="Techo plano (estructura inclinada)">Techo plano (estructura inclinada)</option><option value="Techo inclinado (flush mount)">Techo inclinado (flush mount)</option><option value="Carport solar">Carport solar</option></select>
+  </div>
+  <div class="btn-row"><button class="btn btn-outline" onclick="showStep(0)">← Anterior</button><button class="btn" onclick="calculate();showStep(2)">Siguiente →</button></div>
+</div>
+
+<!-- STEP 3: Financial -->
+<div class="step" id="step2">
+  <div class="info-box">Los valores se calculan automáticamente según los datos del sistema. Puede ajustar el precio por Wp.</div>
+  <div class="row">
+    <div class="form-group"><label>Precio por Wp (USD)</label><input type="number" id="pricePerWp" value="0.60" step="0.01" onchange="calculate()"></div>
+    <div class="form-group"><label>Método de financiamiento</label>
+      <select id="financing"><option value="Compra Directa">Compra Directa</option><option value="Leasing (Banco Comafi)">Leasing (Banco Comafi)</option><option value="PPA">PPA (Power Purchase Agreement)</option></select>
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group"><label>Inversión total (USD)</label><input type="text" id="totalInvestment" readonly></div>
+    <div class="form-group"><label>Generación anual estimada (kWh)</label><input type="text" id="annualGeneration" readonly></div>
+  </div>
+  <div class="row">
+    <div class="form-group"><label>Ahorro anual estimado (USD)</label><input type="text" id="annualSavings" readonly></div>
+    <div class="form-group"><label>Período de retorno (años)</label><input type="text" id="payback" readonly></div>
+  </div>
+  <div class="row">
+    <div class="form-group"><label>Ahorro total 25 años (USD)</label><input type="text" id="totalSavings25" readonly></div>
+    <div class="form-group"><label>CO₂ evitado/año (toneladas)</label><input type="text" id="co2" readonly></div>
+  </div>
+  <div class="btn-row"><button class="btn btn-outline" onclick="showStep(1)">← Anterior</button><button class="btn" onclick="generateProposal();showStep(3)">Generar Propuesta →</button></div>
+</div>
+
+<!-- STEP 4: Preview -->
+<div class="step" id="step3">
+  <div class="btn-row" style="margin-bottom:16px;"><button class="btn btn-outline" onclick="showStep(2)">← Editar</button><button class="btn" onclick="printProposal()">Imprimir / PDF</button></div>
+  <div id="proposalPreview" class="preview-frame"></div>
+</div>
+
+</div>
+
+<script>
+function showStep(n){
+  document.querySelectorAll('.step').forEach((s,i)=>{s.classList.toggle('active',i===n);});
+  document.querySelectorAll('.tab').forEach((t,i)=>{t.classList.toggle('active',i===n);});
+}
+
+function getIrradiation(){
+  const sel=document.getElementById('location');
+  return parseFloat(sel.options[sel.selectedIndex].dataset.irr)||4.5;
+}
+
+function calculate(){
+  const size=parseFloat(document.getElementById('systemSize').value)||100;
+  const price=parseFloat(document.getElementById('pricePerWp').value)||0.60;
+  const tariff=parseFloat(document.getElementById('tariff').value)||0.15;
+  const irr=getIrradiation();
+  
+  const investment=size*1000*price;
+  const annualGen=size*irr*365*0.80;
+  const annualSave=annualGen*tariff;
+  const payback=investment/annualSave;
+  const savings25=annualSave*25*1.02;
+  const co2=annualGen*0.0005;
+  
+  document.getElementById('totalInvestment').value='$'+investment.toLocaleString('en',{maximumFractionDigits:0});
+  document.getElementById('annualGeneration').value=annualGen.toLocaleString('en',{maximumFractionDigits:0});
+  document.getElementById('annualSavings').value='$'+annualSave.toLocaleString('en',{maximumFractionDigits:0});
+  document.getElementById('payback').value=payback.toFixed(1);
+  document.getElementById('totalSavings25').value='$'+savings25.toLocaleString('en',{maximumFractionDigits:0});
+  document.getElementById('co2').value=co2.toFixed(1);
+}
+
+function generateProposal(){
+  calculate();
+  const d={
+    company:document.getElementById('company').value||'[Empresa]',
+    contact:document.getElementById('contact').value||'[Contacto]',
+    role:document.getElementById('role').value||'[Cargo]',
+    sector:document.getElementById('sector').value,
+    location:document.getElementById('location').value,
+    size:document.getElementById('systemSize').value,
+    panels:document.getElementById('panels').value,
+    inverters:document.getElementById('inverters').value,
+    installType:document.getElementById('installType').value,
+    financing:document.getElementById('financing').value,
+    investment:document.getElementById('totalInvestment').value,
+    annualGen:document.getElementById('annualGeneration').value,
+    annualSave:document.getElementById('annualSavings').value,
+    payback:document.getElementById('payback').value,
+    savings25:document.getElementById('totalSavings25').value,
+    co2:document.getElementById('co2').value,
+    notes:document.getElementById('notes').value,
+    date:new Date().toLocaleDateString('es-AR',{year:'numeric',month:'long',day:'numeric'})
+  };
+  
+  const html=`
+    <div class="preview-header">
+      <h2>PROPUESTA SOLAR</h2>
+      <div class="tagline">SOLARIS ARGENTINA · ENERGÍA PROPIA</div>
+      <div style="margin-top:16px;font-size:13px;">
+        <strong>${d.company}</strong> — ${d.location}<br>
+        Preparado para: ${d.contact} (${d.role})<br>
+        Fecha: ${d.date}
+      </div>
+    </div>
+    <div class="preview-body">
+      <h3>Resumen Ejecutivo</h3>
+      <p>Solaris Argentina tiene el agrado de presentar esta propuesta para la instalación de un sistema fotovoltaico de <strong>${d.size} kWp</strong> en las instalaciones de <strong>${d.company}</strong> en ${d.location}. El sistema generará un ahorro estimado de <strong>${d.annualSave}/año</strong> con un retorno de inversión en <strong>${d.payback} años</strong>.</p>
+      
+      <h3>Especificaciones Técnicas</h3>
+      <table>
+        <tr><th>Componente</th><th>Especificación</th></tr>
+        <tr><td>Potencia del sistema</td><td><strong>${d.size} kWp</strong></td></tr>
+        <tr><td>Paneles solares</td><td>${d.panels}</td></tr>
+        <tr><td>Inversores</td><td>${d.inverters}</td></tr>
+        <tr><td>Tipo de instalación</td><td>${d.installType}</td></tr>
+        <tr><td>Monitoreo</td><td>Solar OS — 24/7 en tiempo real</td></tr>
+      </table>
+      
+      <h3>Análisis Financiero</h3>
+      <table>
+        <tr><th>Concepto</th><th>Valor</th></tr>
+        <tr><td>Inversión total</td><td><strong>${d.investment}</strong></td></tr>
+        <tr><td>Generación anual estimada</td><td>${d.annualGen} kWh</td></tr>
+        <tr><td>Ahorro anual estimado</td><td><strong>${d.annualSave}</strong></td></tr>
+        <tr><td>Período de retorno</td><td><strong>${d.payback} años</strong></td></tr>
+        <tr><td>Ahorro total (25 años)</td><td><strong>${d.savings25}</strong></td></tr>
+        <tr><td>CO₂ evitado por año</td><td>${d.co2} toneladas</td></tr>
+        <tr><td>Financiamiento</td><td>${d.financing}</td></tr>
+      </table>
+      
+      <h3>Servicios Incluidos</h3>
+      <table>
+        <tr><th>Servicio</th><th>Detalle</th></tr>
+        <tr><td>Diseño e ingeniería</td><td>Simulación PVsyst, planos eléctricos, trámites</td></tr>
+        <tr><td>Suministro de equipos</td><td>Paneles + inversores + estructura + cableado</td></tr>
+        <tr><td>Instalación</td><td>Montaje, conexión, puesta en marcha</td></tr>
+        <tr><td>Monitoreo Solar OS</td><td>Dashboard 24/7, alertas, reportes mensuales</td></tr>
+        <tr><td>Garantía</td><td>Paneles 25 años, inversores 5 años (ext. 10), mano de obra 2 años</td></tr>
+        <tr><td>Capacitación</td><td>Entrenamiento del equipo técnico del cliente</td></tr>
+      </table>
+      
+      <h3>Cronograma Estimado</h3>
+      <table>
+        <tr><th>Etapa</th><th>Duración</th></tr>
+        <tr><td>Diseño e ingeniería</td><td>2 semanas</td></tr>
+        <tr><td>Adquisición de equipos</td><td>4-6 semanas</td></tr>
+        <tr><td>Instalación</td><td>2-3 semanas</td></tr>
+        <tr><td>Comisionamiento y puesta en marcha</td><td>1 semana</td></tr>
+        <tr><td><strong>Total</strong></td><td><strong>6-8 semanas</strong></td></tr>
+      </table>
+      
+      ${d.notes?`<h3>Notas</h3><p>${d.notes}</p>`:''}
+      
+      <h3>Próximos Pasos</h3>
+      <p>1. Visita técnica al sitio (sin costo)<br>
+      2. Diseño personalizado con simulación PVsyst<br>
+      3. Propuesta técnico-económica definitiva<br>
+      4. Firma de contrato y anticipo<br>
+      5. Inicio de obra</p>
+      
+      <div style="margin-top:30px;padding:16px;background:#f3f4f6;border-radius:8px;text-align:center;">
+        <strong>Kaniel Tordjman</strong> — Presidente<br>
+        <span style="color:#D4A843;">k@kanielt.com · kanielt.com</span>
+      </div>
+    </div>
+    <div class="preview-footer">
+      <span>KANIEL TORD LLC — Florida, USA</span>
+      <span class="gold">ENERGÍA PROPIA</span>
+      <span>Propuesta válida por 30 días</span>
+    </div>
+  `;
+  document.getElementById('proposalPreview').innerHTML=html;
+}
+
+function printProposal(){
+  const content=document.getElementById('proposalPreview').innerHTML;
+  const w=window.open('','','width=800,height=1100');
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Propuesta Solar</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:'DM Sans',sans-serif;}
+  .preview-header{background:#0B3D2E;padding:30px;color:#FEFDFB;}
+  .preview-header h2{font-family:'Playfair Display',serif;font-size:24px;}
+  .preview-header .tagline{font-size:10px;color:#D4A843;letter-spacing:4px;margin-top:4px;}
+  .preview-body{padding:30px;font-size:13px;line-height:1.8;color:#333;}
+  .preview-body h3{font-family:'Playfair Display',serif;font-size:16px;color:#0B3D2E;margin:20px 0 8px;border-bottom:2px solid #D4A843;padding-bottom:4px;}
+  .preview-body table{width:100%;border-collapse:collapse;margin:10px 0;}
+  .preview-body th{background:#0B3D2E;color:#fff;padding:8px 12px;text-align:left;font-size:12px;}
+  .preview-body td{padding:6px 12px;border-bottom:1px solid #E5E7EB;font-size:12px;}
+  .preview-footer{background:#0B3D2E;color:#FEFDFB;padding:12px 30px;display:flex;justify-content:space-between;font-size:10px;}
+  .preview-footer .gold{color:#D4A843;}
+  @media print{@page{size:A4;margin:0;}}</style></head><body>${content}</body></html>`);
+  w.document.close();
+  setTimeout(()=>w.print(),500);
+}
+
+calculate();
+</script>
+</body>
+</html>

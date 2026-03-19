@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solaris Argentina — Asset Index</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --green: #0B3D2E; --gold: #D4A843; --pearl: #FEFDFB; --dark: #0A0A0A; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--dark); color: #fff; min-height: 100vh; }
+  .container { max-width: 960px; margin: 0 auto; padding: 40px 20px; }
+  
+  .header { text-align: center; margin-bottom: 50px; }
+  .header h1 { font-family: 'Playfair Display', serif; font-size: 36px; color: var(--pearl); letter-spacing: 3px; }
+  .header .tagline { font-size: 12px; color: var(--gold); letter-spacing: 6px; margin-top: 6px; }
+  .header .subtitle { font-size: 14px; color: #888; margin-top: 16px; }
+  
+  .progress-bar { background: rgba(255,255,255,0.06); border-radius: 8px; height: 12px; margin: 20px auto; max-width: 400px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--green), var(--gold)); border-radius: 8px; transition: width 1s ease; }
+  .progress-text { text-align: center; font-size: 13px; color: var(--gold); margin-top: 6px; }
+  
+  .category { margin-bottom: 36px; }
+  .category-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-bottom: 10px; border-bottom: 2px solid rgba(255,255,255,0.06); margin-bottom: 14px;
+  }
+  .category-title { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--pearl); }
+  .category-badge {
+    font-size: 11px; padding: 4px 12px; border-radius: 20px; font-weight: 600;
+  }
+  .badge-complete { background: var(--green); color: var(--pearl); }
+  .badge-progress { background: rgba(212,168,67,0.2); color: var(--gold); }
+  .badge-todo { background: rgba(255,255,255,0.06); color: #666; }
+  
+  .asset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+  .asset-card {
+    display: flex; align-items: center; gap: 12px;
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 10px; padding: 14px 16px; text-decoration: none; color: #fff;
+    transition: all 0.2s;
+  }
+  .asset-card:hover { background: rgba(255,255,255,0.07); border-color: var(--gold); transform: translateY(-2px); }
+  .asset-icon { font-size: 20px; width: 36px; text-align: center; flex-shrink: 0; }
+  .asset-info { flex: 1; min-width: 0; }
+  .asset-name { font-size: 14px; font-weight: 600; color: var(--pearl); }
+  .asset-type { font-size: 11px; color: #888; margin-top: 2px; }
+  .asset-card.disabled { opacity: 0.35; pointer-events: none; }
+  
+  .ext-links { margin-top: 40px; text-align: center; }
+  .ext-links a {
+    display: inline-block; padding: 10px 24px; margin: 6px;
+    background: var(--green); color: var(--pearl); text-decoration: none;
+    border-radius: 8px; font-weight: 600; font-size: 13px; transition: all 0.2s;
+  }
+  .ext-links a:hover { background: var(--gold); color: var(--dark); }
+  
+  .footer { text-align: center; margin-top: 50px; font-size: 11px; color: #555; }
+  .footer .gold { color: var(--gold); letter-spacing: 3px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <h1>SOLARIS ARGENTINA</h1>
+  <div class="tagline">ENERGÍA PROPIA</div>
+  <div class="subtitle">Asset Index — Internal Use Only</div>
+  <div class="progress-bar"><div class="progress-fill" style="width:91%;"></div></div>
+  <div class="progress-text">40 / 44 assets complete (91%)</div>
+</div>
+
+<!-- BRAND -->
+<div class="category">
+  <div class="category-header">
+    <div class="category-title">Brand</div>
+    <span class="category-badge badge-progress">5/7</span>
+  </div>
+  <div class="asset-grid">
+    <a href="brand/brand-guidelines.md" class="asset-card"><div class="asset-icon">📋</div><div class="asset-info"><div class="asset-name">Brand Guidelines</div><div class="asset-type">Markdown</div></div></a>
+    <a href="brand/business-card.html" class="asset-card"><div class="asset-icon">💳</div><div class="asset-info"><div class="asset-name">Business Card</div><div class="asset-type">HTML — Print-ready</div></div></a>
+    <a href="brand/email-signature.html" class="asset-card"><div class="asset-icon">✉️</div><div class="asset-info"><div class="asset-name">Email Signature</div><div class="asset-type">HTML — Copy to email client</div></div></a>
+    <a href="brand/letterhead.html" class="asset-card"><div class="asset-icon">📄</div><div class="asset-info"><div class="asset-name">Letterhead</div><div class="asset-type">HTML — A4 printable</div></div></a>
+    <a href="brand/social-media-templates.html" class="asset-card"><div class="asset-icon">📱</div><div class="asset-info"><div class="asset-name">Social Media Templates</div><div class="asset-type">HTML — LinkedIn, IG, FB, Twitter</div></div></a>
+    <div class="asset-card disabled"><div class="asset-icon">🎨</div><div class="asset-info"><div class="asset-name">Logo</div><div class="asset-type">Pending</div></div></div>
+    <div class="asset-card disabled"><div class="asset-icon">📊</div><div class="asset-info"><div class="asset-name">Presentation Template</div><div class="asset-type">Pending</div></div></div>
+  </div>
+</div>
+
+<!-- WEBSITE -->
+<div class="category">
+  <div class="category-header">
+    <div class="category-title">Website</div>
+    <span class="category-badge badge-progress">3/4</span>
+  </div>
+  <div class="asset-grid">
+    <a href="website/index.html" class="asset-card"><div class="asset-icon">🌐</div><div class="asset-info"><div class="asset-name">Landing Page</div><div class="asset-type">HTML — Full responsive site</div></div></a>
+    <a href="website/robots.txt" class="asset-card"><div class="asset-icon">🤖</div><div class="asset-info"><div class="asset-name">robots.txt</div><div class="asset-type">SEO</div></div></a>
+    <a href="blog/index.html" class="asset-card"><div class="asset-icon">📝</div><div class="asset-info"><div class="asset-name">Blog (5 articles)</div><div class="asset-type">HTML — SEO articles</div></div></a>
+  </div>
+</div>
+
+<!-- TOOLS -->
+<div class="category">
+  <div class="category-header">
+    <div class="category-title">Tools</div>
+    <span class="category-badge badge-progress">4/5</span>
+  </div>
+  <div class="asset-grid">
+    <a href="tools/financing-calculator.html" class="asset-card"><div class="asset-icon">🏦</div><div class="asset-info"><div class="asset-name">Financing Calculator</div><div class="asset-type">HTML — Cash / Leasing / PPA</div></div></a>
+    <a href="tools/roi-calculator.html" class="asset-card"><div class="asset-icon">📈</div><div class="asset-info"><div class="asset-name">ROI Calculator</div><div class="asset-type">HTML — 5 regions, charts</div></div></a>
+    <a href="tools/bill-scanner.html" class="asset-card"><div class="asset-icon">🔍</div><div class="asset-info"><div class="asset-name">Bill Scanner</div><div class="asset-type">HTML — Electricity analysis</div></div></a>
+    <a href="tools/solar-atlas.html" class="asset-card"><div class="asset-icon">🗺️</div><div class="asset-info"><div class="asset-name">Solar Atlas</div><div class="asset-type">HTML — 6 regions, irradiation data</div></div></a>
+    <a href="tools/proposal-generator.html" class="asset-card"><div class="asset-icon">📑</div><div class="asset-info"><div class="asset-name">Proposal Generator</div><div class="asset-type">HTML — Interactive 4-step</div></div></a>
+    <a href="tools/pipeline-tracker.html" class="asset-card"><div class="asset-icon">📋</div><div class="asset-info"><div class="asset-name">Pipeline Tracker</div><div class="asset-type">HTML — Kanban board</div></div></a>
+  </div>
+</div>
+
+<!-- SALES -->
+<div class="category">
+  <div class="category-header">
+    <div class="category-title">Sales</div>
+    <span class="category-badge badge-complete">6/6 ✓</span>
+  </div>
+  <div class="asset-grid">
+    <a href="sales/ICP.md" class="asset-card"><div class="asset-icon">🎯</div><div class="asset-info"><div class="asset-name">ICP</div><div class="asset-type">Markdown — Ideal Customer Profile</div></div></a>
+    <a href="sales/pricing-model.md" class="asset-card"><div class="asset-icon">💰</div><div class="asset-info"><div class="asset-name">Pricing Model</div><div class="asset-type">Markdown — Costs & margins</div></div></a>
+    <a href="sales/objection-playbook.md" class="asset-card"><div class="asset-icon">🛡️</div><div class="asset-info"><div class="asset-name">Objection Playbook</div><div class="asset-type">Markdown — 10 objections + answers</div></div></a>
+    <a href="sales/outreach-sequences.md" class="asset-card"><div class="asset-icon">📧</div><div class="asset-info"><div class="asset-name">Outreach Sequences</div><div class="asset-type">Markdown — Email + LinkedIn + WhatsApp</div></div></a>
+    <a href="sales/strategy.md" class="asset-card"><div class="asset-icon">🚀</div><div class="asset-info"><div class="asset-name">Sales Strategy</div><div class="asset-type">Markdown — 3 phases</div></div></a>
+  </div>
+</div>
+
+<!-- MARKETING -->
+<div class="category">
+  <div class="category-header">
+    <div class="category-title">Marketing & Ads</div>
+    <span class="category-badge badge-complete">8/8 ✓</span>
+  </div>
+  <div class="asset-grid">
+    <a href="marketing/one-pager.html" class="asset-card"><div class="asset-icon">📄</div><div class="asset-info"><div class="asset-name">One-Pager</div><div class="asset-type">HTML — A4 printable PDF</div></div></a>
+    <a href="marketing/ads-strategy.md" class="asset-card"><div class="asset-icon">📣</div><div class="asset-info"><div class="asset-name">Ads Strategy</div><div class="asset-type">Markdown — Google + LinkedIn + FB</div></div></a>
+    <a href="marketing/lead-magnets.md" class="asset-card"><div class="asset-icon">🧲</div><div class="asset-info"><div class="asset-name">Lead Magnets Plan</div><div class="asset-type">Markdown — 5 lead magnets</div></div></a>
+    <a href="marketing/creatives/ad-ahorro.html" class="asset-card"><div class="asset-icon">🎨</div><div class="asset-info"><div class="asset-name">Ad: Ahorro (70%)</div><div class="asset-type">HTML — 1080×1080</div></div></a>
+    <a href="marketing/creatives/ad-payback.html" class="asset-card"><div class="asset-icon">🎨</div><div class="asset-info"><div class="asset-name">Ad: Payback (ROI)</div><div class="asset-type">HTML — 1080×1080</div></div></a>
+    <a href="marketing/creatives/ad-tarifa.html" class="asset-card"><div class="asset-icon">🎨</div><div class="asset-info"><div class="asset-name">Ad: Tarifa (urgency)</div><div class="asset-type">HTML — 1080×1920 story</div></div></a>
+    <a href="marketing/creatives/ad-tecnologia.html" class="asset-card"><div class="asset-icon">🎨</div><div class="asset-info"><div class="asset-name">Ad: Tecnología (Solar OS)</div><div class="asset-type">HTML — 1080×1080</div></div></a>
+    <a href="marketing/creatives/ad-financiamiento.html" class="asset-card"><div class="asset-icon">🎨</div><div class="asset-info"><div class="asset-name">Ad: Financiamiento (Comafi)</div><div class="asset-type">HTML — 1080×1080</div></div></a>
+  </div>
+</div>
+
+<!-- LEGAL -->
+<div class="category">
+  <div class="category-header">
+    <div class="category-title">Legal</div>
+    <span class="category-badge badge-complete">5/5 ✓</span>
+  </div>
+  <div class="asset-grid">
+    <a href="legal/epc-contract.html" class="asset-card"><div class="asset-icon">📜</div><div class="asset-info"><div class="asset-name">EPC Contract</div><div class="asset-type">HTML — 13 articles, printable</div></div></a>
+    <a href="legal/ppa-contract.html" class="asset-card"><div class="asset-icon">📜</div><div class="asset-info"><div class="asset-name">PPA Contract</div><div class="asset-type">HTML — 18 clauses, 15-20yr</div></div></a>
+    <a href="legal/nda-template.html" class="asset-card"><div class="asset-icon">🔒</div><div class="asset-info"><div class="asset-name">NDA Template</div><div class="asset-type">HTML — Mutual, 3yr</div></div></a>
+    <a href="legal/equipment-supply-agreement.md" class="asset-card"><div class="asset-icon">📋</div><div class="asset-info"><div class="asset-name">Equipment Supply Agreement</div><div class="asset-type">Markdown</div></div></a>
+    <a href="legal/terms-privacy.html" class="asset-card"><div class="asset-icon">⚖️</div><div class="asset-info"><div class="asset-name">Terms & Privacy Policy</div><div class="asset-type">HTML — Ley 25.326</div></div></a>
+  </div>
+</div>
+
+<!-- RESEARCH -->
+<div class="category">
+  <div class="category-header">
+    <div class="category-title">Research</div>
+    <span class="category-badge badge-complete">3/3 ✓</span>
+  </div>
+  <div class="asset-grid">
+    <a href="research/market-research.md" class="asset-card"><div class="asset-icon">🔬</div><div class="asset-info"><div class="asset-name">Market Research</div><div class="asset-type">Markdown — $4.7B market analysis</div></div></a>
+    <a href="research/regulations.md" class="asset-card"><div class="asset-icon">⚖️</div><div class="asset-info"><div class="asset-name">Regulations</div><div class="asset-type">Markdown — Laws, FODIS, I-REC</div></div></a>
+    <a href="research/competitors.md" class="asset-card"><div class="asset-icon">🔍</div><div class="asset-info"><div class="asset-name">Competitors</div><div class="asset-type">Markdown — 6 competitors analyzed</div></div></a>
+  </div>
+</div>
+
+<!-- PRESENTATIONS -->
+<div class="category">
+  <div class="category-header">
+    <div class="category-title">Presentations</div>
+    <span class="category-badge badge-progress">2/3</span>
+  </div>
+  <div class="asset-grid">
+    <a href="https://kaniel149.github.io/comafi-presentation/" target="_blank" class="asset-card"><div class="asset-icon">🏦</div><div class="asset-info"><div class="asset-name">Banco Comafi Pitch</div><div class="asset-type">Live — GitHub Pages</div></div></a>
+    <a href="https://kaniel149.github.io/swh-presentation/" target="_blank" class="asset-card"><div class="asset-icon">🤝</div><div class="asset-info"><div class="asset-name">SWH Partnership Pitch</div><div class="asset-type">Live — GitHub Pages</div></div></a>
+    <a href="presentations/investor-deck.html" class="asset-card"><div class="asset-icon">💼</div><div class="asset-info"><div class="asset-name">Investor Deck</div><div class="asset-type">HTML — 10 slides</div></div></a>
+  </div>
+</div>
+
+<!-- HEBREW -->
+<div class="category">
+  <div class="category-header">
+    <div class="category-title">Hebrew (עברית)</div>
+    <span class="category-badge badge-progress">5</span>
+  </div>
+  <div class="asset-grid">
+    <a href="he/one-pager.html" class="asset-card"><div class="asset-icon">📄</div><div class="asset-info"><div class="asset-name">One-Pager (עברית)</div><div class="asset-type">HTML — RTL, A4</div></div></a>
+    <a href="he/roi-calculator.html" class="asset-card"><div class="asset-icon">📈</div><div class="asset-info"><div class="asset-name">ROI Calculator (עברית)</div><div class="asset-type">HTML — RTL</div></div></a>
+    <a href="he/financing-calculator.html" class="asset-card"><div class="asset-icon">🏦</div><div class="asset-info"><div class="asset-name">Financing Calculator (עברית)</div><div class="asset-type">HTML — RTL</div></div></a>
+    <a href="he/bill-scanner.html" class="asset-card"><div class="asset-icon">🔍</div><div class="asset-info"><div class="asset-name">Bill Scanner (עברית)</div><div class="asset-type">HTML — RTL</div></div></a>
+    <a href="he/solar-atlas.html" class="asset-card"><div class="asset-icon">🗺️</div><div class="asset-info"><div class="asset-name">Solar Atlas (עברית)</div><div class="asset-type">HTML — RTL</div></div></a>
+  </div>
+</div>
+
+<!-- ENGLISH -->
+<div class="category">
+  <div class="category-header">
+    <div class="category-title">English</div>
+    <span class="category-badge badge-progress">6</span>
+  </div>
+  <div class="asset-grid">
+    <a href="en/landing-page.html" class="asset-card"><div class="asset-icon">🌐</div><div class="asset-info"><div class="asset-name">Landing Page (English)</div><div class="asset-type">HTML — Full 10 sections</div></div></a>
+    <a href="en/one-pager.html" class="asset-card"><div class="asset-icon">📄</div><div class="asset-info"><div class="asset-name">One-Pager (English)</div><div class="asset-type">HTML — A4</div></div></a>
+    <a href="en/roi-calculator.html" class="asset-card"><div class="asset-icon">📈</div><div class="asset-info"><div class="asset-name">ROI Calculator (English)</div><div class="asset-type">HTML</div></div></a>
+    <a href="en/financing-calculator.html" class="asset-card"><div class="asset-icon">🏦</div><div class="asset-info"><div class="asset-name">Financing Calculator (English)</div><div class="asset-type">HTML</div></div></a>
+    <a href="en/bill-scanner.html" class="asset-card"><div class="asset-icon">🔍</div><div class="asset-info"><div class="asset-name">Bill Scanner (English)</div><div class="asset-type">HTML</div></div></a>
+    <a href="en/solar-atlas.html" class="asset-card"><div class="asset-icon">🗺️</div><div class="asset-info"><div class="asset-name">Solar Atlas (English)</div><div class="asset-type">HTML</div></div></a>
+  </div>
+</div>
+
+<!-- EXTERNAL LINKS -->
+<div class="ext-links">
+  <a href="https://kaniel149.github.io/comafi-presentation/" target="_blank">Comafi Presentation</a>
+  <a href="https://kaniel149.github.io/swh-presentation/" target="_blank">SWH Presentation</a>
+  <a href="https://solar-os-app.vercel.app" target="_blank">Solar OS Demo</a>
+</div>
+
+<div class="footer">
+  <div class="gold">KANIEL TORD LLC</div>
+  <div style="margin-top:6px;">Internal Use Only — March 2026</div>
+</div>
+
+</div>
+</body>
+</html>

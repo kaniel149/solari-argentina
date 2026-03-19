@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solaris Argentina — Social Media Templates</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --green: #0B3D2E; --gold: #D4A843; --pearl: #FEFDFB; --dark: #0A0A0A; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: #111; color: #fff; padding: 40px; }
+  h1 { font-family: 'Playfair Display', serif; text-align: center; color: var(--gold); margin-bottom: 40px; font-size: 28px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; }
+  .template-label { font-size: 12px; color: #666; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 2px; }
+
+  /* LinkedIn Post Template */
+  .linkedin-post {
+    width: 320px; background: var(--dark); border-radius: 12px; overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .linkedin-post .img-area {
+    height: 320px; background: linear-gradient(135deg, var(--green), #1a6b4a);
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    padding: 30px; text-align: center;
+  }
+  .linkedin-post .img-area .stat { font-family: 'Playfair Display', serif; font-size: 64px; color: var(--gold); font-weight: 800; }
+  .linkedin-post .img-area .stat-text { font-size: 16px; color: var(--pearl); margin-top: 8px; }
+  .linkedin-post .img-area .brand { font-size: 11px; color: var(--gold); letter-spacing: 3px; margin-top: 20px; }
+  .linkedin-post .caption { padding: 16px; font-size: 13px; color: #999; line-height: 1.6; }
+
+  /* Instagram Story Template */
+  .ig-story {
+    width: 270px; height: 480px; background: linear-gradient(180deg, var(--dark) 0%, var(--green) 100%);
+    border-radius: 16px; overflow: hidden; display: flex; flex-direction: column;
+    justify-content: space-between; padding: 30px 24px; position: relative;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .ig-story .top { text-align: center; }
+  .ig-story .top .brand { font-size: 10px; color: var(--gold); letter-spacing: 4px; }
+  .ig-story .middle { text-align: center; }
+  .ig-story .middle h2 { font-family: 'Playfair Display', serif; font-size: 28px; color: var(--pearl); line-height: 1.3; }
+  .ig-story .middle .highlight { color: var(--gold); }
+  .ig-story .bottom { text-align: center; }
+  .ig-story .bottom .cta {
+    display: inline-block; padding: 10px 24px; background: var(--gold); color: var(--dark);
+    border-radius: 8px; font-weight: 700; font-size: 13px;
+  }
+  .ig-story .bottom .swipe { font-size: 11px; color: #999; margin-top: 8px; }
+
+  /* Facebook Cover */
+  .fb-cover {
+    width: 320px; height: 120px; background: linear-gradient(90deg, var(--green), var(--dark));
+    border-radius: 8px; display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px; border: 1px solid rgba(255,255,255,0.1);
+  }
+  .fb-cover .left h2 { font-family: 'Playfair Display', serif; font-size: 16px; color: var(--pearl); }
+  .fb-cover .left .tagline { font-size: 9px; color: var(--gold); letter-spacing: 3px; margin-top: 4px; }
+  .fb-cover .right { text-align: right; }
+  .fb-cover .right .stat { font-family: 'Playfair Display', serif; font-size: 28px; color: var(--gold); }
+  .fb-cover .right .label { font-size: 9px; color: #999; }
+
+  /* Twitter Header */
+  .twitter-header {
+    width: 320px; height: 107px; background: var(--green);
+    border-radius: 8px; display: flex; align-items: center; justify-content: center;
+    text-align: center; border: 1px solid rgba(255,255,255,0.1);
+  }
+  .twitter-header h2 { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--pearl); }
+  .twitter-header .tagline { font-size: 10px; color: var(--gold); letter-spacing: 4px; margin-top: 6px; }
+</style>
+</head>
+<body>
+
+<h1>Social Media Templates — Solaris Argentina</h1>
+
+<div class="grid">
+
+  <!-- LinkedIn Post -->
+  <div>
+    <div class="template-label">LinkedIn Post (1080×1080)</div>
+    <div class="linkedin-post">
+      <div class="img-area">
+        <div class="stat">70%</div>
+        <div class="stat-text">de ahorro en su factura eléctrica</div>
+        <div class="brand">SOLARIS ARGENTINA</div>
+      </div>
+      <div class="caption">Descubra cómo su empresa puede reducir hasta un 70% en costos de electricidad con energía solar. Más de 500 instalaciones internacionales. #EnergíaSolar #Argentina</div>
+    </div>
+  </div>
+
+  <!-- Instagram Story -->
+  <div>
+    <div class="template-label">Instagram Story (1080×1920)</div>
+    <div class="ig-story">
+      <div class="top"><div class="brand">SOLARIS ARGENTINA</div></div>
+      <div class="middle">
+        <h2>¿Cuánto paga de <span class="highlight">electricidad</span> por mes?</h2>
+      </div>
+      <div class="bottom">
+        <div class="cta">Calcule su ahorro →</div>
+        <div class="swipe">Deslizar hacia arriba</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Facebook Cover -->
+  <div>
+    <div class="template-label">Facebook Cover (820×312)</div>
+    <div class="fb-cover">
+      <div class="left">
+        <h2>SOLARIS ARGENTINA</h2>
+        <div class="tagline">ENERGÍA PROPIA</div>
+      </div>
+      <div class="right">
+        <div class="stat">500+</div>
+        <div class="label">instalaciones</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Twitter Header -->
+  <div>
+    <div class="template-label">Twitter/X Header (1500×500)</div>
+    <div class="twitter-header">
+      <div>
+        <h2>SOLARIS ARGENTINA</h2>
+        <div class="tagline">ENERGÍA PROPIA</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

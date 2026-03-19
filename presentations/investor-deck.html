@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solaris Argentina — Investor Deck</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--green:#0B3D2E;--gold:#D4A843;--pearl:#FEFDFB;--dark:#0A0A0A;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'DM Sans',sans-serif;background:#111;overflow:hidden;}
+  
+  .slide{width:100vw;height:100vh;display:none;flex-direction:column;justify-content:center;padding:80px;position:relative;overflow:hidden;}
+  .slide.active{display:flex;}
+  .slide::before{content:'';position:absolute;top:0;right:0;width:40%;height:100%;background:linear-gradient(135deg,transparent,rgba(11,61,46,0.15));pointer-events:none;}
+  
+  .slide-num{position:absolute;bottom:30px;right:40px;font-size:12px;color:#555;letter-spacing:2px;}
+  .brand-mark{position:absolute;top:30px;left:40px;font-size:11px;color:var(--gold);letter-spacing:4px;font-weight:600;}
+  
+  h1{font-family:'Playfair Display',serif;font-size:52px;color:var(--pearl);line-height:1.2;max-width:800px;}
+  h2{font-family:'Playfair Display',serif;font-size:36px;color:var(--pearl);line-height:1.3;margin-bottom:24px;}
+  .gold{color:var(--gold);}
+  p{font-size:18px;color:#999;line-height:1.7;max-width:700px;margin-top:16px;}
+  
+  .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:30px;max-width:900px;}
+  .stat-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:28px;text-align:center;}
+  .stat-card .num{font-family:'Playfair Display',serif;font-size:42px;color:var(--gold);font-weight:800;}
+  .stat-card .lab{font-size:13px;color:#888;margin-top:6px;}
+  
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:24px;max-width:900px;}
+  .col-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:24px;}
+  .col-card h3{font-family:'Playfair Display',serif;font-size:20px;color:var(--pearl);margin-bottom:12px;}
+  .col-card ul{padding-left:16px;color:#999;font-size:14px;line-height:2;}
+  
+  .timeline{display:flex;gap:0;margin-top:30px;max-width:900px;}
+  .phase{flex:1;padding:20px;border-top:3px solid;text-align:center;}
+  .phase:nth-child(1){border-color:#64748B;}
+  .phase:nth-child(2){border-color:var(--gold);}
+  .phase:nth-child(3){border-color:var(--green);}
+  .phase:nth-child(4){border-color:#16A34A;}
+  .phase h4{font-size:14px;color:var(--pearl);margin-bottom:4px;}
+  .phase .period{font-size:11px;color:var(--gold);margin-bottom:8px;}
+  .phase .items{font-size:12px;color:#888;line-height:1.8;}
+  
+  .ask-box{background:linear-gradient(135deg,var(--green),#1a6b4a);border-radius:16px;padding:40px;max-width:700px;margin-top:24px;}
+  .ask-box h3{font-family:'Playfair Display',serif;font-size:24px;color:var(--pearl);margin-bottom:16px;}
+  .ask-box .amount{font-family:'Playfair Display',serif;font-size:48px;color:var(--gold);margin-bottom:8px;}
+  .ask-box ul{color:rgba(254,253,251,0.8);font-size:14px;line-height:2;padding-left:16px;}
+  
+  .contact-block{margin-top:30px;font-size:16px;color:#999;line-height:2;}
+  .contact-block a{color:var(--gold);text-decoration:none;}
+  
+  .nav{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:10;}
+  .dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.15);cursor:pointer;transition:all .3s;}
+  .dot.active{background:var(--gold);width:24px;border-radius:4px;}
+  
+  .arrows{position:fixed;bottom:30px;display:flex;gap:12px;z-index:10;}
+  .arrows.left{left:40px;}
+  .arrows.right{right:40px;}
+  .arrow{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;color:#999;font-size:14px;transition:all .2s;}
+  .arrow:hover{background:var(--gold);color:var(--dark);border-color:var(--gold);}
+</style>
+</head>
+<body>
+
+<!-- Slide 1: Title -->
+<div class="slide active" style="background:var(--dark);">
+  <div class="brand-mark">SOLARIS ARGENTINA</div>
+  <h1>Powering Argentina's <span class="gold">Solar Revolution</span></h1>
+  <p>C&I rooftop solar installation, monitoring, and financing — powered by Israeli expertise and proprietary technology.</p>
+  <p style="color:var(--gold);font-size:14px;margin-top:30px;letter-spacing:2px;">INVESTOR PRESENTATION · MARCH 2026</p>
+  <div class="slide-num">01 / 10</div>
+</div>
+
+<!-- Slide 2: The Opportunity -->
+<div class="slide" style="background:var(--dark);">
+  <div class="brand-mark">SOLARIS ARGENTINA</div>
+  <h2>The <span class="gold">$4.7B</span> Opportunity</h2>
+  <div class="stat-grid">
+    <div class="stat-card"><div class="num">$4.7B</div><div class="lab">Market size (2030)</div></div>
+    <div class="stat-card"><div class="num">200%+</div><div class="lab">Tariff increase since 2024</div></div>
+    <div class="stat-card"><div class="num">&lt;2%</div><div class="lab">C&I rooftop penetration</div></div>
+    <div class="stat-card"><div class="num">5.5</div><div class="lab">Avg kWh/m²/day irradiation</div></div>
+  </div>
+  <p>Argentina's C&I solar market is virtually untapped. Rising electricity tariffs, favorable irradiation, and government incentives create a perfect storm for rapid adoption.</p>
+  <div class="slide-num">02 / 10</div>
+</div>
+
+<!-- Slide 3: The Problem -->
+<div class="slide" style="background:var(--dark);">
+  <div class="brand-mark">SOLARIS ARGENTINA</div>
+  <h2>The <span class="gold">Problem</span></h2>
+  <div class="two-col">
+    <div class="col-card">
+      <h3>For Businesses</h3>
+      <ul>
+        <li>Electricity is 2nd highest operating cost</li>
+        <li>Tariffs increase every quarter</li>
+        <li>No reliable energy cost forecasting</li>
+        <li>Zero control over energy supply</li>
+        <li>Growing sustainability pressure</li>
+      </ul>
+    </div>
+    <div class="col-card">
+      <h3>Market Gap</h3>
+      <ul>
+        <li>No integrated install + monitor solution</li>
+        <li>No structured bank financing for rooftop</li>
+        <li>Fragmented market (small local shops)</li>
+        <li>No performance guarantees</li>
+        <li>No enterprise-grade monitoring</li>
+      </ul>
+    </div>
+  </div>
+  <div class="slide-num">03 / 10</div>
+</div>
+
+<!-- Slide 4: Our Solution -->
+<div class="slide" style="background:var(--dark);">
+  <div class="brand-mark">SOLARIS ARGENTINA</div>
+  <h2>Our <span class="gold">Solution</span></h2>
+  <div class="two-col">
+    <div class="col-card" style="border-color:var(--gold);">
+      <h3 style="color:var(--gold);">Vertical Integration</h3>
+      <ul>
+        <li>Design & engineering (PVsyst simulation)</li>
+        <li>Equipment supply (Tier 1: Jinko, Sineng)</li>
+        <li>Professional installation</li>
+        <li>24/7 monitoring (Solar OS platform)</li>
+        <li>Maintenance & performance guarantee</li>
+      </ul>
+    </div>
+    <div class="col-card">
+      <h3>Solar OS Platform</h3>
+      <ul>
+        <li>Proprietary monitoring software</li>
+        <li>Real-time alerts (WhatsApp, email)</li>
+        <li>Monthly performance reports</li>
+        <li>Multi-site dashboard</li>
+        <li>Performance guarantee enforcement</li>
+      </ul>
+    </div>
+  </div>
+  <div class="slide-num">04 / 10</div>
+</div>
+
+<!-- Slide 5: Track Record -->
+<div class="slide" style="background:var(--dark);">
+  <div class="brand-mark">SOLARIS ARGENTINA</div>
+  <h2>Proven <span class="gold">Track Record</span></h2>
+  <div class="stat-grid">
+    <div class="stat-card"><div class="num">500+</div><div class="lab">Installations (Israel)</div></div>
+    <div class="stat-card"><div class="num">3</div><div class="lab">Countries</div></div>
+    <div class="stat-card"><div class="num">8+</div><div class="lab">Years experience</div></div>
+    <div class="stat-card"><div class="num">50MW+</div><div class="lab">Installed capacity</div></div>
+  </div>
+  <div class="two-col" style="margin-top:24px;">
+    <div class="col-card"><h3>Navitas Solar (Israel)</h3><ul><li>500+ residential & C&I installations</li><li>Market leader in rooftop segment</li><li>Full EPC + monitoring</li></ul></div>
+    <div class="col-card"><h3>Solaris Panama</h3><ul><li>C&I focus (hotels, industry)</li><li>Ley 417 solar incentives</li><li>Active pipeline</li></ul></div>
+  </div>
+  <div class="slide-num">05 / 10</div>
+</div>
+
+<!-- Slide 6: Business Model -->
+<div class="slide" style="background:var(--dark);">
+  <div class="brand-mark">SOLARIS ARGENTINA</div>
+  <h2>Business <span class="gold">Model</span></h2>
+  <div class="two-col">
+    <div class="col-card">
+      <h3>Revenue Streams</h3>
+      <ul>
+        <li><strong>EPC Installation:</strong> $0.55-0.70/Wp (30-40% margin)</li>
+        <li><strong>Solar OS SaaS:</strong> $50-200/mo per site</li>
+        <li><strong>O&M Contracts:</strong> 1-2% of system cost/year</li>
+        <li><strong>PPA Revenue:</strong> $0.10-0.12/kWh (15-20yr)</li>
+        <li><strong>Financing Commissions:</strong> 1-3% via Comafi</li>
+      </ul>
+    </div>
+    <div class="col-card">
+      <h3>Unit Economics (100 kWp)</h3>
+      <ul>
+        <li>System price: $60,000-70,000</li>
+        <li>Equipment cost: ~$35,000</li>
+        <li>Installation cost: ~$10,000</li>
+        <li><strong>Gross margin: 30-40%</strong></li>
+        <li>+ Recurring: $150/mo SaaS + O&M</li>
+      </ul>
+    </div>
+  </div>
+  <div class="slide-num">06 / 10</div>
+</div>
+
+<!-- Slide 7: Competitive Advantage -->
+<div class="slide" style="background:var(--dark);">
+  <div class="brand-mark">SOLARIS ARGENTINA</div>
+  <h2>Competitive <span class="gold">Moat</span></h2>
+  <div class="stat-grid" style="grid-template-columns:repeat(3,1fr);">
+    <div class="stat-card"><div class="num" style="font-size:24px;">🏦</div><div class="lab" style="font-size:14px;color:var(--pearl);margin-top:12px;">Banco Comafi Partnership</div><div class="lab">Only structured bank financing for C&I rooftop solar in Argentina</div></div>
+    <div class="stat-card"><div class="num" style="font-size:24px;">📊</div><div class="lab" style="font-size:14px;color:var(--pearl);margin-top:12px;">Solar OS Platform</div><div class="lab">Proprietary monitoring creates lock-in and recurring revenue</div></div>
+    <div class="stat-card"><div class="num" style="font-size:24px;">🌍</div><div class="lab" style="font-size:14px;color:var(--pearl);margin-top:12px;">International Track Record</div><div class="lab">500+ installations across 3 countries vs local shops with 50-100</div></div>
+  </div>
+  <div class="slide-num">07 / 10</div>
+</div>
+
+<!-- Slide 8: Go-to-Market -->
+<div class="slide" style="background:var(--dark);">
+  <div class="brand-mark">SOLARIS ARGENTINA</div>
+  <h2>Go-to-Market <span class="gold">Roadmap</span></h2>
+  <div class="timeline">
+    <div class="phase"><h4>Phase 1</h4><div class="period">Month 1-3</div><div class="items">Anchor projects<br>Comafi partnership<br>SWH referrals<br>3-5 installations</div></div>
+    <div class="phase"><h4>Phase 2</h4><div class="period">Month 4-6</div><div class="items">Pipeline building<br>Digital marketing<br>Lead generation<br>10-15 installations</div></div>
+    <div class="phase"><h4>Phase 3</h4><div class="period">Month 7-12</div><div class="items">Scale operations<br>Local team hire<br>Channel partners<br>30-50 installations</div></div>
+    <div class="phase"><h4>Phase 4</h4><div class="period">Year 2+</div><div class="items">National expansion<br>Academy program<br>PPA fund<br>100+ installations/yr</div></div>
+  </div>
+  <div class="slide-num">08 / 10</div>
+</div>
+
+<!-- Slide 9: Financial Projections -->
+<div class="slide" style="background:var(--dark);">
+  <div class="brand-mark">SOLARIS ARGENTINA</div>
+  <h2>Financial <span class="gold">Projections</span></h2>
+  <div class="stat-grid">
+    <div class="stat-card"><div class="num">$500K</div><div class="lab">Year 1 Revenue</div></div>
+    <div class="stat-card"><div class="num">$2M</div><div class="lab">Year 2 Revenue</div></div>
+    <div class="stat-card"><div class="num">$5M</div><div class="lab">Year 3 Revenue</div></div>
+    <div class="stat-card"><div class="num">35%</div><div class="lab">Target Gross Margin</div></div>
+  </div>
+  <div class="two-col" style="margin-top:20px;">
+    <div class="col-card"><h3>Revenue Mix (Year 2)</h3><ul><li>EPC: 80% ($1.6M)</li><li>SaaS (Solar OS): 8% ($160K)</li><li>O&M: 7% ($140K)</li><li>Commissions: 5% ($100K)</li></ul></div>
+    <div class="col-card"><h3>Key Assumptions</h3><ul><li>Avg deal size: $80K</li><li>25 installations Year 2</li><li>30% gross margin</li><li>Break-even: Month 8</li></ul></div>
+  </div>
+  <div class="slide-num">09 / 10</div>
+</div>
+
+<!-- Slide 10: The Ask -->
+<div class="slide" style="background:var(--dark);">
+  <div class="brand-mark">SOLARIS ARGENTINA</div>
+  <h2>The <span class="gold">Ask</span></h2>
+  <div class="ask-box">
+    <h3>Seed Investment</h3>
+    <div class="amount">$250K - $500K</div>
+    <ul>
+      <li>First 5 anchor projects (equipment procurement)</li>
+      <li>Local team (project manager + 2 technicians)</li>
+      <li>Marketing & lead generation (6 months)</li>
+      <li>Working capital & operations</li>
+      <li>Solar OS Argentina deployment</li>
+    </ul>
+  </div>
+  <div class="contact-block">
+    <strong style="color:var(--pearl);">Rubén Freidman</strong> — CEO<br>
+    <strong style="color:var(--pearl);">Kaniel Tordjman</strong> — Presidente (Chairman)<br>
+    <a href="mailto:k@kanielt.com">k@kanielt.com</a> · <a href="https://kanielt.com">kanielt.com</a><br>
+    KANIEL TORD LLC — Florida, USA
+  </div>
+  <div class="slide-num">10 / 10</div>
+</div>
+
+<!-- Navigation -->
+<div class="nav" id="nav"></div>
+<div class="arrows left"><div class="arrow" onclick="prev()">←</div></div>
+<div class="arrows right"><div class="arrow" onclick="next()">→</div></div>
+
+<script>
+const slides=document.querySelectorAll('.slide');
+let current=0;
+function show(n){
+  current=Math.max(0,Math.min(n,slides.length-1));
+  slides.forEach((s,i)=>s.classList.toggle('active',i===current));
+  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===current));
+}
+function next(){show(current+1);}
+function prev(){show(current-1);}
+const nav=document.getElementById('nav');
+slides.forEach((_,i)=>{const d=document.createElement('div');d.className='dot'+(i===0?' active':'');d.onclick=()=>show(i);nav.appendChild(d);});
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' ')next();if(e.key==='ArrowLeft')prev();});
+let touchX=0;
+document.addEventListener('touchstart',e=>touchX=e.touches[0].clientX);
+document.addEventListener('touchend',e=>{const d=e.changedTouches[0].clientX-touchX;if(d<-50)next();if(d>50)prev();});
+</script>
+</body>
+</html>

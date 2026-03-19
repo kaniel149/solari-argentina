@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solaris Argentina — Pipeline Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--green:#0B3D2E;--gold:#D4A843;--pearl:#FEFDFB;--dark:#0A0A0A;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'DM Sans',sans-serif;background:var(--dark);color:#fff;min-height:100vh;}
+  .app{max-width:1200px;margin:0 auto;padding:30px 20px;}
+  h1{font-family:'Playfair Display',serif;font-size:28px;color:var(--pearl);text-align:center;margin-bottom:6px;}
+  .sub{text-align:center;color:var(--gold);font-size:12px;letter-spacing:4px;margin-bottom:30px;}
+  
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:30px;}
+  .stat{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:16px;text-align:center;}
+  .stat .num{font-family:'Playfair Display',serif;font-size:28px;color:var(--gold);}
+  .stat .label{font-size:11px;color:#888;margin-top:4px;}
+  
+  .board{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:30px;}
+  @media(max-width:900px){.board{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:500px){.board{grid-template-columns:1fr;}}
+  
+  .column{background:rgba(255,255,255,0.02);border-radius:12px;padding:12px;min-height:300px;}
+  .col-header{font-weight:700;font-size:13px;color:var(--pearl);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;}
+  .col-count{background:rgba(255,255,255,0.1);padding:2px 8px;border-radius:10px;font-size:11px;color:#999;}
+  
+  .card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:12px;margin-bottom:8px;cursor:pointer;transition:all .2s;}
+  .card:hover{border-color:var(--gold);transform:translateY(-2px);}
+  .card .name{font-weight:600;font-size:13px;color:var(--pearl);margin-bottom:4px;}
+  .card .company{font-size:11px;color:var(--gold);}
+  .card .details{font-size:11px;color:#888;margin-top:6px;line-height:1.6;}
+  .card .value{font-family:'Playfair Display',serif;font-size:16px;color:var(--gold);margin-top:6px;}
+  .card .tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:9px;font-weight:600;margin-top:4px;}
+  .tag-hot{background:rgba(234,88,12,0.2);color:#EA580C;}
+  .tag-warm{background:rgba(212,168,67,0.2);color:var(--gold);}
+  .tag-cold{background:rgba(100,116,139,0.2);color:#94A3B8;}
+  
+  .add-btn{display:block;width:100%;padding:8px;background:rgba(255,255,255,0.03);border:1px dashed rgba(255,255,255,0.1);border-radius:8px;color:#666;text-align:center;cursor:pointer;font-size:12px;transition:all .2s;}
+  .add-btn:hover{border-color:var(--gold);color:var(--gold);}
+  
+  .modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:100;align-items:center;justify-content:center;}
+  .modal-overlay.show{display:flex;}
+  .modal{background:#1a1a1a;border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:30px;max-width:500px;width:90%;max-height:80vh;overflow-y:auto;}
+  .modal h2{font-family:'Playfair Display',serif;font-size:20px;color:var(--pearl);margin-bottom:20px;}
+  .form-group{margin-bottom:14px;}
+  .form-group label{display:block;font-size:12px;color:#999;margin-bottom:4px;}
+  .form-group input,.form-group select,.form-group textarea{width:100%;padding:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#fff;font-family:'DM Sans';font-size:13px;}
+  .form-group select option{background:#1a1a1a;}
+  .modal-btns{display:flex;gap:10px;margin-top:16px;}
+  .modal-btns button{flex:1;padding:10px;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-family:'DM Sans';}
+  .btn-save{background:var(--gold);color:var(--dark);}
+  .btn-cancel{background:rgba(255,255,255,0.06);color:#999;}
+  .btn-delete{background:rgba(234,88,12,0.2);color:#EA580C;}
+  
+  .footer{text-align:center;font-size:11px;color:#555;margin-top:30px;}
+  .footer .gold{color:var(--gold);letter-spacing:3px;}
+</style>
+</head>
+<body>
+<div class="app">
+<h1>Pipeline Tracker</h1>
+<div class="sub">SOLARIS ARGENTINA</div>
+
+<div class="stats">
+  <div class="stat"><div class="num" id="totalLeads">0</div><div class="label">Total Leads</div></div>
+  <div class="stat"><div class="num" id="totalValue">$0</div><div class="label">Pipeline Value</div></div>
+  <div class="stat"><div class="num" id="avgDeal">$0</div><div class="label">Avg Deal Size</div></div>
+  <div class="stat"><div class="num" id="convRate">0%</div><div class="label">Conversion Rate</div></div>
+  <div class="stat"><div class="num" id="wonValue">$0</div><div class="label">Won Revenue</div></div>
+</div>
+
+<div class="board" id="board"></div>
+
+<div class="footer"><span class="gold">SOLARIS ARGENTINA</span> — Pipeline Tracker<br>Data stored locally in your browser</div>
+</div>
+
+<!-- Add/Edit Modal -->
+<div class="modal-overlay" id="modal">
+<div class="modal">
+  <h2 id="modalTitle">Agregar Lead</h2>
+  <input type="hidden" id="editId">
+  <div class="form-group"><label>Empresa</label><input id="fCompany" placeholder="Nombre"></div>
+  <div class="form-group"><label>Contacto</label><input id="fContact" placeholder="Nombre del contacto"></div>
+  <div class="form-group"><label>Email / Teléfono</label><input id="fEmail" placeholder="email@empresa.com"></div>
+  <div class="form-group"><label>Sector</label>
+    <select id="fSector"><option>Industrial</option><option>Agroindustrial</option><option>Comercial</option><option>Logístico</option><option>Inmobiliario</option><option>Hotelero</option><option>Otro</option></select>
+  </div>
+  <div class="form-group"><label>Ubicación</label>
+    <select id="fLocation"><option>Buenos Aires</option><option>Córdoba</option><option>Mendoza</option><option>Río Negro</option><option>Santa Fe</option><option>NOA</option></select>
+  </div>
+  <div class="form-group"><label>Tamaño estimado (kWp)</label><input type="number" id="fSize" value="100"></div>
+  <div class="form-group"><label>Valor estimado (USD)</label><input type="number" id="fValue" value="60000"></div>
+  <div class="form-group"><label>Temperatura</label>
+    <select id="fTemp"><option value="hot">Hot 🔥</option><option value="warm">Warm</option><option value="cold">Cold</option></select>
+  </div>
+  <div class="form-group"><label>Notas</label><textarea id="fNotes" rows="2"></textarea></div>
+  <div class="modal-btns">
+    <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+    <button class="btn-delete" id="deleteBtn" onclick="deleteLead()" style="display:none">Eliminar</button>
+    <button class="btn-save" onclick="saveLead()">Guardar</button>
+  </div>
+</div>
+</div>
+
+<script>
+const STAGES=['Prospecto','Contactado','Reunión','Propuesta','Ganado'];
+const STAGE_COLORS=['#64748B','#D4A843','#3B82F6','#8B5CF6','#16A34A'];
+
+let leads=JSON.parse(localStorage.getItem('solaris_pipeline')||'[]');
+if(!leads.length){
+  leads=[
+    {id:1,company:'Planta Frutícola Río Negro',contact:'Rubén',email:'',sector:'Agroindustrial',location:'Río Negro',size:572,value:278737,temp:'hot',stage:'Propuesta',notes:'Intermepro quote received. 572 kWp.'},
+    {id:2,company:'Banco Comafi (EcoLeasing)',contact:'Mauro González',email:'',sector:'Otro',location:'Buenos Aires',size:0,value:0,temp:'hot',stage:'Reunión',notes:'Financing partnership. Extend EcoLeasing to C&I rooftop.'},
+    {id:3,company:'SWH Ingeniería',contact:'',email:'swh@swh.ar',sector:'Otro',location:'Buenos Aires',size:0,value:0,temp:'warm',stage:'Reunión',notes:'Engineering consulting. 3 partnership models pitched.'},
+  ];
+  save();
+}
+
+function save(){localStorage.setItem('solaris_pipeline',JSON.stringify(leads));}
+function nextId(){return leads.length?Math.max(...leads.map(l=>l.id))+1:1;}
+
+function render(){
+  const board=document.getElementById('board');
+  board.innerHTML='';
+  STAGES.forEach((stage,i)=>{
+    const col=document.createElement('div');
+    col.className='column';
+    const stageLeads=leads.filter(l=>l.stage===stage);
+    col.innerHTML=`<div class="col-header"><span style="color:${STAGE_COLORS[i]}">${stage}</span><span class="col-count">${stageLeads.length}</span></div>`;
+    stageLeads.forEach(l=>{
+      const tagClass=l.temp==='hot'?'tag-hot':l.temp==='warm'?'tag-warm':'tag-cold';
+      const card=document.createElement('div');
+      card.className='card';
+      card.onclick=()=>editLead(l.id);
+      card.draggable=true;
+      card.dataset.id=l.id;
+      card.ondragstart=e=>e.dataTransfer.setData('id',l.id);
+      card.innerHTML=`<div class="name">${l.company}</div><div class="company">${l.contact||l.sector}</div>${l.value?`<div class="value">$${l.value.toLocaleString()}</div>`:''}<div class="details">${l.location}${l.size?' · '+l.size+' kWp':''}</div><span class="tag ${tagClass}">${l.temp}</span>`;
+      col.appendChild(card);
+    });
+    const addBtn=document.createElement('div');
+    addBtn.className='add-btn';
+    addBtn.textContent='+ Agregar';
+    addBtn.onclick=()=>openModal(stage);
+    col.appendChild(addBtn);
+    col.ondragover=e=>e.preventDefault();
+    col.ondrop=e=>{e.preventDefault();const id=parseInt(e.dataTransfer.getData('id'));const lead=leads.find(l=>l.id===id);if(lead){lead.stage=stage;save();render();}};
+    board.appendChild(col);
+  });
+  updateStats();
+}
+
+function updateStats(){
+  const total=leads.length;
+  const totalVal=leads.reduce((s,l)=>s+l.value,0);
+  const won=leads.filter(l=>l.stage==='Ganado');
+  const wonVal=won.reduce((s,l)=>s+l.value,0);
+  const avg=total?totalVal/total:0;
+  const conv=total?(won.length/total*100):0;
+  document.getElementById('totalLeads').textContent=total;
+  document.getElementById('totalValue').textContent='$'+totalVal.toLocaleString();
+  document.getElementById('avgDeal').textContent='$'+Math.round(avg).toLocaleString();
+  document.getElementById('convRate').textContent=conv.toFixed(0)+'%';
+  document.getElementById('wonValue').textContent='$'+wonVal.toLocaleString();
+}
+
+function openModal(stage){
+  document.getElementById('modalTitle').textContent='Agregar Lead';
+  document.getElementById('editId').value='';
+  document.getElementById('fCompany').value='';
+  document.getElementById('fContact').value='';
+  document.getElementById('fEmail').value='';
+  document.getElementById('fSize').value='100';
+  document.getElementById('fValue').value='60000';
+  document.getElementById('fNotes').value='';
+  document.getElementById('deleteBtn').style.display='none';
+  document.getElementById('modal').classList.add('show');
+  window._addStage=stage||'Prospecto';
+}
+
+function editLead(id){
+  const l=leads.find(x=>x.id===id);
+  if(!l)return;
+  document.getElementById('modalTitle').textContent='Editar Lead';
+  document.getElementById('editId').value=l.id;
+  document.getElementById('fCompany').value=l.company;
+  document.getElementById('fContact').value=l.contact;
+  document.getElementById('fEmail').value=l.email;
+  document.getElementById('fSector').value=l.sector;
+  document.getElementById('fLocation').value=l.location;
+  document.getElementById('fSize').value=l.size;
+  document.getElementById('fValue').value=l.value;
+  document.getElementById('fTemp').value=l.temp;
+  document.getElementById('fNotes').value=l.notes||'';
+  document.getElementById('deleteBtn').style.display='block';
+  document.getElementById('modal').classList.add('show');
+}
+
+function closeModal(){document.getElementById('modal').classList.remove('show');}
+
+function saveLead(){
+  const id=document.getElementById('editId').value;
+  const data={
+    company:document.getElementById('fCompany').value,
+    contact:document.getElementById('fContact').value,
+    email:document.getElementById('fEmail').value,
+    sector:document.getElementById('fSector').value,
+    location:document.getElementById('fLocation').value,
+    size:parseInt(document.getElementById('fSize').value)||0,
+    value:parseInt(document.getElementById('fValue').value)||0,
+    temp:document.getElementById('fTemp').value,
+    notes:document.getElementById('fNotes').value
+  };
+  if(id){
+    const lead=leads.find(l=>l.id===parseInt(id));
+    Object.assign(lead,data);
+  }else{
+    leads.push({id:nextId(),stage:window._addStage||'Prospecto',...data});
+  }
+  save();render();closeModal();
+}
+
+function deleteLead(){
+  const id=parseInt(document.getElementById('editId').value);
+  leads=leads.filter(l=>l.id!==id);
+  save();render();closeModal();
+}
+
+render();
+</script>
+</body>
+</html>

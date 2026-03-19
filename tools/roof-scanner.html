@@ -1,0 +1,2033 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solaris Argentina — Roof Scanner Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.1.1/dist/maplibre-gl.css">
+<script src="https://unpkg.com/maplibre-gl@4.1.1/dist/maplibre-gl.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--green:#0B3D2E;--green2:#0d4a37;--gold:#D4A843;--accent:#1A7A5A;--coral:#E85D3A;--bg:#0A0A0A;--card:#142822;--border:rgba(255,255,255,0.1);--pearl:#FEFDFB}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--pearl);overflow:hidden;height:100vh}
+
+/* ── Login Overlay ── */
+.login-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#060606 0%,var(--green) 50%,#060606 100%);z-index:10000;display:flex;align-items:center;justify-content:center;transition:opacity .5s}
+.login-overlay.hidden{opacity:0;pointer-events:none}
+.login-box{background:rgba(10,10,10,0.85);border:1px solid rgba(212,168,67,0.3);border-radius:16px;padding:48px 40px;width:380px;text-align:center;backdrop-filter:blur(20px)}
+.login-logo{margin-bottom:8px}
+.login-logo .brand{font-size:28px;font-weight:800;letter-spacing:2px;color:var(--gold)}
+.login-logo .sub{font-size:13px;color:rgba(254,253,251,0.5);letter-spacing:4px;text-transform:uppercase;margin-top:2px}
+.login-tagline{font-size:11px;color:var(--gold);letter-spacing:3px;text-transform:uppercase;margin:16px 0 32px;opacity:0.7}
+.login-field{width:100%;background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--pearl);padding:12px 16px;border-radius:8px;font-size:14px;font-family:inherit;outline:none;margin-bottom:12px;transition:border-color .2s}
+.login-field:focus{border-color:var(--gold)}
+.login-field::placeholder{color:rgba(255,255,255,0.3)}
+.login-btn{width:100%;background:var(--gold);color:var(--bg);border:none;padding:14px;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:8px;transition:background .2s}
+.login-btn:hover{background:#c49a3a}
+.login-error{color:var(--coral);font-size:12px;margin-top:12px;min-height:18px}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+.shake{animation:shake .4s ease}
+
+/* ── Header ── */
+.header{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--gold);z-index:1000;position:relative}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-mark{width:32px;height:32px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;color:var(--green)}
+.logo-text{font-size:16px;font-weight:700}.logo-text span{color:var(--gold)}
+.header-stats{display:flex;gap:20px}
+.hstat{text-align:center}
+.hstat-val{font-size:18px;font-weight:800;color:var(--gold)}
+.hstat-label{font-size:10px;opacity:0.6;text-transform:uppercase;letter-spacing:1px}
+.header-user{font-size:11px;opacity:0.5;display:flex;align-items:center;gap:8px}
+.logout-btn{background:none;border:1px solid var(--border);color:rgba(255,255,255,0.5);padding:3px 10px;border-radius:4px;font-size:10px;cursor:pointer;font-family:inherit}
+.logout-btn:hover{border-color:var(--gold);color:var(--gold)}
+
+/* ── Main Layout ── */
+.main{display:flex;height:calc(100vh - 52px)}
+
+/* ── Sidebar ── */
+.sidebar{width:380px;min-width:380px;background:var(--green);display:flex;flex-direction:column;border-right:1px solid var(--border);z-index:500}
+.sidebar-tabs{display:flex;border-bottom:1px solid var(--border)}
+.sidebar-tabs button{flex:1;padding:10px 8px;background:none;border:none;color:rgba(255,255,255,0.5);font-size:12px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;font-family:inherit;transition:all .2s}
+.sidebar-tabs button.active{color:var(--gold);border-bottom-color:var(--gold)}
+.sidebar-tabs button:hover{color:#fff}
+
+/* Filters */
+.filters-bar{padding:8px 12px;border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.fbtn{background:var(--green2);border:1px solid var(--border);color:rgba(255,255,255,0.7);padding:4px 10px;border-radius:14px;font-size:11px;cursor:pointer;font-family:inherit;transition:all .15s}
+.fbtn:hover{border-color:var(--gold);color:#fff}
+.fbtn.on{background:var(--gold);color:var(--green);border-color:var(--gold);font-weight:600}
+.search-row{padding:8px 12px;border-bottom:1px solid var(--border);display:flex;gap:6px}
+.search-row input{flex:1;background:var(--green2);border:1px solid var(--border);color:#fff;padding:6px 10px;border-radius:6px;font-size:12px;font-family:inherit;outline:none}
+.search-row input:focus{border-color:var(--gold)}
+.search-row select{background:var(--green2);border:1px solid var(--border);color:#fff;padding:6px;border-radius:6px;font-size:11px;font-family:inherit;outline:none}
+
+/* Building list */
+.panel-content{flex:1;overflow-y:auto;padding:0}
+.bldg-card{padding:10px 12px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s}
+.bldg-card:hover{background:rgba(212,168,67,0.08)}
+.bldg-card.selected{background:rgba(212,168,67,0.15);border-left:3px solid var(--gold)}
+.bldg-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px}
+.bldg-name{font-size:13px;font-weight:600;flex:1;margin-right:8px}
+.bldg-badge{padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;flex-shrink:0}
+.badge-A{background:rgba(212,168,67,0.2);color:var(--gold)}
+.badge-B{background:rgba(46,216,154,0.2);color:#2ED89A}
+.badge-C{background:rgba(100,150,255,0.2);color:#6496FF}
+.badge-D{background:rgba(102,102,102,0.2);color:#888}
+.bldg-meta{font-size:11px;opacity:0.5;margin-bottom:4px}
+.bldg-stats{display:flex;gap:12px;font-size:11px}
+.bldg-stats span{color:var(--gold);font-weight:600}
+.bldg-actions{display:flex;gap:4px;margin-top:6px}
+.bldg-actions button{background:var(--green2);border:1px solid var(--border);color:#fff;padding:3px 8px;border-radius:4px;font-size:10px;cursor:pointer;font-family:inherit}
+.bldg-actions button:hover{border-color:var(--gold);color:var(--gold)}
+.bldg-actions button.pip-on{background:var(--accent);border-color:var(--accent)}
+
+/* Compare bar */
+.compare-bar{padding:8px 12px;background:var(--green2);border-top:1px solid var(--gold);display:none;align-items:center;justify-content:space-between;font-size:12px}
+.compare-bar.show{display:flex}
+.compare-bar button{background:var(--gold);color:var(--green);border:none;padding:4px 12px;border-radius:4px;font-weight:600;cursor:pointer;font-family:inherit;font-size:11px}
+.compare-bar .clear-btn{background:var(--coral)}
+
+/* Analytics */
+.analytics-panel{padding:16px}
+.analytics-panel h3{color:var(--gold);font-size:14px;margin-bottom:12px}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.stat-card{background:var(--green2);border-radius:8px;padding:12px;text-align:center}
+.stat-card .sv{font-size:20px;font-weight:800;color:var(--gold)}
+.stat-card .sl{font-size:10px;opacity:0.5;text-transform:uppercase;margin-top:2px}
+.chart-section{margin-bottom:16px}
+.chart-section h4{font-size:12px;color:var(--gold);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:4px;font-size:11px}
+.bar-label{width:90px;text-align:right;opacity:0.6;flex-shrink:0}
+.bar-track{flex:1;height:16px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;display:flex;align-items:center;padding-left:6px;font-size:9px;font-weight:600;transition:width .5s}
+.bar-count{width:35px;font-size:11px;opacity:0.6}
+.top-list{list-style:none;margin-top:8px}
+.top-list li{display:flex;justify-content:space-between;padding:4px 0;font-size:11px;border-bottom:1px solid var(--border)}
+.top-list .tl-rank{color:var(--gold);font-weight:700;width:20px}
+.top-list .tl-name{flex:1;margin:0 8px}
+.top-list .tl-val{font-weight:600;color:var(--accent)}
+
+/* Map */
+.map-wrap{flex:1;position:relative}
+#map{width:100%;height:100%}
+.map-ctrls{position:absolute;top:12px;right:12px;display:flex;flex-direction:column;gap:6px;z-index:10}
+.map-ctrls button{background:rgba(11,61,46,0.9);border:1px solid var(--border);color:#fff;width:34px;height:34px;border-radius:6px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.map-ctrls button:hover{border-color:var(--gold);color:var(--gold)}
+.map-ctrls button.active{background:var(--gold);color:var(--green);border-color:var(--gold)}
+.style-toggle{position:absolute;top:12px;left:12px;display:flex;gap:2px;z-index:10;background:rgba(11,61,46,0.9);border-radius:6px;padding:2px;border:1px solid var(--border)}
+.style-toggle button{background:none;border:none;color:rgba(255,255,255,0.6);padding:6px 12px;border-radius:4px;cursor:pointer;font-size:11px;font-weight:600;font-family:inherit;transition:all .15s}
+.style-toggle button.active{background:var(--gold);color:var(--green)}
+.map-legend{position:absolute;bottom:12px;left:12px;background:rgba(11,61,46,0.92);border:1px solid var(--border);border-radius:8px;padding:10px 14px;z-index:10;font-size:11px}
+.map-legend h5{color:var(--gold);font-size:10px;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.lg-i{display:flex;align-items:center;gap:6px;margin-bottom:3px}
+.lg-d{width:10px;height:10px;border-radius:50%}
+
+/* Popup */
+.maplibregl-popup-content{background:var(--green)!important;color:var(--pearl)!important;border:1px solid var(--gold)!important;border-radius:10px!important;padding:16px!important;min-width:300px;max-width:360px;box-shadow:0 8px 30px rgba(0,0,0,0.5)!important}
+.maplibregl-popup-tip{border-top-color:var(--gold)!important}
+.maplibregl-popup-close-button{color:#fff!important;font-size:18px!important;right:8px!important;top:4px!important}
+.popup-title{font-size:15px;font-weight:700;margin-bottom:4px;padding-right:20px}
+.popup-sub{font-size:11px;opacity:0.5;margin-bottom:10px}
+.popup-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;margin-bottom:10px}
+.popup-grid .pg-label{font-size:10px;opacity:0.5;text-transform:uppercase}
+.popup-grid .pg-val{font-size:13px;font-weight:600}
+.popup-btns{display:flex;gap:6px}
+.popup-btns a,.popup-btns button{flex:1;text-align:center;padding:8px;border-radius:6px;font-size:12px;font-weight:600;text-decoration:none;cursor:pointer;font-family:inherit;border:none}
+.wa-btn{background:var(--accent);color:#fff}
+.wa-btn:hover{background:#15634a}
+.proposal-btn{background:var(--gold);color:var(--green)}
+.proposal-btn:hover{background:#c49a3a}
+.pip-toggle-btn{background:var(--green2);color:#fff;border:1px solid var(--border)!important}
+.pip-toggle-btn.active{background:var(--accent);border-color:var(--accent)!important}
+.note-area{width:100%;background:var(--green2);border:1px solid var(--border);color:#fff;padding:6px 8px;border-radius:4px;font-size:11px;font-family:inherit;resize:vertical;min-height:40px;margin-top:6px}
+.note-area:focus{border-color:var(--gold);outline:none}
+
+/* Compare overlay */
+.compare-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:2000;display:none;align-items:center;justify-content:center}
+.compare-overlay.show{display:flex}
+.compare-box{background:var(--green);border:2px solid var(--gold);border-radius:12px;padding:24px;max-width:900px;width:90%;max-height:80vh;overflow-y:auto}
+.compare-box h3{color:var(--gold);margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
+.compare-box .close-cmp{background:none;border:none;color:#fff;font-size:20px;cursor:pointer}
+.compare-grid{display:grid;gap:16px}
+.compare-col{background:var(--green2);border-radius:8px;padding:14px}
+.compare-col h4{color:var(--gold);font-size:13px;margin-bottom:10px}
+.cmp-row{display:flex;justify-content:space-between;padding:4px 0;font-size:12px;border-bottom:1px solid var(--border)}
+.cmp-label{opacity:0.5}
+.cmp-val{font-weight:600}
+
+/* Loading */
+.loading{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .5s}
+.loading.done{opacity:0;pointer-events:none}
+.spinner{width:40px;height:40px;border:3px solid var(--green2);border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading p{margin-top:12px;font-size:13px;opacity:0.6}
+
+/* Mobile */
+@media(max-width:768px){
+  .sidebar{width:100%;min-width:unset;position:fixed;bottom:0;left:0;right:0;height:50vh;z-index:500;border-right:none;border-top:2px solid var(--gold)}
+  .main{flex-direction:column}
+  .map-wrap{height:50vh}
+  .header-stats{display:none}
+  .login-box{width:90%;padding:32px 24px}
+}
+.panel-content::-webkit-scrollbar{width:6px}
+.panel-content::-webkit-scrollbar-track{background:var(--green)}
+.panel-content::-webkit-scrollbar-thumb{background:var(--green2);border-radius:3px}
+.panel-content::-webkit-scrollbar-thumb:hover{background:var(--gold)}
+</style>
+</head>
+<body>
+
+<!-- ═══ LOGIN OVERLAY ═══ -->
+<div class="login-overlay hidden" id="loginOverlay">
+  <div class="login-box" id="loginBox">
+    <div class="login-logo">
+      <div class="brand">SOLARIS</div>
+      <div class="sub">Argentina</div>
+    </div>
+    <div class="login-tagline">Roof Scanner Pro</div>
+    <input class="login-field" id="loginUser" type="text" placeholder="Usuario" autocomplete="username" autofocus>
+    <input class="login-field" id="loginPass" type="password" placeholder="Contraseña" autocomplete="current-password">
+    <button class="login-btn" id="loginBtn" onclick="attemptLogin()">Ingresar</button>
+    <div class="login-error" id="loginError"></div>
+    <div style="margin-top:24px;font-size:10px;color:rgba(255,255,255,0.2);letter-spacing:3px;text-transform:uppercase">Energía Propia</div>
+  </div>
+</div>
+
+<!-- ═══ LOADING ═══ -->
+<div class="loading" id="loading" style="display:none">
+  <div class="spinner"></div>
+  <p>Cargando edificios...</p>
+</div>
+
+<!-- ═══ HEADER ═══ -->
+<div class="header" id="appHeader">
+  <div class="logo">
+    <div class="logo-mark">SA</div>
+    <div class="logo-text"><span>Solaris</span> Argentina</div>
+  </div>
+  <div class="header-stats">
+    <div class="hstat"><div class="hstat-val" id="h-buildings">0</div><div class="hstat-label">Edificios</div></div>
+    <div class="hstat"><div class="hstat-val" id="h-mwp">0</div><div class="hstat-label">MWp</div></div>
+    <div class="hstat"><div class="hstat-val" id="h-value">0</div><div class="hstat-label">USD M</div></div>
+    <div class="hstat"><div class="hstat-val" id="h-pipeline">0</div><div class="hstat-label">Pipeline</div></div>
+  </div>
+  <div class="header-user">
+    <span id="userDisplay"></span>
+    <button class="logout-btn" onclick="doLogout()">Salir</button>
+  </div>
+</div>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main" id="appMain">
+  <div class="sidebar">
+    <div class="sidebar-tabs">
+      <button class="active" onclick="switchTab('buildings',this)">🏢 Edificios</button>
+      <button onclick="switchTab('analytics',this)">📊 Analíticas</button>
+    </div>
+
+    <div id="tab-buildings">
+      <div class="filters-bar">
+        <button class="fbtn on" data-pr="all" onclick="filterPriority('all',this)">Todos</button>
+        <button class="fbtn" data-pr="A" onclick="filterPriority('A',this)">🥇 A</button>
+        <button class="fbtn" data-pr="B" onclick="filterPriority('B',this)">🥈 B</button>
+        <button class="fbtn" data-pr="C" onclick="filterPriority('C',this)">🥉 C</button>
+        <button class="fbtn" data-pr="D" onclick="filterPriority('D',this)">D</button>
+        <span style="margin-left:8px;opacity:0.3">|</span>
+        <button class="fbtn" data-cat="industrial" onclick="filterCat('industrial',this)">🏭</button>
+        <button class="fbtn" data-cat="commercial" onclick="filterCat('commercial',this)">🏢</button>
+        <button class="fbtn" data-cat="warehouse" onclick="filterCat('warehouse',this)">📦</button>
+        <button class="fbtn" data-cat="retail" onclick="filterCat('retail',this)">🛒</button>
+        <button class="fbtn" data-cat="food_processing" onclick="filterCat('food_processing',this)">🍎</button>
+        <button class="fbtn" data-cat="hotel" onclick="filterCat('hotel',this)">🏨</button>
+        <button class="fbtn" data-cat="healthcare" onclick="filterCat('healthcare',this)">🏥</button>
+        <button class="fbtn" data-cat="education" onclick="filterCat('education',this)">🏫</button>
+        <span style="margin-left:4px;opacity:0.3">|</span>
+        <button class="fbtn" data-sz="500" onclick="filterSize(500,this)">500m²+</button>
+        <button class="fbtn" data-sz="1000" onclick="filterSize(1000,this)">1000m²+</button>
+        <button class="fbtn" data-pip="1" onclick="filterPipeline(this)">🟢 Pipeline</button>
+      </div>
+      <div class="search-row">
+        <input type="text" id="searchInput" placeholder="🔍 Buscar nombre, categoría...">
+        <select id="sortSelect" onchange="sortAndRender()">
+          <option value="kwp">kWp ↓</option>
+          <option value="area">Área ↓</option>
+          <option value="savings">Ahorro ↓</option>
+          <option value="payback">Retorno ↑</option>
+          <option value="name">Nombre A-Z</option>
+        </select>
+      </div>
+      <div class="panel-content" id="buildingList"></div>
+      <div class="compare-bar" id="compareBar">
+        <span>Comparar: <span id="cmpCount">0</span>/3</span>
+        <div style="display:flex;gap:4px">
+          <button onclick="showCompare()">Comparar</button>
+          <button class="clear-btn" onclick="clearCompare()">Limpiar</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-analytics" style="display:none">
+      <div class="panel-content">
+        <div class="analytics-panel" id="analyticsContent"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="map-wrap">
+    <div id="map"></div>
+    <div class="style-toggle">
+      <button id="btn-streets" class="active" onclick="setMapStyle('streets')">🗺️ Mapa</button>
+      <button id="btn-sat" onclick="setMapStyle('satellite')">🛰️ Satélite</button>
+    </div>
+    <div class="map-ctrls">
+      <button onclick="map.zoomIn()" title="Acercar">+</button>
+      <button onclick="map.zoomOut()" title="Alejar">−</button>
+      <button onclick="resetView()" title="Vista inicial">⌂</button>
+    </div>
+    <div class="map-legend">
+      <h5>Prioridad</h5>
+      <div class="lg-i"><div class="lg-d" style="background:#D4A843"></div> A — Alta (&gt;100 kWp)</div>
+      <div class="lg-i"><div class="lg-d" style="background:#2ED89A"></div> B — Media (50-100)</div>
+      <div class="lg-i"><div class="lg-d" style="background:#6496FF"></div> C — Baja (20-50)</div>
+      <div class="lg-i"><div class="lg-d" style="background:#666"></div> D — Pequeña (&lt;20)</div>
+      <div class="lg-i"><div class="lg-d" style="background:var(--accent);border:2px solid #2ED89A"></div> Pipeline</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ COMPARE OVERLAY ═══ -->
+<div class="compare-overlay" id="compareOverlay">
+  <div class="compare-box">
+    <h3><span>⚖️ Comparación de Edificios</span><button class="close-cmp" onclick="closeCompare()">✕</button></h3>
+    <div class="compare-grid" id="compareGrid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr))"></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// AUTH
+// ═══════════════════════════════════════════
+const USERS = {ruben:'2026',kaniel:'2026'};
+let currentUser = null;
+
+function attemptLogin(){
+  const u = document.getElementById('loginUser').value.trim().toLowerCase();
+  const p = document.getElementById('loginPass').value;
+  if(USERS[u] && USERS[u]===p){
+    currentUser = u;
+    sessionStorage.setItem('sa_user',u);
+    showApp();
+  } else {
+    document.getElementById('loginError').textContent='Usuario o contraseña incorrectos';
+    document.getElementById('loginBox').classList.add('shake');
+    setTimeout(()=>document.getElementById('loginBox').classList.remove('shake'),500);
+  }
+}
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementById('loginOverlay').style.display!=='none'&&!document.getElementById('loginOverlay').classList.contains('hidden'))attemptLogin()});
+
+function showApp(){
+  document.getElementById('loginOverlay').classList.add('hidden');
+  document.getElementById('appHeader').style.display='';
+  document.getElementById('appMain').style.display='';
+  document.getElementById('loading').style.display='flex';
+  document.getElementById('userDisplay').textContent=currentUser;
+  setTimeout(initApp,100);
+}
+
+function doLogout(){
+  sessionStorage.removeItem('sa_user');
+  location.reload();
+}
+
+// Check session on load
+(function(){
+  // Auto-load without login
+  currentUser='guest';
+  showApp();
+})();
+
+// ═══════════════════════════════════════════
+// CONSTANTS
+// ═══════════════════════════════════════════
+const COST_PER_KWP = 600;
+const IRRADIATION = 4.5;
+const PERF_RATIO = 0.80;
+const TARIFF = 0.06;
+const ANNUAL_KWH_PER_KWP = IRRADIATION * 365 * PERF_RATIO; // 1314
+const WA_NUMBER = '972503773225';
+
+const PRIORITY_COLORS = {A:'#D4A843',B:'#2ED89A',C:'#6496FF',D:'#666666'};
+const CAT_LABELS = {industrial:'🏭 Industrial',commercial:'🏢 Comercial',warehouse:'📦 Depósito',retail:'🛒 Retail',food_processing:'🍎 Agroindustria',hotel:'🏨 Hotel',healthcare:'🏥 Salud',education:'🏫 Educación',other:'📍 Otro'};
+const CAT_ICONS = {};
+Object.entries(CAT_LABELS).forEach(([k,v])=>CAT_ICONS[k]=v.split(' ')[0]);
+
+// ═══════════════════════════════════════════
+// BUILDING DATA — 500+ buildings across southern GBA (20km radius)
+// ═══════════════════════════════════════════
+// ═══════════════════════════════════════════
+// BUILDING DATA — 1,251 real buildings from OpenStreetMap (20km radius)
+// ═══════════════════════════════════════════
+const RAW = [];
+let _id=0;
+function B(name,lat,lon,cat,area){
+  _id++;
+  const kwp=Math.round(area*0.15);
+  const ann=Math.round(kwp*ANNUAL_KWH_PER_KWP);
+  const sav=Math.round(ann*TARIFF*100)/100;
+  const inv=kwp*COST_PER_KWP;
+  const pay=sav>0?Math.round(inv/sav*10)/10:99;
+  const pr=kwp>=100?'A':kwp>=50?'B':kwp>=20?'C':'D';
+  RAW.push({id:_id,n:name,la:lat,lo:lon,c:cat,a:area,kwp,ann,sav,inv,pay,pr,pip:0});
+}
+
+B("Metalúrgica Quilmes",-34.8138751,-58.5062312,"industrial",3717);
+B("Química Adrogué",-34.8140413,-58.5053404,"industrial",2254);
+B("Aceros Lanús",-34.8201723,-58.5063591,"industrial",962);
+B("Industrias Banfield",-34.8190728,-58.506248,"industrial",2405);
+B("Manufacturera Remedios de Escalada",-34.8183328,-58.5060335,"industrial",3638);
+B("Textil Avellaneda",-34.799916,-58.4609792,"industrial",2119);
+B("Fábrica Lomas",-34.892566,-58.6017858,"industrial",3418);
+B("Fábrica Temperley",-34.8945563,-58.6016375,"industrial",2628);
+B("Facultad de Ciencias Económicas",-34.77557,-58.4588227,"education",706);
+B("Coto",-34.7030711,-58.4999729,"retail",355);
+B("Comercio Temperley",-34.6998193,-58.5380345,"retail",496);
+B("Comercio Remedios de Escalada",-34.7011165,-58.5329278,"retail",869);
+B("Universidad Burzaco",-34.7721308,-58.4053635,"education",1367);
+B("Facultad de Ingeniería",-34.7752671,-58.4568374,"education",1387);
+B("Facultad de Ciencias Sociales",-34.7759025,-58.4558005,"education",1780);
+B("Facultad de Derecho",-34.77661,-58.4570474,"education",1177);
+B("Facultad de Ciencias Agrarias",-34.7743558,-58.4574746,"education",1974);
+B("Instituto Lomas",-34.8012693,-58.4533146,"education",1750);
+B("Universidad Lanús",-34.8010122,-58.4536064,"education",1274);
+B("Disco",-34.7638409,-58.3980202,"commercial",496);
+B("Palacio Sansinena",-34.7752754,-58.3950767,"education",1520);
+B("Aceros Burzaco",-34.7736041,-58.4459345,"industrial",1141);
+B("Industrias Monte Grande",-34.7735589,-58.4443936,"industrial",2657);
+B("Industrias Adrogué",-34.7741697,-58.4475448,"industrial",3199);
+B("Plásticos Lomas",-34.7745643,-58.4447372,"industrial",2372);
+B("Fundición Lomas",-34.7728257,-58.443804,"industrial",2329);
+B("Aceros Adrogué",-34.773234,-58.4441107,"industrial",944);
+B("Metalúrgica Banfield",-34.773081,-58.4466531,"industrial",1966);
+B("Aceros Adrogué",-34.7725604,-58.4447215,"industrial",1681);
+B("Buenos Aires Catering",-34.7978696,-58.523639,"industrial",969);
+B("Química Monte Grande",-34.8012842,-58.4203326,"industrial",1933);
+B("Nave H, I",-34.8789755,-58.5079464,"industrial",2247);
+B("Vacios LCH",-34.8452838,-58.3813093,"warehouse",2507);
+B("Distribuidora Adrogué",-34.8465149,-58.3769926,"warehouse",1802);
+B("LCTPRO",-34.8443896,-58.3790752,"industrial",2883);
+B("Fundición Avellaneda",-34.8460886,-58.3783994,"industrial",2980);
+B("Colegio Avellaneda",-34.7811032,-58.398206,"education",641);
+B("Industrias Lanús",-34.815967,-58.3899342,"industrial",2305);
+B("Supermercado Languenheim",-34.8519892,-58.3806517,"retail",885);
+B("Escuela Sendas Verdes",-34.8460549,-58.3765885,"education",1269);
+B("Depósito Lomas",-34.8438193,-58.3781513,"warehouse",736);
+B("Manufacturera Lanús",-34.8418922,-58.4063,"industrial",2764);
+B("Fundición Quilmes",-34.8417629,-58.4125672,"industrial",2155);
+B("Fundición Burzaco",-34.8411833,-58.4115616,"industrial",1534);
+B("Fábrica Monte Grande",-34.8437859,-58.409334,"industrial",3302);
+B("Manufacturera Quilmes",-34.8413678,-58.412401,"industrial",1194);
+B("Fundición Monte Grande",-34.8423291,-58.4133423,"industrial",2699);
+B("Textil Burzaco",-34.8410882,-58.4066436,"industrial",2682);
+B("Aceros Burzaco",-34.8386776,-58.4060709,"industrial",2196);
+B("Depósito Lomas",-34.8450845,-58.4035918,"warehouse",2890);
+B("Industrias Temperley",-34.8434376,-58.4086152,"industrial",1113);
+B("Aceros Lanús",-34.841548,-58.4091178,"industrial",1083);
+B("Metalúrgica Quilmes",-34.839843,-58.4130356,"industrial",3543);
+B("Zoloda",-34.8363285,-58.4030898,"industrial",2150);
+B("Industrias Adrogué",-34.8413396,-58.404106,"industrial",2471);
+B("Plásticos Monte Grande",-34.8416122,-58.4046163,"industrial",1811);
+B("Textil Temperley",-34.8399863,-58.4115408,"industrial",1320);
+B("Química Banfield",-34.8395499,-58.4120793,"industrial",3171);
+B("Manufacturera Quilmes",-34.8420747,-58.4108363,"industrial",1984);
+B("Plásticos Avellaneda",-34.8425048,-58.4097357,"industrial",1138);
+B("Fundición Quilmes",-34.8356059,-58.4067989,"industrial",1932);
+B("Metalúrgica Banfield",-34.8442038,-58.403766,"industrial",1249);
+B("Química Burzaco",-34.8428804,-58.4103049,"industrial",1489);
+B("Giannoni",-34.8350159,-58.4071731,"retail",597);
+B("Manufacturera Burzaco",-34.8413439,-58.4119549,"industrial",1787);
+B("Manufacturera Burzaco",-34.8425772,-58.4105561,"industrial",1690);
+B("Industrias Lomas",-34.8418334,-58.4101402,"industrial",3330);
+B("Logística Adrogué",-34.8373919,-58.4026026,"warehouse",1971);
+B("Fundición Monte Grande",-34.8379239,-58.406661,"industrial",3619);
+B("Industrias Lomas",-34.8351187,-58.406593,"industrial",3359);
+B("Industrias Remedios de Escalada",-34.8433929,-58.4099373,"industrial",1782);
+B("Manufacturera Monte Grande",-34.840409,-58.4129517,"industrial",3539);
+B("Textil Lomas",-34.8406625,-58.4109753,"industrial",3196);
+B("Aceros Lomas",-34.8376411,-58.4226345,"industrial",1324);
+B("Aceros Temperley",-34.8394134,-58.4181303,"industrial",2750);
+B("Textil Lomas",-34.8383538,-58.4236898,"industrial",2078);
+B("Fundición Monte Grande",-34.8432534,-58.421653,"industrial",1940);
+B("Industrias Banfield",-34.8392451,-58.4207875,"industrial",1088);
+B("Industrias Remedios de Escalada",-34.8388838,-58.4199645,"industrial",1000);
+B("Aceros Temperley",-34.8402342,-58.4177633,"industrial",3668);
+B("Química Temperley",-34.8386215,-58.4195134,"industrial",3072);
+B("Barbieri",-34.8345328,-58.4203416,"industrial",1748);
+B("Química Lanús",-34.8466027,-58.4138452,"industrial",1897);
+B("Metalúrgica Adrogué",-34.8498677,-58.408762,"industrial",2845);
+B("La Salteña (General Mlls)",-34.8327592,-58.4226867,"industrial",3289);
+B("Textil Lomas",-34.8395415,-58.4257661,"industrial",1925);
+B("Aceros Adrogué",-34.8397704,-58.419533,"industrial",1605);
+B("Industrias Burzaco",-34.8368526,-58.4188122,"industrial",2695);
+B("Manufacturera Temperley",-34.8487234,-58.4129698,"industrial",2789);
+B("Fundición Banfield",-34.8387257,-58.4243507,"industrial",2754);
+B("Aceros Lomas",-34.8401158,-58.4202566,"industrial",884);
+B("Fundición Adrogué",-34.8345932,-58.4248249,"industrial",1469);
+B("Textil Temperley",-34.847943,-58.4121482,"industrial",1669);
+B("Aceros Temperley",-34.8405634,-58.4206009,"industrial",3372);
+B("Industrias Burzaco",-34.8405417,-58.423078,"industrial",3517);
+B("Fábrica Lanús",-34.8374931,-58.4256441,"industrial",751);
+B("Textil Banfield",-34.8389835,-58.424163,"industrial",2512);
+B("Industrias Quilmes",-34.8469664,-58.4204343,"industrial",2643);
+B("Fábrica Quilmes",-34.8528046,-58.4142516,"industrial",2967);
+B("Manufacturera Burzaco",-34.8373038,-58.4185059,"industrial",3372);
+B("Textil Lomas",-34.8392885,-58.4253149,"industrial",1201);
+B("Manufacturera Monte Grande",-34.8429637,-58.4233518,"industrial",2011);
+B("Textil Adrogué",-34.8396762,-58.4237185,"industrial",1120);
+B("Fundición Lomas",-34.8400001,-58.4248349,"industrial",987);
+B("Química Avellaneda",-34.83558,-58.4244523,"industrial",1835);
+B("Aceros Avellaneda",-34.8495231,-58.4111505,"industrial",2733);
+B("Fundición Temperley",-34.8376256,-58.4182871,"industrial",2962);
+B("Fundición Lomas",-34.835931,-58.4218072,"industrial",3491);
+B("Plásticos Monte Grande",-34.8411562,-58.4217443,"industrial",3043);
+B("Química Avellaneda",-34.8418924,-58.4194658,"industrial",3675);
+B("Genrod",-34.8338379,-58.4190821,"industrial",1997);
+B("Fundición Quilmes",-34.8330768,-58.4218585,"industrial",3420);
+B("Industrias Burzaco",-34.8369842,-58.4184782,"industrial",3404);
+B("Industrias Temperley",-34.8393908,-58.4239254,"industrial",2046);
+B("Cofaloza",-34.8350849,-58.424164,"warehouse",1444);
+B("Aceros Quilmes",-34.8356311,-58.4148744,"industrial",3472);
+B("Industrias Temperley",-34.8324761,-58.4145843,"industrial",1663);
+B("Fundición Avellaneda",-34.8385456,-58.4171267,"industrial",3369);
+B("Manufacturera Adrogué",-34.8375982,-58.4166642,"industrial",1211);
+B("Fábrica Remedios de Escalada",-34.8427101,-58.4140185,"industrial",2994);
+B("Envases Giannattasio",-34.8344167,-58.4148252,"industrial",1324);
+B("Química Banfield",-34.8335807,-58.4082113,"industrial",3711);
+B("Manufacturera Lomas",-34.8347906,-58.4115384,"industrial",3663);
+B("Plásticos Remedios de Escalada",-34.841711,-58.4249669,"industrial",2943);
+B("Fábrica Temperley",-34.8372353,-58.4168622,"industrial",3307);
+B("Química Lomas",-34.8362743,-58.4160969,"industrial",2262);
+B("Plásticos Avellaneda",-34.8341719,-58.4124252,"industrial",3662);
+B("Metalúrgica Burzaco",-34.8412329,-58.4239763,"industrial",1111);
+B("Aceros Remedios de Escalada",-34.8413524,-58.4243826,"industrial",3280);
+B("Industrias Banfield",-34.8367302,-58.4169287,"industrial",863);
+B("Manufacturera Avellaneda",-34.8414181,-58.4228179,"industrial",1284);
+B("Fundición Lomas",-34.841086,-58.4237255,"industrial",1503);
+B("Fundición Banfield",-34.840665,-58.4154291,"industrial",1026);
+B("Manufacturera Lanús",-34.8415363,-58.4246005,"industrial",3104);
+B("Plásticos Quilmes",-34.8422198,-58.4233912,"industrial",2317);
+B("Textil Avellaneda",-34.8419169,-58.4230524,"industrial",3309);
+B("Química Burzaco",-34.8419052,-58.4236095,"industrial",3192);
+B("Fábrica Remedios de Escalada",-34.9558593,-58.6399936,"industrial",1008);
+B("Portal Lomas Shopping",-34.7921079,-58.4171902,"commercial",808);
+B("Scalabrini Ortiz",-34.7355671,-58.3910462,"education",856);
+B("Manuel Ugarte",-34.7349676,-58.391955,"education",1643);
+B("Arturo Jauretche",-34.7349878,-58.3915804,"education",1715);
+B("Instituto Lomas",-34.7821852,-58.3978788,"education",1339);
+B("Escuela Burzaco",-34.7824456,-58.3984896,"education",453);
+B("Universidad Remedios de Escalada",-34.7816581,-58.3976702,"education",1002);
+B("Textil Adrogué",-34.7994657,-58.4421682,"industrial",1009);
+B("Plásticos Banfield",-34.7991017,-58.4424042,"industrial",3190);
+B("Fábrica Lanús",-34.7991036,-58.4417509,"industrial",1101);
+B("Industrias Monte Grande",-34.798896,-58.4411634,"industrial",2571);
+B("Ortega Peña",-34.7346078,-58.3927128,"education",1519);
+B("Juana Manso",-34.7331847,-58.3925545,"education",858);
+B("Homero Manzi",-34.7347605,-58.3924176,"education",1683);
+B("José Hernández",-34.7324239,-58.3935042,"education",1827);
+B("Shopping Quilmes",-34.7819484,-58.4602958,"retail",391);
+B("Manufacturera Monte Grande",-34.7749963,-58.4681159,"industrial",3570);
+B("Almacén Monte Grande",-34.7744553,-58.466226,"warehouse",767);
+B("Nave A, B",-34.8804724,-58.5081705,"industrial",3588);
+B("Nave E, F G",-34.8796087,-58.5076906,"industrial",1246);
+B("Nave C, D, Ing.",-34.8798261,-58.5072596,"industrial",3401);
+B("Comedor",-34.8803664,-58.5071891,"industrial",1172);
+B("Fábrica Lanús",-34.8798217,-58.5094408,"industrial",797);
+B("Vesturario",-34.8807017,-58.5071309,"industrial",1167);
+B("Textil Lanús",-34.8792639,-58.5065319,"industrial",869);
+B("Química Banfield",-34.8796909,-58.5091685,"industrial",873);
+B("Pintura",-34.8802759,-58.5097805,"industrial",3124);
+B("Shopping Las Toscas",-34.856028,-58.5039211,"commercial",891);
+B("Portal Canning",-34.8537181,-58.5009821,"commercial",1252);
+B("Emmel",-34.7435849,-58.3894168,"commercial",1104);
+B("Compumax",-34.74358,-58.3892047,"retail",821);
+B("Galería Avellaneda",-34.7435462,-58.3893,"retail",942);
+B("Anexo de aulas",-34.7896914,-58.4498457,"education",1416);
+B("Escuela Adrogué",-34.7904396,-58.4496533,"education",1026);
+B("Colegio Monte Grande",-34.7423409,-58.3887938,"education",1903);
+B("La Genovesa",-34.7426322,-58.3919627,"retail",644);
+B("Instituto Stella Maris",-34.8062309,-58.399792,"education",463);
+B("Shopping Remedios de Escalada",-34.8101258,-58.4002012,"retail",370);
+B("Manufacturera Lomas",-34.8025813,-58.4383903,"industrial",1630);
+B("Escuela Nº1",-34.7972589,-58.3842486,"education",1306);
+B("Enrique Santos Discépolo",-34.7324573,-58.3930554,"education",1049);
+B("Lola Mora",-34.7317177,-58.3929868,"education",1551);
+B("Escuela 28 Patricias Argentinas",-34.8340056,-58.3824647,"education",1903);
+B("Laboratorio Lisandro de la Torre",-34.7346854,-58.3906343,"education",1847);
+B("Manufacturera Remedios de Escalada",-34.7991348,-58.4177125,"industrial",1665);
+B("Plásticos Banfield",-34.7975245,-58.4168239,"industrial",1379);
+B("Industrias Adrogué",-34.7985287,-58.4158764,"industrial",902);
+B("Manufacturera Quilmes",-34.7969449,-58.4177703,"industrial",2782);
+B("Fábrica Temperley",-34.797187,-58.4182136,"industrial",3434);
+B("Industrias Lomas",-34.7974612,-58.4157158,"industrial",2658);
+B("Metalúrgica Banfield",-34.7997828,-58.4146695,"industrial",3310);
+B("Metalúrgica Banfield",-34.7999643,-58.415213,"industrial",2586);
+B("Textil Lanús",-34.8000687,-58.4147426,"industrial",1494);
+B("Metalúrgica Quilmes",-34.7995218,-58.4139101,"industrial",1752);
+B("Aceros Avellaneda",-34.7998789,-58.4180249,"industrial",795);
+B("Metalúrgica Lomas",-34.8002265,-58.4176942,"industrial",2814);
+B("Textil Remedios de Escalada",-34.7990573,-58.420077,"industrial",1598);
+B("Aceros Remedios de Escalada",-34.7993918,-58.4200867,"industrial",1264);
+B("Fábrica Banfield",-34.7967513,-58.4203664,"industrial",1270);
+B("Textil Avellaneda",-34.7969983,-58.4204049,"industrial",974);
+B("Manufacturera Remedios de Escalada",-34.7973442,-58.4201537,"industrial",2960);
+B("Metalúrgica Lomas",-34.7968855,-58.4213368,"industrial",2498);
+B("UPA 5 - Almirante Brown",-34.8572166,-58.3878534,"healthcare",631);
+B("Maxi Consumo",-34.7712078,-58.4677784,"retail",367);
+B("Complejo Remedios de Escalada",-34.8830488,-58.3881937,"commercial",1455);
+B("Industrias Lomas",-34.8453234,-58.3953449,"industrial",1821);
+B("Industrias Remedios de Escalada",-34.8444925,-58.3969958,"industrial",2128);
+B("Industrias Avellaneda",-34.8440466,-58.3970027,"industrial",868);
+B("Plásticos Monte Grande",-34.8457786,-58.3956407,"industrial",3524);
+B("Manufacturera Quilmes",-34.8178428,-58.5069546,"industrial",2345);
+B("Manufacturera Temperley",-34.8094368,-58.4941891,"industrial",1810);
+B("Industrias Temperley",-34.8059907,-58.4990943,"industrial",2289);
+B("Fundición Burzaco",-34.8099874,-58.5049464,"industrial",2940);
+B("Instituto Apostolado Católico (Pallotinas)",-34.7901399,-58.4053493,"education",1571);
+B("Jardín Infantes",-34.7899058,-58.4057983,"education",1538);
+B("Logística Banfield",-34.720674,-58.4646707,"warehouse",1472);
+B("Aceros Avellaneda",-34.8292716,-58.4767511,"industrial",1725);
+B("Manufacturera Remedios de Escalada",-34.8106638,-58.4951619,"industrial",1726);
+B("Empresa Monte Grande S.A.",-34.8072682,-58.4567207,"industrial",3002);
+B("Emilio López",-34.8059179,-58.4580428,"industrial",3588);
+B("Asociación Japonesa Burzaco",-34.8256873,-58.3897386,"education",1727);
+B("Escuela Primaria n° 10 Doctor Pascual Santoro",-34.9309212,-58.3923626,"education",1112);
+B("Casa del Estudiante",-34.7343123,-58.3911867,"education",1387);
+B("Macedonio Fernández",-34.735587,-58.3906985,"education",737);
+B("Clínica Estrada",-34.7350333,-58.3952434,"healthcare",931);
+B("Universidad Avellaneda",-34.7359492,-58.3908571,"education",1065);
+B("Colegio Lomas",-34.7352385,-58.3907753,"education",1798);
+B("Escuela Remedios de Escalada",-34.735593,-58.3908161,"education",1895);
+B("Talleres",-34.7212832,-58.3934487,"education",1781);
+B("MUD",-34.7197326,-58.3938577,"education",430);
+B("Polideportivo Mary Teran de Weiss",-34.7198047,-58.3932669,"education",1219);
+B("Recepción",-34.9481035,-58.5942838,"commercial",952);
+B("Shopping San Vicente",-35.0160492,-58.4088899,"commercial",693);
+B("Sagrada Familia",-34.7432077,-58.3895682,"education",1608);
+B("Agencia Chance",-34.7436285,-58.388838,"retail",795);
+B("Bebe Club",-34.7437228,-58.3888856,"retail",371);
+B("Sonne Outlet",-34.7436321,-58.388943,"retail",758);
+B("Bandada",-34.7435746,-58.3889919,"retail",776);
+B("ED Uniformes",-34.74361,-58.3890349,"retail",615);
+B("Quién te viste?",-34.7435646,-58.3891096,"retail",647);
+B("Anchus",-34.7434949,-58.3894909,"retail",271);
+B("Farmacias Cruz Verde",-34.7438513,-58.3900458,"retail",795);
+B("Galería Lomas",-34.7438645,-58.389944,"retail",991);
+B("Comercio Banfield",-34.7439799,-58.3896813,"retail",711);
+B("Anabella",-34.7440015,-58.3894844,"retail",834);
+B("Lo D\' Marie",-34.7440242,-58.3892977,"retail",262);
+B("Las Catalanas",-34.7440357,-58.3892089,"retail",631);
+B("Shopping Temperley",-34.7440462,-58.3891278,"retail",755);
+B("Havaianas - Urban Beach",-34.743815,-58.3897546,"retail",825);
+B("CDG Computación",-34.7438253,-58.3896711,"retail",296);
+B("Monalisa",-34.7438322,-58.3896129,"retail",568);
+B("Siamo Fiori",-34.7438214,-58.38953,"retail",504);
+B("Tom Hillit",-34.7438631,-58.3893731,"retail",305);
+B("Reino Garabato",-34.7438676,-58.3893346,"retail",547);
+B("Bella Inocencia",-34.7438953,-58.3890733,"retail",799);
+B("Electro Sur",-34.7439038,-58.3890078,"retail",836);
+B("Lanalú",-34.7439139,-58.3889257,"retail",268);
+B("Foto Claudio",-34.7432823,-58.391447,"retail",656);
+B("Kit\'n\'Couch",-34.7432927,-58.3913478,"retail",522);
+B("Cultura",-34.7433046,-58.3912568,"commercial",1243);
+B("Abel",-34.7434056,-58.391194,"retail",555);
+B("Alto Voltaje",-34.7434778,-58.3906353,"commercial",767);
+B("Sancho",-34.7434957,-58.3904993,"retail",493);
+B("Galería Burzaco",-34.7435055,-58.3904235,"retail",978);
+B("Inés Ciley",-34.7435007,-58.3904608,"retail",435);
+B("Veterinaria Maipu",-34.7433908,-58.3907049,"retail",576);
+B("Una vez mas",-34.7434593,-58.3907866,"retail",897);
+B("La ventana indiscreta (Ciber)",-34.7433897,-58.3907981,"retail",797);
+B("Bonafide",-34.7433845,-58.3908622,"retail",263);
+B("Optica Maipu",-34.7433789,-58.3909032,"retail",710);
+B("Casa Antonio",-34.7432689,-58.3909496,"retail",571);
+B("Supermercado Monte Grande",-34.7432548,-58.3910425,"retail",903);
+B("Edificio Quilmes",-34.7434113,-58.3910985,"commercial",714);
+B("Supermercado Lomas",-34.743441,-58.3902274,"retail",554);
+B("0KB",-34.7434884,-58.3903756,"retail",810);
+B("Unicornio\'s",-34.743496,-58.3903136,"retail",717);
+B("Hadas y duendes",-34.7430823,-58.3913356,"retail",986);
+B("El zapato roto",-34.7430443,-58.3913291,"retail",749);
+B("Mariel",-34.7430016,-58.3917579,"retail",430);
+B("Optica Maipu",-34.7431568,-58.3918437,"retail",970);
+B("Oficinas Temperley",-34.9467754,-58.5929151,"commercial",783);
+B("Enfermeria",-34.8318174,-58.4227263,"healthcare",741);
+B("Sanatorio Banfield",-34.7784381,-58.4171874,"healthcare",394);
+B("Centro Médico Lanús",-34.7788127,-58.4168744,"healthcare",438);
+B("Sanatorio Monte Grande",-34.7804227,-58.4168183,"healthcare",209);
+B("Centro Médico Lomas",-34.7809083,-58.4177613,"healthcare",600);
+B("Clínica Quilmes",-34.7814347,-58.4187419,"healthcare",237);
+B("Clínica Banfield",-34.7802475,-58.4179404,"healthcare",726);
+B("Sanatorio Adrogué",-34.7805062,-58.4185316,"healthcare",929);
+B("Centro Médico Temperley",-34.7799645,-58.4174852,"healthcare",508);
+B("Clínica Remedios de Escalada",-34.7800489,-58.4197641,"healthcare",265);
+B("Sanatorio Lomas",-34.7808494,-58.4201189,"healthcare",888);
+B("Centro Médico Temperley",-34.7808919,-58.4190998,"healthcare",935);
+B("Clínica Lanús",-34.7791431,-58.4191391,"healthcare",897);
+B("Clínica Banfield",-34.7791414,-58.4172486,"healthcare",545);
+B("Clínica Avellaneda",-34.779102,-58.4177872,"healthcare",384);
+B("Colegio Burzaco",-34.843001,-58.2837842,"education",499);
+B("Colegio Quilmes",-34.8438931,-58.2831701,"education",737);
+B("Magicos Sabores",-34.8378382,-58.5131888,"commercial",632);
+B("Escuela Primaria 69",-34.8336096,-58.2952167,"education",1705);
+B("Universidad Banfield",-34.8330587,-58.2945399,"education",1557);
+B("Galería Lomas",-34.7001922,-58.5426822,"retail",308);
+B("Josimar",-34.8147436,-58.4723132,"commercial",1417);
+B("Comercio Quilmes",-34.7025283,-58.4993484,"retail",268);
+B("Comercio Banfield",-34.757519,-58.377615,"retail",346);
+B("Los Nogales Shopping",-34.8826208,-58.5580219,"commercial",1141);
+B("Escuela N° 58 \"España\"",-34.707031,-58.4616043,"education",1978);
+B("Autopartes FAL",-34.790207,-58.4062251,"industrial",1246);
+B("Complejo Banfield",-34.8497902,-58.5235624,"commercial",569);
+B("Oficinas Banfield",-34.8501536,-58.5232511,"commercial",362);
+B("Oficinas Remedios de Escalada",-34.8514426,-58.5223562,"commercial",490);
+B("Complejo Quilmes",-34.8520252,-58.5218111,"commercial",1098);
+B("Oficinas Temperley",-34.8523735,-58.5214769,"commercial",1006);
+B("Edificio Avellaneda",-34.8524557,-58.5214539,"commercial",1223);
+B("Edificio Adrogué",-34.8531147,-58.5207453,"commercial",812);
+B("Centro Comercial Quilmes",-34.8532943,-58.5208385,"commercial",303);
+B("Oficinas Banfield",-34.8538813,-58.521596,"commercial",300);
+B("Oficinas Remedios de Escalada",-34.8543696,-58.5221622,"commercial",569);
+B("Oficinas Banfield",-34.8545339,-58.5224389,"commercial",1270);
+B("Oficinas Lanús",-34.855807,-58.5231168,"commercial",1240);
+B("Oficinas Adrogué",-34.8559503,-58.5229253,"commercial",1025);
+B("Complejo Lanús",-34.856172,-58.5226943,"commercial",809);
+B("Edificio Adrogué",-34.8681275,-58.511083,"commercial",1074);
+B("Centro Comercial Avellaneda",-34.8492525,-58.5231995,"commercial",1487);
+B("Edificio Remedios de Escalada",-34.8500667,-58.5236762,"commercial",1360);
+B("Paseo French",-34.8504103,-58.523417,"commercial",388);
+B("Edificio Lomas",-34.8506413,-58.5232286,"commercial",1346);
+B("Paseo de Reyes",-34.851702,-58.522616,"retail",848);
+B("Oficinas Lanús",-34.8520039,-58.5222191,"commercial",698);
+B("Centro Comercial Temperley",-34.8522011,-58.5221815,"commercial",1013);
+B("Edificio Lomas",-34.8522543,-58.5220999,"commercial",838);
+B("Edificio Adrogué",-34.8523215,-58.5220522,"commercial",889);
+B("Edificio Lomas",-34.8523764,-58.5219995,"commercial",635);
+B("Edificio Temperley",-34.8555815,-58.5237559,"commercial",1074);
+B("Manufacturera Adrogué",-34.8559251,-58.5235182,"industrial",870);
+B("Oficinas Temperley",-34.8561555,-58.5231742,"commercial",845);
+B("Centro Comercial Quilmes",-34.8836635,-58.5054178,"commercial",1033);
+B("Oficinas Lanús",-34.8734776,-58.5032319,"commercial",949);
+B("Supermercado Lomas",-34.8922762,-58.5703591,"retail",622);
+B("Galería Quilmes",-34.8874029,-58.5643488,"retail",234);
+B("Supermercado Monte Grande",-34.8684556,-58.5402602,"retail",911);
+B("Supermercado Banfield",-34.8704934,-58.5427478,"retail",598);
+B("Comercio Avellaneda",-34.8708389,-58.543176,"retail",525);
+B("Saboya",-34.7635147,-58.3962744,"hotel",348);
+B("Colegio Nuestra Señora del Carmen",-34.7970262,-58.3835716,"education",511);
+B("Edificio Avellaneda",-34.688428,-58.4786271,"commercial",749);
+B("Comercio Temperley",-34.6968251,-58.4693351,"retail",534);
+B("Urbano",-34.6953917,-58.4678276,"industrial",2800);
+B("Centro Comercial Quilmes",-34.6914417,-58.4817524,"commercial",806);
+B("Servicompras",-34.6905929,-58.4814312,"retail",405);
+B("Centro Comercial Avellaneda",-34.6909505,-58.48175,"commercial",440);
+B("Edificio Temperley",-34.6982318,-58.4914638,"commercial",675);
+B("Galería Avellaneda",-34.6960392,-58.4687382,"retail",609);
+B("Depósito Burzaco",-34.8871868,-58.3833806,"warehouse",2659);
+B("Edificio Almafuerte",-34.8884951,-58.3831856,"commercial",843);
+B("Shopping Burzaco",-34.8424878,-58.5191346,"retail",474);
+B("Shopping Monte Grande",-34.8491716,-58.5243507,"retail",895);
+B("Shopping Monte Grande",-34.8503037,-58.5234933,"retail",725);
+B("Comercio Banfield",-34.8488698,-58.5242344,"retail",364);
+B("Galería Quilmes",-34.8935334,-58.5726228,"retail",663);
+B("Galería Monte Grande",-34.9169471,-58.6021226,"retail",495);
+B("Shopping Avellaneda",-34.9323473,-58.6163564,"retail",395);
+B("Shopping Temperley",-34.7625144,-58.4121839,"retail",950);
+B("Comercio Banfield",-34.7619283,-58.4032004,"retail",212);
+B("Supermercado Avellaneda",-34.7617422,-58.4031621,"retail",907);
+B("Complejo Adrogué",-34.761246,-58.4030556,"commercial",345);
+B("Edificio Lomas",-34.760238,-58.4027315,"commercial",365);
+B("Complejo Remedios de Escalada",-34.7601039,-58.4027498,"commercial",1318);
+B("Comercio Lanús",-34.7594857,-58.4026054,"retail",360);
+B("Shopping Burzaco",-34.7587398,-58.4026544,"retail",909);
+B("Shopping Temperley",-34.7559213,-58.4019264,"retail",773);
+B("Strianese",-34.7560991,-58.4021062,"commercial",578);
+B("Comercio Lanús",-34.7562725,-58.4019568,"retail",211);
+B("Shopping Lomas",-34.7505914,-58.4006459,"retail",424);
+B("Supermercado Banfield",-34.7495058,-58.4006016,"retail",566);
+B("Shopping Lomas",-34.7439312,-58.3994718,"retail",400);
+B("Shopping Monte Grande",-34.8639015,-58.5240617,"retail",515);
+B("Supermercado Burzaco",-34.8700671,-58.5144741,"retail",986);
+B("Union de Sindicatos de la Industria Maderera de la Republica Argentina",-34.8651079,-58.5034585,"commercial",550);
+B("Galería Temperley",-34.8554981,-58.5024497,"retail",797);
+B("Comercio Monte Grande",-34.8550459,-58.5024982,"retail",720);
+B("Brisas Canning Shops",-34.8530188,-58.5028068,"commercial",416);
+B("Shopping Quilmes",-34.8521737,-58.5032017,"retail",819);
+B("Supermercado Adrogué",-34.8508764,-58.5035663,"retail",868);
+B("Comercio Temperley",-34.740787,-58.3988249,"retail",292);
+B("Galería Lanús",-34.7626637,-58.4047495,"retail",334);
+B("Galería Lomas",-34.7601204,-58.4022416,"retail",395);
+B("Supermercado Temperley",-34.7588954,-58.4019646,"retail",906);
+B("Shopping Burzaco",-34.7588113,-58.4019442,"retail",977);
+B("Fundación Científica del Sur",-34.7566008,-58.4013324,"commercial",1356);
+B("Comercio Banfield",-34.7555433,-58.4009898,"retail",719);
+B("Complejo Lomas",-34.7547397,-58.4008943,"commercial",1442);
+B("Supermercado Lomas",-34.7535977,-58.4007859,"retail",312);
+B("Comercio Quilmes",-34.7519954,-58.4005486,"retail",935);
+B("Supermercado Burzaco",-34.748437,-58.3997784,"retail",909);
+B("F. Camoia",-34.7410206,-58.3981426,"industrial",2520);
+B("Comercio Banfield",-34.7402698,-58.3981909,"retail",469);
+B("Comercio Banfield",-34.7399339,-58.3981475,"retail",214);
+B("Supermercado Quilmes",-34.7398839,-58.3985428,"retail",959);
+B("Galería Temperley",-34.8622465,-58.5249498,"retail",359);
+B("Shopping Lanús",-34.8647482,-58.5230988,"retail",772);
+B("Galería Lomas",-34.8696702,-58.5195899,"retail",669);
+B("Supermercado Adrogué",-34.8708601,-58.5167306,"retail",241);
+B("Galería Monte Grande",-34.8698142,-58.514651,"retail",486);
+B("Comercio Banfield",-34.8695345,-58.5139815,"retail",764);
+B("Comercio Monte Grande",-34.8535828,-58.5037021,"retail",777);
+B("Shopping Lomas",-34.853127,-58.5038809,"retail",806);
+B("Galería Temperley",-34.8488482,-58.50558,"retail",521);
+B("Shopping Lomas",-34.8325901,-58.4604443,"retail",749);
+B("Shopping Monte Grande",-34.8317632,-58.4585611,"retail",904);
+B("Comercio Monte Grande",-34.8206504,-58.4541395,"retail",966);
+B("Supermercado Lomas",-34.7711726,-58.404585,"retail",709);
+B("Shopping Adrogué",-34.7700598,-58.4049057,"retail",414);
+B("Comercio Banfield",-34.7707582,-58.4050649,"retail",640);
+B("Galería Lomas",-34.7694108,-58.4046984,"retail",832);
+B("Supermercado Avellaneda",-34.7678547,-58.4043755,"retail",913);
+B("Galería Monte Grande",-34.7659377,-58.4039415,"retail",701);
+B("Shopping Avellaneda",-34.7656384,-58.404058,"retail",941);
+B("Supermercado Lomas",-34.7651609,-58.403891,"retail",254);
+B("Shopping Burzaco",-34.8185488,-58.4557829,"retail",496);
+B("Supermercado Banfield",-34.8154313,-58.4588075,"retail",918);
+B("Complejo Lanús",-34.8171265,-58.4620313,"commercial",1364);
+B("Comercio Temperley",-34.8174334,-58.462834,"retail",826);
+B("Shopping Lomas",-34.8180079,-58.4637118,"retail",488);
+B("Galería Burzaco",-34.7610166,-58.4029391,"retail",731);
+B("Supermercado Adrogué",-34.7607977,-58.4029008,"retail",797);
+B("Comercio Remedios de Escalada",-34.7607253,-58.4028362,"retail",900);
+B("Supermercado Quilmes",-34.7605246,-58.4029708,"retail",674);
+B("Shopping Lomas",-34.7603582,-58.4038924,"retail",474);
+B("Supermercado Adrogué",-34.760509,-58.4033977,"retail",592);
+B("Galería Lomas",-34.7604449,-58.4037854,"retail",906);
+B("Shopping Temperley",-34.7597087,-58.4054972,"retail",265);
+B("Supermercado Temperley",-34.7595491,-58.4054992,"retail",445);
+B("Shopping Adrogué",-34.7594682,-58.4054841,"retail",493);
+B("Supermercado Burzaco",-34.7553617,-58.4046008,"retail",619);
+B("Shopping Remedios de Escalada",-34.7537332,-58.4203332,"retail",243);
+B("Shopping Lanús",-34.7567292,-58.421205,"retail",895);
+B("Shopping Banfield",-34.7600766,-58.4218982,"retail",341);
+B("Galería Lomas",-34.7608449,-58.4219527,"retail",567);
+B("Shopping Quilmes",-34.8185747,-58.4641212,"retail",356);
+B("Supermercado Burzaco",-34.7691966,-58.4040406,"retail",549);
+B("Comercio Lanús",-34.7672697,-58.4037924,"retail",890);
+B("Comercio Remedios de Escalada",-34.7661756,-58.4035338,"retail",996);
+B("Galería Temperley",-34.7660052,-58.4033896,"retail",915);
+B("Shopping Monte Grande",-34.7650852,-58.4033185,"retail",512);
+B("Shopping Monte Grande",-34.7648482,-58.4032402,"retail",548);
+B("Comercio Lanús",-34.7647721,-58.4032316,"retail",485);
+B("Comercio Lanús",-34.7638713,-58.4030487,"retail",356);
+B("Comercio Monte Grande",-34.760211,-58.4028864,"retail",991);
+B("Galería Burzaco",-34.7601839,-58.4031049,"retail",466);
+B("Supermercado Burzaco",-34.7601478,-58.4033884,"retail",737);
+B("Galería Remedios de Escalada",-34.8231656,-58.4631799,"retail",400);
+B("Galería Quilmes",-34.8232486,-58.4631189,"retail",994);
+B("Supermercado Burzaco",-34.8233932,-58.4630059,"retail",525);
+B("Supermercado Adrogué",-34.8242955,-58.4623172,"retail",300);
+B("Comercio Banfield",-34.8313975,-58.4567838,"retail",632);
+B("Supermercado Temperley",-34.7600664,-58.4043276,"retail",712);
+B("Shopping Lanús",-34.760014,-58.4044084,"retail",243);
+B("Galería Burzaco",-34.7600439,-58.4045311,"retail",335);
+B("Comercio Remedios de Escalada",-34.759958,-58.4051034,"retail",360);
+B("Supermercado Burzaco",-34.7599213,-58.4052525,"retail",541);
+B("Shopping Lanús",-34.7536283,-58.4059329,"retail",259);
+B("Shopping Burzaco",-34.7532191,-58.4087254,"retail",256);
+B("Supermercado Burzaco",-34.7528886,-58.411153,"retail",740);
+B("Comercio Remedios de Escalada",-34.7516263,-58.4196091,"retail",379);
+B("Supermercado Adrogué",-34.7526627,-58.4206339,"retail",802);
+B("Supermercado Temperley",-34.7534737,-58.4207564,"retail",965);
+B("Supermercado Quilmes",-34.7536213,-58.4208618,"retail",724);
+B("Supermercado Lomas",-34.7541214,-58.4209639,"retail",897);
+B("Comercio Monte Grande",-34.7545779,-58.4210106,"retail",472);
+B("Comercio Temperley",-34.8365162,-58.4530489,"retail",701);
+B("Galería Lomas",-34.7563011,-58.4214085,"retail",423);
+B("Comercio Lomas",-34.7601922,-58.4223491,"retail",814);
+B("Comercio Adrogué",-34.7606258,-58.4225294,"retail",888);
+B("Comercio Monte Grande",-34.7609914,-58.4225045,"retail",482);
+B("Comercio Remedios de Escalada",-34.7608379,-58.4224783,"retail",441);
+B("Comercio Monte Grande",-34.8400379,-58.4504945,"retail",274);
+B("Comercio Remedios de Escalada",-34.8402714,-58.4503,"retail",475);
+B("Galería Lanús",-34.8235673,-58.4624623,"retail",507);
+B("Shopping Monte Grande",-34.8412933,-58.44914,"retail",621);
+B("Shopping Monte Grande",-34.838746,-58.4510093,"retail",355);
+B("Supermercado Adrogué",-34.7913956,-58.3890975,"retail",311);
+B("Supermercado Monte Grande",-34.7865304,-58.3894388,"retail",562);
+B("Comercio Quilmes",-34.7846701,-58.3896288,"retail",648);
+B("Supermercado Lomas",-34.7821627,-58.3899355,"retail",481);
+B("Comercio Lanús",-34.7820346,-58.3900071,"retail",924);
+B("Gal-Plas S.A.",-34.7794296,-58.3909862,"industrial",1503);
+B("Supermercado Temperley",-34.7782608,-58.3913114,"retail",586);
+B("Comercio Quilmes",-34.7779234,-58.391451,"retail",721);
+B("Supermercado Adrogué",-34.7769281,-58.3919171,"retail",453);
+B("Supermercado Remedios de Escalada",-34.7758584,-58.3926515,"retail",549);
+B("Galería Avellaneda",-34.7755097,-58.3929489,"retail",616);
+B("Galería Lomas",-34.7752623,-58.3931293,"retail",522);
+B("Comercio Quilmes",-34.7753339,-58.3930747,"retail",324);
+B("Supermercado Quilmes",-34.7746495,-58.3935437,"retail",511);
+B("Supermercado Monte Grande",-34.7743114,-58.3937148,"retail",358);
+B("Galería Lomas",-34.7907836,-58.3887365,"retail",317);
+B("Comercio Monte Grande",-34.7906232,-58.3887438,"retail",649);
+B("Galería Avellaneda",-34.7894836,-58.3887857,"retail",641);
+B("Comercio Banfield",-34.7881785,-58.3888702,"retail",371);
+B("Comercio Monte Grande",-34.7874049,-58.3889151,"retail",501);
+B("Supermercado Lanús",-34.7854512,-58.3890758,"retail",685);
+B("Shopping Temperley",-34.7851718,-58.3891121,"retail",348);
+B("Estrella Store",-34.77568,-58.4056554,"retail",709);
+B("Centro Comercial Banfield",-34.7781129,-58.4062391,"commercial",695);
+B("Galería Lomas",-34.7833296,-58.3892417,"retail",370);
+B("Comercio Quilmes",-34.7780487,-58.3909554,"retail",836);
+B("Comercio Lanús",-34.7773194,-58.391277,"retail",829);
+B("Shopping Lanús",-34.7767641,-58.3913874,"retail",733);
+B("Galería Adrogué",-34.7806383,-58.406723,"retail",651);
+B("Oficinas Remedios de Escalada",-34.7761781,-58.3920248,"commercial",937);
+B("Supermercado Lomas",-34.7753451,-58.3925598,"retail",740);
+B("Comercio Lanús",-34.7743581,-58.3931886,"retail",819);
+B("Supermercado Temperley",-34.7744412,-58.3931365,"retail",589);
+B("Supermercado Adrogué",-34.7734382,-58.3938838,"retail",351);
+B("Don Pino",-34.7855504,-58.407877,"retail",716);
+B("Galería Burzaco",-34.7713292,-58.3954085,"retail",963);
+B("Shopping Temperley",-34.771018,-58.3955489,"retail",588);
+B("Galería Banfield",-34.769864,-58.3962061,"retail",263);
+B("Shopping Avellaneda",-34.7686686,-58.3961395,"retail",422);
+B("Galería Temperley",-34.7680739,-58.3961262,"retail",856);
+B("Supermercado Monte Grande",-34.8052336,-58.3889521,"retail",480);
+B("Supermercado Banfield",-34.8010723,-58.388946,"retail",577);
+B("Almacén Monte Grande",-34.7775758,-58.4233083,"warehouse",2357);
+B("Complejo Quilmes",-34.7736282,-58.404977,"commercial",371);
+B("Edificio Banfield",-34.7781617,-58.4057019,"commercial",932);
+B("Complejo Quilmes",-34.7789454,-58.4058197,"commercial",673);
+B("Rincón Feliz",-34.7291707,-58.4557827,"education",1855);
+B("Complejo Quilmes",-34.7354991,-58.4335179,"commercial",660);
+B("Oficinas Remedios de Escalada",-34.7343392,-58.4312709,"commercial",1232);
+B("Oficinas Monte Grande",-34.7340538,-58.4308582,"commercial",1172);
+B("Edificio Remedios de Escalada",-34.7339122,-58.4306186,"commercial",667);
+B("Edificio Banfield",-34.7332631,-58.429397,"commercial",1324);
+B("Oficinas Temperley",-34.7296484,-58.422606,"commercial",645);
+B("Oficinas Adrogué",-34.7151238,-58.4515514,"commercial",471);
+B("Maquineria Cochabamba III",-34.7265686,-58.4559692,"industrial",1296);
+B("Oficinas Lanús",-34.7153999,-58.4145051,"commercial",1397);
+B("Complejo Lanús",-34.7136301,-58.4158478,"commercial",507);
+B("Edificio Lomas",-34.7089754,-58.4198394,"commercial",1166);
+B("Oficinas Quilmes",-34.709652,-58.4210768,"commercial",1429);
+B("Edificio Quilmes",-34.7102699,-58.4222658,"commercial",723);
+B("Edificio Remedios de Escalada",-34.7114051,-58.4243475,"commercial",1298);
+B("Taller de Elasticos",-34.7351127,-58.4623737,"industrial",3684);
+B("Shopping Lomas",-34.8009962,-58.3885684,"retail",376);
+B("Shopping Burzaco",-34.8006075,-58.3891723,"retail",814);
+B("Shopping Remedios de Escalada",-34.7973474,-58.3848073,"retail",587);
+B("Shopping Adrogué",-34.7987588,-58.3841445,"retail",629);
+B("Edificio Remedios de Escalada",-34.7318456,-58.4124339,"commercial",1023);
+B("Centro Comercial Remedios de Escalada",-34.7090189,-58.4199167,"commercial",439);
+B("Centro Comercial Temperley",-34.7090575,-58.4199948,"commercial",1108);
+B("Bandag",-34.7604121,-58.480454,"commercial",1394);
+B("Line-X",-34.7567849,-58.484492,"industrial",1353);
+B("Orali",-34.7560931,-58.4852761,"industrial",1268);
+B("Oficinas Adrogué",-34.7103947,-58.4216626,"commercial",1006);
+B("Oficinas Lomas",-34.7117689,-58.4244724,"commercial",1389);
+B("Cacrrocerias Culpina",-34.7572035,-58.4830893,"industrial",2611);
+B("Super Ceramicos",-34.7566878,-58.4834519,"industrial",2360);
+B("Marmolería",-34.7564827,-58.4836009,"industrial",2501);
+B("Distribuidora Echeverría",-34.7562558,-58.4837757,"industrial",3402);
+B("La Ganchera del Matador",-34.7560978,-58.4838842,"industrial",1854);
+B("Don Nino",-34.7558162,-58.484266,"industrial",1107);
+B("Cabaña Don Theo",-34.7554401,-58.4844844,"industrial",953);
+B("Full",-34.8006347,-58.408112,"retail",241);
+B("Bolsapel",-34.8253531,-58.3980194,"industrial",2354);
+B("Edificio Lomas",-34.7173452,-58.4358964,"commercial",1041);
+B("Centro Comercial Quilmes",-34.7173362,-58.4357744,"commercial",1223);
+B("Maxiconsumo",-34.8356407,-58.4035425,"industrial",2583);
+B("Comercio Lanús",-34.8196801,-58.3894903,"retail",520);
+B("Supermercado Remedios de Escalada",-34.8195028,-58.3894346,"retail",796);
+B("Comercio Banfield",-34.8169688,-58.3893473,"retail",672);
+B("Shopping Lomas",-34.8133873,-58.3885506,"retail",740);
+B("Supermercado Remedios de Escalada",-34.8130757,-58.3879805,"retail",581);
+B("Galería Lanús",-34.8129035,-58.3876283,"retail",981);
+B("Supermercado Adrogué",-34.8127165,-58.3872296,"retail",287);
+B("Supermercado Lomas",-34.8085486,-58.3794341,"retail",842);
+B("Supermercado Lanús",-34.8087653,-58.388898,"retail",250);
+B("Shopping Banfield",-34.8207351,-58.3889741,"retail",205);
+B("Shopping Quilmes",-34.8171481,-58.3888872,"retail",961);
+B("Shopping Banfield",-34.8133306,-58.3878368,"retail",988);
+B("Shopping Lomas",-34.8102426,-58.3817708,"retail",462);
+B("Supermercado Lomas",-34.8094378,-58.38851,"retail",290);
+B("Comercio Adrogué",-34.8087551,-58.3884234,"retail",773);
+B("Galería Banfield",-34.8079422,-58.388504,"retail",337);
+B("Supermercado Banfield",-34.8067591,-58.3884343,"retail",776);
+B("Comercio Monte Grande",-34.8467031,-58.3766721,"retail",960);
+B("Galería Temperley",-34.8332447,-58.3856847,"retail",389);
+B("Comercio Temperley",-34.8330602,-58.3857847,"retail",575);
+B("Comercio Burzaco",-34.8316892,-58.3865055,"retail",923);
+B("Shopping Temperley",-34.8319947,-58.3864775,"retail",244);
+B("Supermercado Lanús",-34.8314191,-58.3867135,"retail",975);
+B("Galería Monte Grande",-34.8303068,-58.3872535,"retail",566);
+B("Galería Temperley",-34.8283028,-58.3883024,"retail",330);
+B("Comercio Burzaco",-34.8249941,-58.3838156,"retail",697);
+B("Shopping Burzaco",-34.8155675,-58.3664825,"retail",528);
+B("Shopping Quilmes",-34.8154526,-58.3664951,"retail",515);
+B("Shopping Lanús",-34.8149817,-58.3664471,"retail",770);
+B("Supermercado Avellaneda",-34.8129754,-58.3662911,"retail",676);
+B("Comercio Lanús",-34.8128677,-58.3662157,"retail",273);
+B("Comercio Temperley",-34.8116315,-58.3660857,"retail",755);
+B("Comercio Lomas",-34.8109015,-58.3659259,"retail",261);
+B("Supermercado Lanús",-34.8106053,-58.3659148,"retail",629);
+B("Supermercado Burzaco",-34.8212007,-58.389582,"retail",775);
+B("Supermercado Monte Grande",-34.8465494,-58.3761954,"retail",388);
+B("Supermercado Quilmes",-34.8467037,-58.3760685,"retail",997);
+B("Comercio Quilmes",-34.8466317,-58.3761498,"retail",208);
+B("Supermercado Avellaneda",-34.8359331,-58.3835884,"retail",452);
+B("Supermercado Temperley",-34.8353238,-58.3839469,"retail",783);
+B("Galería Quilmes",-34.8341109,-58.384531,"retail",254);
+B("Supermercado Lomas",-34.8330383,-58.3853052,"retail",985);
+B("Shopping Adrogué",-34.8329411,-58.3853474,"retail",222);
+B("Shopping Quilmes",-34.8323173,-58.3856581,"retail",420);
+B("Shopping Adrogué",-34.8317511,-58.3860064,"retail",247);
+B("Galería Lanús",-34.8313668,-58.3862389,"retail",894);
+B("Galería Adrogué",-34.831017,-58.3863726,"retail",989);
+B("Shopping Burzaco",-34.8308782,-58.3864758,"retail",267);
+B("Supermercado Burzaco",-34.830389,-58.3867485,"retail",954);
+B("Comercio Burzaco",-34.8304805,-58.3867114,"retail",517);
+B("Supermercado Lanús",-34.830569,-58.3866587,"retail",830);
+B("Comercio Remedios de Escalada",-34.830649,-58.3866045,"retail",419);
+B("Comercio Burzaco",-34.8232151,-58.3797819,"retail",965);
+B("Galería Remedios de Escalada",-34.8151188,-58.3658664,"retail",576);
+B("Supermercado Remedios de Escalada",-34.8145605,-58.3658527,"retail",317);
+B("Comercio Temperley",-34.8129926,-58.3657104,"retail",575);
+B("Galería Temperley",-34.8199961,-58.3853599,"retail",749);
+B("Supermercado Lomas",-34.8222123,-58.3891201,"retail",893);
+B("Galería Temperley",-34.8214112,-58.3891361,"retail",351);
+B("Manaos",-34.8808896,-58.3894158,"warehouse",1671);
+B("Complejo Adrogué",-34.9098764,-58.3686685,"commercial",1471);
+B("Shopping Lanús",-34.918259,-58.383418,"retail",718);
+B("Glavasud",-34.9105733,-58.3900443,"industrial",2951);
+B("Logística Banfield",-34.7245425,-58.5978776,"warehouse",2933);
+B("Complejo Monte Grande",-34.9813664,-58.3742696,"commercial",373);
+B("Shopping Quilmes",-34.9816529,-58.3747606,"retail",736);
+B("Galería Adrogué",-34.9840102,-58.374633,"retail",361);
+B("Galería Quilmes",-34.9837766,-58.3741273,"retail",734);
+B("Edificio Lanús",-34.9824555,-58.3768144,"commercial",635);
+B("Edificio Temperley",-34.9186002,-58.3831294,"commercial",1358);
+B("Servi Shop",-34.7702699,-58.6189601,"retail",941);
+B("Cannon",-34.7691377,-58.6185318,"commercial",655);
+B("Comercio Remedios de Escalada",-34.7536013,-58.6135074,"retail",472);
+B("Canos Chaps",-34.7508571,-58.6120365,"warehouse",876);
+B("Minimercado",-34.6993165,-58.5410474,"retail",629);
+B("Supermercado Temperley",-34.697759,-58.538324,"retail",278);
+B("Comercio Temperley",-34.6951725,-58.5327405,"retail",574);
+B("Comercio Quilmes",-34.695592,-58.5329651,"retail",326);
+B("Supermercado Quilmes",-34.6948929,-58.5323227,"retail",635);
+B("Supermercado Quilmes",-34.6999103,-58.5256073,"retail",311);
+B("Galería Lomas",-34.6949533,-58.5324856,"retail",306);
+B("Supermercado Monte Grande",-34.693222,-58.5298499,"retail",507);
+B("Supermercado Quilmes",-34.68956,-58.5095697,"retail",214);
+B("Supermercado Burzaco",-34.6900131,-58.5087865,"retail",581);
+B("Shopping Avellaneda",-34.6909014,-58.5085182,"retail",808);
+B("Supermercado Adrogué",-34.6909073,-58.5086778,"retail",437);
+B("Centro Comercial Monte Grande",-34.7236174,-58.5219474,"commercial",1416);
+B("Complejo Adrogué",-34.7237626,-58.5220473,"commercial",807);
+B("Galería Temperley",-34.694479,-58.5116443,"retail",975);
+B("Galería Burzaco",-34.6942804,-58.5114283,"retail",664);
+B("Comercio Burzaco",-34.7012036,-58.5100322,"retail",901);
+B("Comercio Remedios de Escalada",-34.7056949,-58.5039347,"retail",750);
+B("Galería Remedios de Escalada",-34.700372,-58.5097359,"retail",437);
+B("Comercio Remedios de Escalada",-34.699556,-58.5089284,"retail",811);
+B("Complejo Lomas",-34.7288875,-58.5345042,"commercial",877);
+B("Oficinas Adrogué",-34.7283302,-58.5342131,"commercial",1039);
+B("Edificio Lanús",-34.7282417,-58.5341791,"commercial",1404);
+B("Centro Comercial Monte Grande",-34.7270908,-58.5335988,"commercial",960);
+B("Oficinas Temperley",-34.7267825,-58.5334834,"commercial",858);
+B("Oficinas Lomas",-34.7256691,-58.5328551,"commercial",722);
+B("Complejo Lomas",-34.7197032,-58.5316859,"commercial",599);
+B("Centro Comercial Adrogué",-34.7180133,-58.5301486,"commercial",833);
+B("Complejo Adrogué",-34.7151877,-58.5235475,"commercial",877);
+B("Oficinas Quilmes",-34.7293875,-58.5349944,"commercial",1148);
+B("Centro Comercial Quilmes",-34.7276171,-58.5342199,"commercial",596);
+B("Oficinas Temperley",-34.7272811,-58.5341314,"commercial",1417);
+B("Oficinas Adrogué",-34.7192779,-58.5318055,"commercial",567);
+B("Complejo Avellaneda",-34.7180008,-58.5306576,"commercial",1070);
+B("Edificio Remedios de Escalada",-34.7153124,-58.5352714,"commercial",1176);
+B("Centro Comercial Adrogué",-34.7153128,-58.5353717,"commercial",1027);
+B("Oficinas Avellaneda",-34.7151616,-58.5393625,"commercial",810);
+B("Oficinas Remedios de Escalada",-34.7151286,-58.5394936,"commercial",719);
+B("Centro Comercial Quilmes",-34.705354,-58.5411488,"commercial",1192);
+B("Complejo Lanús",-34.7052748,-58.5410539,"commercial",366);
+B("Oficinas Avellaneda",-34.7149291,-58.5426169,"commercial",977);
+B("Complejo Remedios de Escalada",-34.714884,-58.542929,"commercial",360);
+B("Distribuidora Remedios de Escalada",-34.7139088,-58.5439652,"warehouse",1258);
+B("Venturfin",-34.6903511,-58.5087194,"retail",246);
+B("Supermercado Monte Grande",-34.6944729,-58.5121201,"retail",995);
+B("Supermercado Temperley",-34.6992919,-58.5130084,"retail",646);
+B("Comercio Adrogué",-34.7058799,-58.5043026,"retail",276);
+B("Shopping Banfield",-34.7006436,-58.5093965,"retail",841);
+B("Galería Lomas",-34.6999258,-58.5084401,"retail",762);
+B("Comercio Adrogué",-34.6998382,-58.5083943,"retail",705);
+B("Galería Remedios de Escalada",-34.699661,-58.5081809,"retail",909);
+B("Comercio Adrogué",-34.6986112,-58.5071484,"retail",876);
+B("Supermercado Remedios de Escalada",-34.697919,-58.5069773,"retail",917);
+B("Shopping Lanús",-34.6967086,-58.505591,"retail",323);
+B("Shopping Lomas",-34.6973298,-58.5063222,"retail",490);
+B("Comercio Avellaneda",-34.6968618,-58.505821,"retail",205);
+B("Supermercado Adrogué",-34.6961826,-58.5051457,"retail",614);
+B("Supermercado Quilmes",-34.6960809,-58.5049068,"retail",350);
+B("Comercio Lomas",-34.6960061,-58.5048731,"retail",938);
+B("Comercio Banfield",-34.6957146,-58.5044978,"retail",220);
+B("Comercio Remedios de Escalada",-34.6959047,-58.5047207,"retail",212);
+B("Centro Comercial Lomas",-34.7043088,-58.5433779,"commercial",1375);
+B("Complejo Quilmes",-34.706731,-58.5551607,"commercial",1243);
+B("Edificio Temperley",-34.7049654,-58.5565218,"commercial",1391);
+B("Edificio Banfield",-34.6992578,-58.5620426,"commercial",1070);
+B("Centro Comercial Quilmes",-34.6984454,-58.5630697,"commercial",1205);
+B("Edificio Lanús",-34.6982843,-58.5633087,"commercial",302);
+B("Centro Comercial Lanús",-34.7055487,-58.5571584,"commercial",711);
+B("Edificio Banfield",-34.6999093,-58.5615635,"commercial",733);
+B("Complejo Monte Grande",-34.6988392,-58.5639835,"commercial",874);
+B("Complejo Monte Grande",-34.7033377,-58.568579,"commercial",428);
+B("Galería Avellaneda",-34.6927407,-58.5012324,"retail",228);
+B("Shopping Burzaco",-34.6918709,-58.5002705,"retail",714);
+B("Galería Lanús",-34.6896008,-58.4977286,"retail",373);
+B("Galería Temperley",-34.6888262,-58.496893,"retail",582);
+B("Galería Banfield",-34.689427,-58.5104381,"retail",806);
+B("Shopping Temperley",-34.6977766,-58.506276,"retail",271);
+B("Shopping Monte Grande",-34.6970139,-58.5054212,"retail",738);
+B("Comercio Banfield",-34.6963365,-58.5045759,"retail",748);
+B("Comercio Monte Grande",-34.6958322,-58.5040216,"retail",638);
+B("Galería Burzaco",-34.6922435,-58.5285635,"retail",298);
+B("Supermercado Lanús",-34.6916159,-58.5284837,"retail",549);
+B("Comercio Lanús",-34.6918241,-58.5287548,"retail",858);
+B("Shopping Adrogué",-34.6916809,-58.5285339,"retail",872);
+B("Escuela de Educación Primaria Nº183 Eva Peron",-34.760123,-58.5894354,"education",1867);
+B("Escuela N°3 Martín Miguel de Güemes",-34.8019595,-58.4490493,"education",963);
+B("Quimica",-34.8745732,-58.5081994,"industrial",1470);
+B("Industrias Burzaco",-34.8746814,-58.5081652,"industrial",3676);
+B("Plásticos Temperley",-34.8744274,-58.5083421,"industrial",2253);
+B("Fábrica Temperley",-34.8753217,-58.5074095,"industrial",1852);
+B("Aceros Monte Grande",-34.8747961,-58.5077971,"industrial",3342);
+B("Amaneceres Office",-34.8850138,-58.5059813,"commercial",1115);
+B("Amaneceres Office",-34.8853788,-58.506095,"commercial",474);
+B("Las Toscas Office",-34.8563885,-58.5049759,"commercial",826);
+B("Oficinas Adrogué",-34.8598191,-58.50345,"commercial",363);
+B("Centro Comercial Lanús",-34.8600842,-58.5039252,"commercial",1063);
+B("Centro Comercial Remedios de Escalada",-34.8602272,-58.5035527,"commercial",1335);
+B("Edificio Avellaneda",-34.8607147,-58.5031891,"commercial",1399);
+B("Complejo Adrogué",-34.8605905,-58.5034774,"commercial",989);
+B("Complejo Lanús",-34.8610388,-58.503372,"commercial",788);
+B("Edificio Adrogué",-34.8612069,-58.5031519,"commercial",824);
+B("Instituto González Catán - Jardín Monigote",-34.7853413,-58.629528,"education",1191);
+B("Escuela Manuel Belgrano Nº 5113",-34.7826751,-58.6323202,"education",1712);
+B("Colegio Lomas",-34.7981094,-58.3362704,"education",1601);
+B("Almacenes",-34.8811321,-58.5084163,"industrial",2367);
+B("Oficinas Remedios de Escalada",-34.7161408,-58.490016,"commercial",889);
+B("Centro Comercial Remedios de Escalada",-34.716233,-58.490167,"commercial",367);
+B("Complejo Banfield",-34.7161805,-58.4899601,"commercial",402);
+B("Centro Comercial Avellaneda",-34.7132154,-58.4966419,"commercial",1004);
+B("Centro Comercial Banfield",-34.7134231,-58.4844848,"commercial",409);
+B("Edificio Remedios de Escalada",-34.7167629,-58.4915991,"commercial",1233);
+B("Edificio Remedios de Escalada",-34.716594,-58.4917942,"commercial",633);
+B("Edificio Lanús",-34.7142497,-58.495408,"commercial",1430);
+B("Complejo Remedios de Escalada",-34.7120743,-58.4992766,"commercial",981);
+B("Complejo Quilmes",-34.7047257,-58.4941012,"commercial",1480);
+B("Centro Comercial Lanús",-34.7047544,-58.49453,"commercial",1063);
+B("Centro Comercial Adrogué",-34.7048166,-58.4942285,"commercial",897);
+B("Centro Comercial Burzaco",-34.7049058,-58.4943213,"commercial",630);
+B("Centro Comercial Burzaco",-34.7051079,-58.4944693,"commercial",440);
+B("Oficinas Lomas",-34.7137194,-58.4956899,"commercial",1369);
+B("Edificio Lanús",-34.7127507,-58.4969544,"commercial",1197);
+B("Edificio Burzaco",-34.7131254,-58.4970022,"commercial",424);
+B("Edificio Avellaneda",-34.7131411,-58.4973106,"commercial",857);
+B("Complejo Quilmes",-34.7126672,-58.497621,"commercial",705);
+B("Complejo Temperley",-34.7127902,-58.4974661,"commercial",1149);
+B("Complejo Lomas",-34.7125527,-58.4972098,"commercial",697);
+B("Oficinas Quilmes",-34.7124365,-58.4973813,"commercial",777);
+B("Complejo Burzaco",-34.7122444,-58.4981351,"commercial",1093);
+B("Oficinas Avellaneda",-34.7120295,-58.4979008,"commercial",734);
+B("Edificio Adrogué",-34.7119509,-58.4980864,"commercial",1252);
+B("Complejo Remedios de Escalada",-34.7118391,-58.497962,"commercial",460);
+B("Complejo Remedios de Escalada",-34.7119531,-58.4986372,"commercial",885);
+B("Edificio Banfield",-34.7116944,-58.4983509,"commercial",1296);
+B("Cia. Telefónica Central",-34.7117463,-58.4981644,"commercial",341);
+B("Oficinas Temperley",-34.711889,-58.4983335,"commercial",1389);
+B("Edificio Monte Grande",-34.7111981,-58.4975635,"commercial",625);
+B("Centro Comercial Banfield",-34.704718,-58.494746,"commercial",850);
+B("Complejo Adrogué",-34.712496,-58.4860195,"commercial",978);
+B("Edificio Remedios de Escalada",-34.7121395,-58.4854842,"commercial",878);
+B("Oficinas Lanús",-34.7116221,-58.4861563,"commercial",1475);
+B("Centro Comercial Remedios de Escalada",-34.7119289,-58.486491,"commercial",1278);
+B("Complejo Quilmes",-34.7120641,-58.4867823,"commercial",1093);
+B("Complejo Lanús",-34.7109777,-58.4873615,"commercial",743);
+B("Oficinas Adrogué",-34.7105197,-58.4879615,"commercial",1009);
+B("Complejo Monte Grande",-34.7116777,-58.4882786,"commercial",531);
+B("Complejo Lomas",-34.7145118,-58.4926001,"commercial",1041);
+B("Complejo Quilmes",-34.7115002,-58.4904973,"commercial",813);
+B("Complejo Remedios de Escalada",-34.7120475,-58.4897942,"commercial",1447);
+B("Edificio Avellaneda",-34.7116709,-58.4897447,"commercial",395);
+B("Complejo Adrogué",-34.7125494,-58.4890798,"commercial",388);
+B("Edificio Monte Grande",-34.7138262,-58.4878161,"commercial",642);
+B("Edificio Remedios de Escalada",-34.7093021,-58.4898556,"commercial",858);
+B("Oficinas Quilmes",-34.7121487,-58.49717,"commercial",305);
+B("Edificio Temperley",-34.7117847,-58.4968806,"commercial",804);
+B("Centro Comercial Monte Grande",-34.7110043,-58.4909232,"commercial",1404);
+B("Edificio Adrogué",-34.7111153,-58.4908588,"commercial",1219);
+B("Complejo Adrogué",-34.7109404,-58.4906766,"commercial",417);
+B("Oficinas Banfield",-34.7112342,-58.4910966,"commercial",767);
+B("Centro Comercial Lanús",-34.7113043,-58.491202,"commercial",747);
+B("Oficinas Remedios de Escalada",-34.7112051,-58.4914329,"commercial",962);
+B("Centro Comercial Burzaco",-34.7108966,-58.4912425,"commercial",367);
+B("Oficinas Adrogué",-34.705828,-58.4924331,"commercial",526);
+B("Complejo Quilmes",-34.7126775,-58.4812622,"commercial",502);
+B("Complejo Lomas",-34.7122602,-58.4800665,"commercial",1170);
+B("Centro Comercial Avellaneda",-34.7132981,-58.4799137,"commercial",922);
+B("Complejo Banfield",-34.7083251,-58.4680336,"commercial",690);
+B("Oficinas Quilmes",-34.7086263,-58.4685367,"commercial",480);
+B("Complejo Burzaco",-34.7070742,-58.4701994,"commercial",502);
+B("Complejo Lomas",-34.7073512,-58.469808,"commercial",595);
+B("Oficinas Lomas",-34.7078722,-58.4690763,"commercial",1149);
+B("Complejo Lomas",-34.7038386,-58.4675091,"commercial",795);
+B("Centro Comercial Lomas",-34.7063284,-58.469707,"commercial",899);
+B("Edificio Temperley",-34.7125705,-58.4962194,"commercial",698);
+B("Oficinas Monte Grande",-34.7127097,-58.4956188,"commercial",1100);
+B("Edificio Banfield",-34.712324,-58.4959398,"commercial",955);
+B("Oficinas Temperley",-34.7126765,-58.4951324,"commercial",591);
+B("Centro Comercial Remedios de Escalada",-34.7128122,-58.4952861,"commercial",1425);
+B("Centro Comercial Lanús",-34.7132071,-58.4953551,"commercial",1072);
+B("Complejo Banfield",-34.713081,-58.495209,"commercial",435);
+B("Complejo Temperley",-34.7133433,-58.4955091,"commercial",720);
+B("Centro Comercial Monte Grande",-34.713368,-58.4948257,"commercial",792);
+B("Centro Comercial Lanús",-34.7125284,-58.4959094,"commercial",674);
+B("Oficinas Banfield",-34.7126606,-58.4957761,"commercial",424);
+B("Edificio Avellaneda",-34.7109351,-58.5011284,"commercial",592);
+B("Centro Comercial Adrogué",-34.7116362,-58.5013754,"commercial",724);
+B("Edificio Monte Grande",-34.7114272,-58.5014439,"commercial",386);
+B("Centro Comercial Remedios de Escalada",-34.7112732,-58.501581,"commercial",697);
+B("Complejo Burzaco",-34.7115505,-58.5017455,"commercial",682);
+B("Instituto Burzaco",-34.780507,-58.3970238,"education",436);
+B("Distribuidora Monte Grande",-34.9622529,-58.64833,"warehouse",1094);
+B("Edificio Quilmes",-34.7918571,-58.4034199,"commercial",1000);
+B("Centro Comercial Temperley",-34.7913269,-58.4028538,"commercial",402);
+B("Complejo Temperley",-34.7909341,-58.399055,"commercial",587);
+B("Edificio Burzaco",-34.7926394,-58.4058435,"commercial",1318);
+B("Edificio Monte Grande",-34.701228,-58.4254058,"commercial",1345);
+B("Oficinas Lanús",-34.6966764,-58.4256398,"commercial",950);
+B("Edificio Burzaco",-34.6978261,-58.42783,"commercial",798);
+B("Edificio Banfield",-34.6987494,-58.4296222,"commercial",904);
+B("Oficinas Avellaneda",-34.7121738,-58.425954,"commercial",785);
+B("Edificio Quilmes",-34.7116169,-58.4247972,"commercial",1272);
+B("Escuela de Artes Plásticas",-34.731179,-58.3968066,"education",1236);
+B("Colegio Banfield",-34.7453276,-58.3973836,"education",488);
+B("Colegio Colinas Verdes",-34.7583677,-58.3864787,"education",1412);
+B("Facultad de Ciencias Económicas",-34.7586888,-58.3957237,"education",1105);
+B("Instituto Almafuerte",-34.8000699,-58.3544819,"education",568);
+B("Escuela N 24 Rosario Vera Peñaloza",-34.7279341,-58.3829442,"education",1920);
+B("Química Lanús",-34.7438331,-58.4892019,"industrial",2144);
+B("Galería Banfield",-34.7957646,-58.3317091,"retail",467);
+B("Galería Burzaco",-34.7948949,-58.3584041,"retail",446);
+B("Frioacero",-34.7903674,-58.4509985,"commercial",1042);
+B("Transradio LR4",-34.7568522,-58.5077742,"industrial",3340);
+B("Rodamientos Particulares",-34.7926123,-58.4574443,"commercial",1018);
+B("Distribuidora Buenos Muchachos",-34.7554004,-58.3755578,"commercial",1365);
+B("Instituto Nuestra Senora de Lujan - Escuela primaria y secundaria",-34.93713,-58.6159796,"education",1460);
+B("Jardín Huellitas - Instituto Nuestra Senora de Lujan",-34.9401421,-58.6138244,"education",726);
+B("Galería Adrogué",-34.7341021,-58.5198064,"retail",618);
+B("Instituto Lanús",-34.9264474,-58.375568,"education",1736);
+B("Fundición Avellaneda",-34.8760471,-58.5250541,"industrial",1447);
+B("Química Quilmes",-34.8748989,-58.522801,"industrial",3066);
+B("Manufacturera Banfield",-34.8755695,-58.5223503,"industrial",3521);
+B("Fundición Banfield",-34.877585,-58.5214675,"industrial",2293);
+B("Plásticos Banfield",-34.8762722,-58.5211336,"industrial",3731);
+B("Centro Comercial \"Alas\"",-34.734515,-58.5321812,"retail",628);
+B("Escuela de enseñanza media N°5",-34.9830555,-58.3713514,"education",1739);
+B("Escuela Primaria 9 General José de San Martín",-34.9834314,-58.3747626,"education",1421);
+B("Escuela Privada Primaria y Jardín",-34.9796793,-58.3757865,"education",779);
+B("Instituto Adrogué",-34.7852889,-58.3691929,"education",1653);
+B("Escuela Lanús",-34.7819667,-58.3539344,"education",404);
+B("Instituto Inmaculada Concepción",-34.8327985,-58.3973701,"education",1688);
+B("Instituto Adrogué",-34.8118619,-58.375858,"education",1560);
+B("Instituto Avellaneda",-34.788094,-58.3511354,"education",794);
+B("Colegio Adrogué",-34.7879542,-58.3508813,"education",1480);
+B("Escuela Quilmes",-34.7877092,-58.3514528,"education",1743);
+B("Instituto Banfield",-34.7891458,-58.3536843,"education",1243);
+B("Instituto Avellaneda",-34.7888814,-58.3530439,"education",462);
+B("Instituto Lanús",-34.7888612,-58.3535354,"education",749);
+B("Universidad Quilmes",-34.8023086,-58.362473,"education",1472);
+B("Instituto Avellaneda",-34.8096766,-58.3668224,"education",578);
+B("Escuela Temperley",-34.7875629,-58.3434988,"education",452);
+B("Universidad Banfield",-34.776094,-58.3330153,"education",1438);
+B("Universidad Banfield",-34.7929765,-58.3523526,"education",1903);
+B("Colegio Monte Grande",-34.7931483,-58.3667722,"education",1322);
+B("Jardín de Infantes Madre Teresa de Ávila",-34.7773762,-58.3215308,"education",1283);
+B("Escuela Primaria Nº 7 José Mármol",-34.7860297,-58.3744706,"education",857);
+B("Logística Burzaco",-34.9798865,-58.3743566,"warehouse",1331);
+B("Almacén Monte Grande",-34.9836695,-58.3771698,"warehouse",1489);
+B("Logística Quilmes",-34.9841519,-58.3772752,"warehouse",2127);
+B("Instituto Monte Grande",-34.9859992,-58.3741524,"education",1707);
+B("Colegio Burzaco",-34.9867625,-58.378079,"education",1358);
+B("Colegio San Miguel",-34.7968312,-58.3979805,"education",1224);
+B("Colegio San Miguel",-34.7971644,-58.3976957,"education",1390);
+B("Aceros Monte Grande",-34.8421505,-58.3690954,"industrial",2748);
+B("Plásticos Adrogué",-34.8423941,-58.3701104,"industrial",1961);
+B("Hierros Hierrofe",-34.8077114,-58.4024569,"commercial",1083);
+B("Maderera Frías",-34.7988172,-58.4105894,"warehouse",2342);
+B("Escuela Especial Nº 502",-34.9373246,-58.6179566,"education",1293);
+B("Colegio Temperley",-34.8001632,-58.3393581,"education",636);
+B("Escuela Adrogué",-34.7998175,-58.3395149,"education",1319);
+B("Jardín de Infantes Nº 935",-34.898845,-58.3847103,"education",588);
+B("jardín de infantes Nº 914",-34.871683,-58.36754,"education",1664);
+B("Instituto Monte Grande",-34.7785632,-58.3237538,"education",1974);
+B("Colegio Burzaco",-34.7787943,-58.323772,"education",1104);
+B("Anexo Escuela Numero 8",-34.7916733,-58.3232269,"education",1906);
+B("Colegio Lanús",-34.8129605,-58.369086,"education",447);
+B("Escuela Antonio Ripari",-34.8255782,-58.4091059,"education",663);
+B("Centro Comercial \"Las 200\"",-34.7330898,-58.5345974,"retail",375);
+B("Mayorista de golosinas Pameli",-34.835073,-58.4056293,"retail",822);
+B("Metalúrgica Incomet",-34.8331837,-58.4162828,"industrial",3161);
+B("Textil Burzaco",-34.8318697,-58.416442,"industrial",1209);
+B("Plásticos Banfield",-34.8321098,-58.4170288,"industrial",3631);
+B("Metalúrgica Lomas",-34.8323934,-58.4163237,"industrial",1038);
+B("Industrias Monte Grande",-34.8320411,-58.4152915,"industrial",2077);
+B("Textil Burzaco",-34.8314734,-58.4166034,"industrial",3550);
+B("Metalúrgica Avellaneda",-34.8317132,-58.4170872,"industrial",3511);
+B("Plásticos Lomas",-34.8354796,-58.4212637,"industrial",3303);
+B("Frigorífico Madeka",-34.8337636,-58.4210111,"industrial",2260);
+B("Galletitas Kokis",-34.8342817,-58.4219348,"industrial",1987);
+B("Textil Burzaco",-34.8353982,-58.423918,"industrial",923);
+B("Textil Lomas",-34.83479,-58.4228818,"industrial",3664);
+B("Química Avellaneda",-34.835691,-58.4246605,"industrial",2594);
+B("Plásticos Monte Grande",-34.8359706,-58.4251491,"industrial",2217);
+B("Industrias Burzaco",-34.8365166,-58.4265331,"industrial",850);
+B("Fundición Lomas",-34.8357237,-58.4274323,"industrial",2279);
+B("Depósito Avellaneda",-34.7572725,-58.3398236,"warehouse",2672);
+B("Colegio Adrogué",-35.0205308,-58.4299123,"education",430);
+B("Clínica Temperley",-34.7540175,-58.5800273,"healthcare",497);
+B("Metalúrgica Quilmes",-34.8362209,-58.4673862,"industrial",1510);
+B("Galería Monte Grande",-34.7067925,-58.4543457,"retail",588);
+B("Adidas Outlet",-34.7647012,-58.4037974,"commercial",1399);
+B("Escuela de Educación Primaria Nº160 Horacio Quiroga",-34.7547702,-58.5933337,"education",891);
+B("Depósito Lomas",-34.7110014,-58.4709889,"warehouse",1553);
+B("Shopping Lomas",-34.8000919,-58.3884226,"retail",372);
+B("Paseo Alem",-34.8179114,-58.4675206,"retail",907);
+B("Galería Unión",-34.8162647,-58.469303,"retail",900);
+B("Aceros Remedios de Escalada",-34.8041244,-58.4342221,"industrial",1097);
+B("Industrias Banfield",-34.7967769,-58.4371183,"industrial",2015);
+B("Aceros Lanús",-34.7962735,-58.4362518,"industrial",1802);
+B("Centro Comercial Banfield",-34.7277274,-58.5291708,"commercial",1175);
+B("Supermercado Remedios de Escalada",-34.7310461,-58.528421,"retail",406);
+B("Colegio Lanús",-34.7304189,-58.5340431,"education",492);
+B("Universidad Lanús",-34.7299847,-58.5338449,"education",548);
+B("Shopping Temperley",-34.7321834,-58.5284898,"retail",574);
+B("Escuela Banfield",-34.7264864,-58.529524,"education",931);
+B("Escuela N°28",-34.9389113,-58.6092783,"education",1336);
+B("Jardín",-34.9390772,-58.608226,"education",1331);
+B("Hogar Bernardino Rivadavia",-34.9388211,-58.613047,"education",1954);
+B("Escuela De Educación Secundaria Nº1 \"Alfonsina Storni\"",-34.9396093,-58.6170803,"education",1640);
+B("Jardín De Infantes Nº904",-34.9396394,-58.6177868,"education",1556);
+B("Oficinas Remedios de Escalada",-34.7315533,-58.5287222,"commercial",550);
+B("Colegio Banfield",-34.734402,-58.5266355,"education",1617);
+B("Shopping Monte Grande",-34.7317847,-58.5282711,"retail",998);
+B("Complejo Lanús",-34.7305695,-58.5277713,"commercial",581);
+B("Edificio Lanús",-34.7304457,-58.5276683,"commercial",332);
+B("Oficinas Lanús",-34.7304005,-58.5276306,"commercial",1196);
+B("Centro Comercial Lanús",-34.7300757,-58.527274,"commercial",960);
+B("Complejo Banfield",-34.7293854,-58.5270013,"commercial",1479);
+B("Supermercado Adrogué",-34.7313037,-58.5278697,"retail",267);
+B("Shopping Lomas",-34.7286628,-58.534826,"retail",614);
+B("Shopping Remedios de Escalada",-34.727359,-58.5336072,"retail",615);
+B("Centro Comercial Remedios de Escalada",-34.727457,-58.5284838,"commercial",1124);
+B("Shopping Adrogué",-34.7088981,-58.5046362,"retail",782);
+B("Universidad Lanús",-34.7142615,-58.5319534,"education",1320);
+B("Centro Comercial Temperley",-34.7288142,-58.5344381,"commercial",1325);
+B("Centro Comercial Quilmes",-34.7287403,-58.5344063,"commercial",837);
+B("Edificio Burzaco",-34.7286572,-58.5343706,"commercial",1018);
+B("Oficinas Adrogué",-34.7279146,-58.5288821,"commercial",958);
+B("Oficinas Lomas",-34.7283957,-58.5282476,"commercial",1287);
+B("Centro Comercial Temperley",-34.731712,-58.5281667,"commercial",765);
+B("Complejo Remedios de Escalada",-34.7255581,-58.532211,"commercial",1399);
+B("Oficinas Burzaco",-34.7335197,-58.5264737,"commercial",1346);
+B("Edificio Remedios de Escalada",-34.7337339,-58.526641,"commercial",920);
+B("Centro Médico Avellaneda",-35.0310138,-58.4173737,"healthcare",354);
+B("Sanatorio Lanús",-34.9898126,-58.3684401,"healthcare",820);
+B("Clínica Banfield",-34.8937779,-58.5670347,"healthcare",426);
+B("Sanatorio Avellaneda",-34.699422,-58.5262867,"healthcare",863);
+B("Unidad De Salud Barrio 17 De Marzo M6 L 17",-34.7121236,-58.5622264,"healthcare",484);
+B("Unidad De Salud Malvinas Argentinas",-34.7022322,-58.5587738,"healthcare",500);
+B("Colegio Banfield",-34.7225375,-58.5328071,"education",818);
+B("Sanatorio Temperley",-34.9181711,-58.6115213,"healthcare",929);
+B("Escuela Lanús",-34.9179939,-58.6118503,"education",806);
+B("Instituto Monte Grande",-34.8707717,-58.51585,"education",1132);
+B("Sanatorio Adrogué",-34.893297,-58.5361694,"healthcare",262);
+B("Sanatorio Quilmes",-34.8527787,-58.5359647,"healthcare",491);
+B("Centro Médico Adrogué",-34.886419,-58.5531661,"healthcare",237);
+B("Instituto Monte Grande",-34.8454307,-58.5174648,"education",1095);
+B("Centro Médico Avellaneda",-34.8457252,-58.5172746,"healthcare",245);
+B("Centro Médico Lanús",-34.8959146,-58.5541132,"healthcare",841);
+B("Sanatorio Burzaco",-34.8479028,-58.510154,"healthcare",506);
+B("Clínica Remedios de Escalada",-34.8466461,-58.5308925,"healthcare",388);
+B("Escuela",-34.7997625,-58.3208904,"education",1489);
+B("Escuela 52",-34.7994848,-58.3205974,"education",1073);
+B("Base de Salud 7",-34.915864,-58.5939979,"healthcare",773);
+B("Almacén Adrogué",-34.7703033,-58.6457482,"warehouse",2866);
+B("Almacén Temperley",-34.7708997,-58.6465796,"warehouse",692);
+B("Escuela en construcción",-34.8856545,-58.5444229,"education",1419);
+B("Escuela de Educación Primaria Nº68 Joaquin V. Gonzalez",-34.7396047,-58.5771883,"education",1065);
+B("Escuela de Educación Secundaria Nº16",-34.7392794,-58.5776382,"education",1536);
+B("Colegio Temperley",-34.7397251,-58.5775814,"education",1042);
+B("Instituto Temperley",-34.8189484,-58.3702404,"education",633);
+B("Instituto Lanús",-34.715885,-58.4375213,"education",408);
+B("Sanatorio Temperley",-34.7674258,-58.4332756,"healthcare",433);
+B("Depósito Avellaneda",-34.8083721,-58.4923354,"warehouse",2309);
+B("Frost-center",-34.8327725,-58.5134333,"industrial",2473);
+B("Servicio Técnico",-34.8314798,-58.5133653,"industrial",2847);
+B("Metalúrgica Avellaneda",-34.8318841,-58.512613,"industrial",3565);
+B("Base de Salud La Trocha 2",-34.8545763,-58.5396783,"healthcare",236);
+B("Colegio Adrogué",-34.8602901,-58.3886416,"education",669);
+B("Manufacturera Lanús",-34.8609259,-58.3887287,"industrial",760);
+B("EES 5",-34.8601636,-58.3933367,"education",946);
+B("Universidad Lanús",-34.9208371,-58.4011307,"education",1339);
+B("Instituto Lomas",-34.7917703,-58.6283738,"education",647);
+B("Química Lanús",-34.720499,-58.586388,"industrial",1997);
+B("Plásticos Banfield",-34.7198767,-58.5878593,"industrial",3448);
+B("Manufacturera Monte Grande",-34.7209543,-58.5870492,"industrial",1582);
+B("Fundición Burzaco",-34.7212174,-58.5866693,"industrial",3292);
+B("Metalúrgica Burzaco",-34.7214421,-58.5863815,"industrial",2320);
+B("Textil Lomas",-34.7216366,-58.5851739,"industrial",765);
+B("Plásticos Avellaneda",-34.7212478,-58.5855241,"industrial",3079);
+B("Fábrica Banfield",-34.7210173,-58.5849395,"industrial",2963);
+B("Textil Banfield",-34.7204809,-58.5840989,"industrial",3412);
+B("Textil Quilmes",-34.7199081,-58.584431,"industrial",3205);
+B("Textil Lomas",-34.7162902,-58.5874558,"industrial",2324);
+B("Manufacturera Quilmes",-34.7160236,-58.5884832,"industrial",2908);
+B("Plásticos Avellaneda",-34.7161374,-58.5882889,"industrial",2001);
+B("Escuela de Educación Primaria Nº 22 Mi Esperanza",-34.7080749,-58.5775897,"education",591);
+B("Escuela de Educación Secundaria Nº 34",-34.7084271,-58.5771403,"education",935);
+B("Escuela n° 124",-34.7564218,-58.6392544,"education",1927);
+B("Escuela Sol Naciente",-34.7590483,-58.6336172,"education",607);
+B("Escuela Primaria n° 40",-34.7627435,-58.6619565,"education",1415);
+B("Escuela de Educación Primaria n° 78 \"Atahualpa Yupanqui\"",-34.8347263,-58.3741203,"education",776);
+B("Galeria Nino",-34.8170388,-58.4682283,"retail",432);
+B("Colegio Alicia Moreau de Justo",-34.7400266,-58.4362708,"education",1054);
+B("Escuela Secundaria Soberanía Nacional",-34.736969,-58.4332741,"education",1649);
+B("Industrias Temperley",-34.7526168,-58.4365606,"industrial",3351);
+B("Fundición Lomas",-34.7531241,-58.4358806,"industrial",1860);
+B("Textil Banfield",-34.7518771,-58.4367888,"industrial",2217);
+B("Química Avellaneda",-34.7509379,-58.4368397,"industrial",1304);
+B("Metalúrgica Adrogué",-34.750227,-58.4371491,"industrial",3605);
+B("Oficinas Banfield",-34.8597294,-58.3902362,"commercial",674);
+B("Comercio Remedios de Escalada",-34.7672775,-58.6162985,"retail",712);
+B("Sanatorio Lanús",-34.767753,-58.6174751,"healthcare",348);
+B("Monumento Almirante Brown",-34.6993991,-58.4621709,"retail",346);
+B("Centro de Formacion para el Trabajo en Panificados",-34.8548356,-58.3504308,"industrial",1272);
+B("Pintura",-34.8806577,-58.5105294,"industrial",2910);
+B("Complejo Avellaneda",-34.7301353,-58.5349037,"commercial",905);
+B("Escuela Secundaria N°8",-34.7947027,-58.3303441,"education",1450);
+B("Centro Comercial Remedios de Escalada",-34.7319139,-58.5331558,"commercial",1191);
+B("Escuela Lanús",-34.8031018,-58.3507345,"education",990);
+B("Supermercado Chen",-34.7248103,-58.457184,"commercial",1071);
+B("Aceros Banfield",-34.6980085,-58.4870371,"industrial",2834);
+B("Edificio Avellaneda",-34.765073,-58.4016951,"commercial",1152);
+B("Edificio Adrogué",-34.764984,-58.4016542,"commercial",1352);
+B("Oficinas Burzaco",-34.7650656,-58.4013284,"commercial",739);
+B("Centro Comercial Adrogué",-34.7651175,-58.4014507,"commercial",1155);
+B("Oficinas Remedios de Escalada",-34.7651061,-58.4015723,"commercial",1025);
+B("Paseo del Aljibe",-34.7618341,-58.3987092,"retail",953);
+B("Comercio Quilmes",-34.8497381,-58.2791313,"retail",297);
+B("Escuela Adrogué",-34.8119641,-58.6215247,"education",1456);
+B("Instituto Lanús",-34.8123346,-58.6206282,"education",678);
+B("Galería Temperley",-34.833238,-58.4749393,"retail",599);
+B("Comercio Adrogué",-34.8315208,-58.4761383,"retail",309);
+B("Instituto Remedios de Escalada",-34.7818623,-58.3384295,"education",419);
+B("Galería Visión",-34.7646794,-58.398814,"commercial",890);
+B("Edificio Quilmes",-34.7639065,-58.398944,"commercial",1374);
+B("Instituto Adrogué",-34.838276,-58.5114458,"education",483);
+B("Aceros Burzaco",-34.9126928,-58.6143967,"industrial",3103);
+B("Plásticos Burzaco",-34.9123898,-58.6146302,"industrial",3707);
+B("Textil Avellaneda",-34.9046616,-58.6084652,"industrial",1374);
+B("Manufacturera Burzaco",-34.9030578,-58.6118346,"industrial",3006);
+B("Fábrica Lomas",-34.9064386,-58.6070019,"industrial",1780);
+B("Manufacturera Lanús",-34.9061174,-58.6072052,"industrial",1407);
+B("Aceros Monte Grande",-34.9077915,-58.6074887,"industrial",2498);
+B("Química Temperley",-34.9099423,-58.6096363,"industrial",1386);
+B("Industrias Quilmes",-34.9114157,-58.6080467,"industrial",978);
+B("Manufacturera Adrogué",-34.9117823,-58.6085962,"industrial",3051);
+B("Textil Quilmes",-34.9114742,-58.6117082,"industrial",1296);
+B("Plásticos Banfield",-34.9122032,-58.6130863,"industrial",3417);
+B("Manufacturera Adrogué",-34.9119813,-58.6146708,"industrial",3630);
+B("Metalúrgica Banfield",-34.9112035,-58.6156479,"industrial",3034);
+B("Industrias Banfield",-34.9101189,-58.614532,"industrial",2743);
+B("Fábrica Remedios de Escalada",-34.9087869,-58.612208,"industrial",1956);
+B("Manufacturera Monte Grande",-34.8953758,-58.6014282,"industrial",3371);
+B("Manufacturera Burzaco",-34.8938249,-58.6018467,"industrial",2654);
+B("Logística Adrogué",-34.8854354,-58.5828317,"warehouse",2909);
+B("Logística Monte Grande",-34.8031746,-58.4976905,"warehouse",2286);
+B("Distribuidora Avellaneda",-34.8034296,-58.4981861,"warehouse",2013);
+B("Distribuidora Lomas",-34.8037246,-58.4987077,"warehouse",1009);
+B("Almacén Lanús",-34.806095,-58.503362,"warehouse",700);
+B("Escuela Burzaco",-34.7187268,-58.5294344,"education",1887);
+B("Universidad Lanús",-34.7180618,-58.5236188,"education",1106);
+B("Complejo Quilmes",-34.7116791,-58.4792552,"commercial",357);
+B("Manufacturera Temperley",-34.803928,-58.5418842,"industrial",1852);
+B("Plásticos Banfield",-34.8034598,-58.54183,"industrial",2339);
+B("Fundición Lanús",-34.80337,-58.541113,"industrial",2289);
+B("Industrias Lanús",-34.816463,-58.390955,"industrial",2052);
+B("Centro Médico Adrogué",-34.7457943,-58.4252003,"healthcare",621);
+B("Instituto Monte Grande",-34.8026282,-58.6413568,"education",473);
+B("Universidad Avellaneda",-34.8022401,-58.6408656,"education",960);
+B("Escuela Secundaria Básica N°40",-34.78197,-58.3386345,"education",1955);
+B("Escuela Primaria Básica N° 46",-34.7820415,-58.3383094,"education",1886);
+B("Escuela Técnica N° 5",-34.7858421,-58.3547023,"education",1427);
+B("Escuela de Educación Primaria  N°81",-34.8689656,-58.3639641,"education",1056);
+B("Universidad Banfield",-34.7882027,-58.3513367,"education",1969);
+B("LCCA",-34.8447001,-58.379727,"industrial",2567);
+B("Colegio Lomas",-34.7046081,-58.5392332,"education",1476);
+B("Nicolas Repetto",-34.7070292,-58.5034009,"education",1172);
+B("Frioteka congelados",-34.7424522,-58.4149654,"commercial",1126);
+B("Colegio Remedios de Escalada",-34.7824672,-58.6416663,"education",1066);
+B("Instituto Quilmes",-34.7819436,-58.6411502,"education",1068);
+B("Colegio Temperley",-34.7820874,-58.6424578,"education",654);
+B("Escuela Banfield",-34.8163749,-58.6506182,"education",402);
+B("Instituto Quilmes",-34.767349,-58.628348,"education",1368);
+B("Instituto Banfield",-34.7335638,-58.6342752,"education",627);
+B("Universidad Monte Grande",-34.7594073,-58.6555974,"education",838);
+B("Universidad Monte Grande",-34.7312629,-58.6212859,"education",1556);
+B("Escuela Avellaneda",-34.824905,-58.6677465,"education",1892);
+B("Fiambrería El Rey del Queso",-34.8472265,-58.3763639,"commercial",1112);
+B("Colegio Adrogué",-34.7690949,-58.6078408,"education",750);
+B("Colegio Adrogué",-34.7687503,-58.6082513,"education",1713);
+B("Universidad Remedios de Escalada",-34.768978,-58.6080375,"education",698);
+B("Centro Médico Banfield",-34.9202339,-58.3910695,"healthcare",503);
+B("Centro Médico Banfield",-34.813074,-58.4590407,"healthcare",308);
+B("Sanatorio Burzaco",-34.8140478,-58.4588229,"healthcare",779);
+B("Centro Médico Quilmes",-34.813932,-58.4593607,"healthcare",916);
+B("Clínica Quilmes",-34.813273,-58.4592006,"healthcare",619);
+B("Clínica Temperley",-34.8135965,-58.4592813,"healthcare",433);
+B("Sanatorio Adrogué",-34.8135317,-58.4590418,"healthcare",986);
+B("Clínica Quilmes",-34.8137521,-58.4589366,"healthcare",831);
+B("Universidad Adrogué",-34.6935382,-58.4949966,"education",1293);
+B("Escuela Avellaneda",-34.6929319,-58.4947909,"education",737);
+B("Escuela Burzaco",-34.834974,-58.5106842,"education",1615);
+B("Colegio Lomas",-34.7650328,-58.3989661,"education",1958);
+B("Aceros Lanús",-34.6887442,-58.5137282,"industrial",2324);
+B("Manufacturera Monte Grande",-34.7480679,-58.5040713,"industrial",1445);
+B("Ceramica Martin S.A.",-34.7053363,-58.5725961,"industrial",950);
+B("Colegio Banfield",-34.8320911,-58.6575577,"education",1352);
+B("Centro Comercial Lomas",-34.816868,-58.4717747,"commercial",898);
+B("Complejo Adrogué",-34.8174499,-58.4740488,"commercial",1367);
+B("Usina",-34.7571149,-58.5116368,"industrial",1780);
+B("Fundición Temperley",-34.7572204,-58.5110757,"industrial",3095);
+B("Industrias Avellaneda",-34.7615579,-58.5032923,"industrial",1666);
+B("LR1",-34.7546002,-58.5094497,"industrial",882);
+B("Fundición Lomas",-34.9449177,-58.4595487,"industrial",1104);
+B("Fundición Adrogué",-34.9450474,-58.4597061,"industrial",982);
+B("Fábrica Remedios de Escalada",-34.945169,-58.4598535,"industrial",3617);
+B("Fundición Burzaco",-34.9453379,-58.4594194,"industrial",1137);
+B("Química Banfield",-34.9454563,-58.4595626,"industrial",3236);
+B("Química Banfield",-34.858381,-58.4076211,"industrial",2795);
+B("Fábrica Temperley",-34.8550635,-58.406832,"industrial",1096);
+B("Manufacturera Quilmes",-34.8554645,-58.4088119,"industrial",1117);
+B("Manufacturera Monte Grande",-34.8482581,-58.4060271,"industrial",783);
+B("Aceros Avellaneda",-34.8489804,-58.4081121,"industrial",844);
+B("Textil Adrogué",-34.8506927,-58.4044938,"industrial",2102);
+B("Aceros Avellaneda",-34.8513911,-58.4064467,"industrial",2700);
+B("Fundición Burzaco",-34.8523003,-58.4058568,"industrial",2928);
+B("Plásticos Banfield",-34.852755,-58.4056914,"industrial",3520);
+B("Aceros Burzaco",-34.8530575,-58.4051355,"industrial",2074);
+B("Aceros Remedios de Escalada",-34.8504801,-58.4048406,"industrial",1993);
+B("Aceros Adrogué",-34.850768,-58.4053327,"industrial",2399);
+B("Plásticos Monte Grande",-34.8502577,-58.4073475,"industrial",3572);
+B("Plásticos Banfield",-34.8500435,-58.4060382,"industrial",767);
+B("Aceros Remedios de Escalada",-34.8495578,-58.4054802,"industrial",1943);
+B("Plásticos Adrogué",-34.8494417,-58.4059326,"industrial",1547);
+B("Metalúrgica Burzaco",-34.8498161,-58.404687,"industrial",2753);
+B("Textil Adrogué",-34.8497001,-58.4072059,"industrial",1214);
+B("Fundición Banfield",-34.849759,-58.4074629,"industrial",2655);
+B("Aceros Lomas",-34.8502463,-58.4085989,"industrial",1432);
+B("Industrias Burzaco",-34.8507075,-58.4086507,"industrial",1386);
+B("Colegio Avellaneda",-34.7262031,-58.5663455,"education",1033);
+B("Colegio Monte Grande",-34.7552291,-58.6092737,"education",521);
+B("La Gran Dulce",-34.706316,-58.4653454,"retail",339);
+B("Universidad Burzaco",-34.7187009,-58.5608622,"education",1269);
+B("Colegio Avellaneda",-34.7196734,-58.5591089,"education",969);
+B("Instituto Remedios de Escalada",-34.719251,-58.5589004,"education",1236);
+B("Colegio Burzaco",-34.721236,-58.5592472,"education",563);
+B("Universidad Remedios de Escalada",-34.721111,-58.5589918,"education",853);
+B("Figrorifico Arenales",-34.8458513,-58.4800946,"retail",451);
+B("Colegio Banfield",-34.8118099,-58.497917,"education",578);
+B("Colegio Monte Grande",-34.8132541,-58.5016914,"education",780);
+B("Instituto Monte Grande",-34.8620739,-58.5371146,"education",749);
+B("Universidad Burzaco",-34.7519566,-58.5736959,"education",441);
+B("Colegio Lanús",-34.7701425,-58.595947,"education",1070);
+B("Aceros Temperley",-34.7006962,-58.4955214,"industrial",1553);
+B("Edificio Avellaneda",-34.700511,-58.495209,"commercial",1192);
+B("Oficinas Remedios de Escalada",-34.7004548,-58.4949014,"commercial",1089);
+B("Oficinas Banfield",-34.7005361,-58.4943442,"commercial",1424);
+B("Complejo Quilmes",-34.7006394,-58.4945299,"commercial",1443);
+B("Oficinas Avellaneda",-34.7005292,-58.4945292,"commercial",1487);
+B("Edificio Lanús",-34.7004231,-58.4946225,"commercial",1256);
+B("Colegio Monte Grande",-34.7029279,-58.4745582,"education",429);
+B("Colegio Quilmes",-34.7033633,-58.4748157,"education",1619);
+B("Universidad Quilmes",-34.7075254,-58.5495716,"education",1374);
+B("Universidad Monte Grande",-34.7072509,-58.5490712,"education",1089);
+B("Universidad Lomas",-34.7077141,-58.549592,"education",1289);
+B("Universidad Remedios de Escalada",-34.7073027,-58.5494664,"education",900);
+B("Química Adrogué",-34.6992506,-58.5265239,"industrial",1185);
+B("Manufacturera Lomas",-34.8449746,-58.3957766,"industrial",3377);
+B("Industrias Quilmes",-34.8449345,-58.3950724,"industrial",1743);
+B("Fábrica Monte Grande",-34.8445608,-58.3954921,"industrial",1375);
+B("Fábrica Adrogué",-34.8441414,-58.3955434,"industrial",3179);
+B("Manufacturera Adrogué",-34.8449114,-58.3970723,"industrial",2364);
+B("Industrias Remedios de Escalada",-34.8453118,-58.3969759,"industrial",3551);
+B("Metalúrgica Burzaco",-34.8461351,-58.3974555,"industrial",1960);
+B("Química Temperley",-34.8459819,-58.3970571,"industrial",2131);
+B("Fundición Lomas",-34.8475668,-58.3981345,"industrial",1914);
+B("Industrias Adrogué",-34.8475327,-58.3976456,"industrial",3556);
+B("Industrias Temperley",-34.8472044,-58.3970775,"industrial",1482);
+B("Shopping Lanús",-34.7755887,-58.4057522,"retail",969);
+B("Supermercado Lanús",-34.7763494,-58.4119112,"retail",574);
+B("Polo Vial",-34.7453384,-58.4269506,"commercial",1232);
+B("EEST N° 6 \"Ing. Passalacqua\"",-34.7467594,-58.3933213,"education",1171);
+B("Centro Comercial Burzaco",-34.8583831,-58.3910336,"commercial",359);
+B("Universidad Banfield",-34.8290772,-58.2912527,"education",1675);
+B("Escuela Lanús",-34.8295574,-58.2910438,"education",1552);
+B("Universidad Adrogué",-34.8293447,-58.2908266,"education",1382);
+B("Instituto Monte Grande",-34.7851652,-58.489664,"education",1299);
+B("Instituto Adrogué",-35.0252602,-58.4253932,"education",746);
+B("Hospital Local General Agudos Doctor Arturo Melo",-34.7257464,-58.3852586,"healthcare",244);
+B("Industrias Banfield",-34.915237,-58.4418594,"industrial",1837);
+B("Complejo Banfield",-34.8548358,-58.5036164,"commercial",926);
+B("Industrias Temperley",-34.8533944,-58.5001066,"industrial",1484);
+B("Manufacturera Avellaneda",-34.8526089,-58.4997087,"industrial",2098);
+B("Escuela Quilmes",-34.9201276,-58.5971964,"education",839);
+B("Universidad Avellaneda",-34.7787423,-58.308802,"education",1272);
+B("Sanatorio Lanús",-34.8184993,-58.3895566,"healthcare",762);
+B("Lenterdit SA - V. Del Pino",-34.8717393,-58.6671352,"industrial",2528);
+B("Fábrica Burzaco",-34.7840133,-58.4730048,"industrial",1395);
+B("Aceros Lomas",-34.7844653,-58.4727744,"industrial",1480);
+B("Fundición Lanús",-34.784334,-58.4735467,"industrial",1000);
+B("Aceros Lomas",-34.784823,-58.4731498,"industrial",2769);
+B("Fábrica Monte Grande",-34.7853379,-58.4732139,"industrial",3384);
+B("Plásticos Quilmes",-34.7847697,-58.4741853,"industrial",1370);
+B("Fundición Lomas",-34.7855744,-58.4735934,"industrial",3487);
+B("Plásticos Adrogué",-34.7839438,-58.4748575,"industrial",1149);
+B("Metalúrgica Banfield",-34.7834757,-58.4735828,"industrial",1260);
+B("Fábrica Banfield",-34.7830445,-58.473862,"industrial",2906);
+B("Plásticos Banfield",-34.7834673,-58.4741775,"industrial",2762);
+B("Química Adrogué",-34.7832792,-58.4732164,"industrial",3080);
+B("Fundición Lanús",-34.7836193,-58.4729822,"industrial",2115);
+B("Instituto Lomas",-34.6974468,-58.4443893,"education",431);
+B("Sanatorio Quilmes",-34.6965125,-58.4458192,"healthcare",480);
+B("Colegio Lanús",-34.6917957,-58.4672513,"education",1184);
+B("Textil Avellaneda",-34.691546,-58.4671571,"industrial",3285);
+B("Fundición Quilmes",-34.7775853,-58.4649642,"industrial",1966);
+B("Fundición Temperley",-34.7770257,-58.4644927,"industrial",1083);
+B("Manufacturera Quilmes",-34.7774893,-58.4642784,"industrial",1214);
+B("Fábrica Lanús",-34.777311,-58.4639199,"industrial",2556);
+B("Química Temperley",-34.7764455,-58.465107,"industrial",1527);
+B("Industrias Remedios de Escalada",-34.7768586,-58.4655601,"industrial",1832);
+B("Química Avellaneda",-34.7748841,-58.4658652,"industrial",1209);
+B("Química Remedios de Escalada",-34.7742772,-58.4666637,"industrial",2188);
+B("Industrias Lomas",-34.775627,-58.4694787,"industrial",754);
+
+const buildings = RAW;
+
+let currentFilter = {priority:'all',category:null,minSize:0,pipeline:false,search:''};
+let compareSet = new Set();
+let notes = {};
+let pipelineState = {};
+let map;
+
+try{
+  notes=JSON.parse(localStorage.getItem('sa_notes')||'{}');
+  pipelineState=JSON.parse(localStorage.getItem('sa_pipeline')||'{}');
+  buildings.forEach(b=>{if(pipelineState[b.id]!==undefined)b.pip=pipelineState[b.id]});
+}catch(e){}
+
+function initApp(){
+  map = new maplibregl.Map({
+    container:'map',
+    style:{
+      version:8,
+      glyphs:'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf',
+      sources:{
+        'osm':{type:'raster',tiles:['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],tileSize:256,maxzoom:19,attribution:'© OpenStreetMap'}
+      },
+      layers:[{id:'osm-layer',type:'raster',source:'osm'}]
+    },
+    center:[-58.490818,-34.868172],
+    zoom:12,
+    maxZoom:19,
+    minZoom:9
+  });
+
+  map.on('load',()=>{
+    initMapLayers();
+    renderBuildings();
+    renderAnalytics();
+    updateHeaderStats();
+    document.getElementById('loading').classList.add('done');
+  });
+}
+
+let currentStyle='streets';
+function setMapStyle(style){
+  currentStyle=style;
+  document.getElementById('btn-streets').classList.toggle('active',style==='streets');
+  document.getElementById('btn-sat').classList.toggle('active',style==='satellite');
+  const tiles=style==='satellite'
+    ?['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}']
+    :['https://tile.openstreetmap.org/{z}/{x}/{y}.png'];
+  map.getSource('osm').tiles=tiles;
+  map.style.sourceCaches['osm'].clearTiles();
+  map.style.sourceCaches['osm'].update(map.transform);
+  map.triggerRepaint();
+}
+
+function resetView(){map.flyTo({center:[-58.490818,-34.868172],zoom:12})}
+
+function initMapLayers(){
+  const features=buildings.map(b=>({
+    type:'Feature',
+    geometry:{type:'Point',coordinates:[b.lo,b.la]},
+    properties:{id:b.id,pr:b.pr,kwp:b.kwp,pip:b.pip,a:b.a,n:b.n,c:b.c}
+  }));
+  map.addSource('buildings',{type:'geojson',data:{type:'FeatureCollection',features}});
+  map.addLayer({
+    id:'buildings-circles',type:'circle',source:'buildings',
+    filter:['==',['get','pip'],0],
+    paint:{
+      'circle-radius':['interpolate',['linear'],['zoom'],9,2,12,4,16,9],
+      'circle-color':['match',['get','pr'],'A','#D4A843','B','#2ED89A','C','#6496FF','#666666'],
+      'circle-opacity':0.85,
+      'circle-stroke-width':1,
+      'circle-stroke-color':'rgba(255,255,255,0.4)'
+    }
+  });
+  map.addLayer({
+    id:'buildings-pipeline',type:'circle',source:'buildings',
+    filter:['==',['get','pip'],1],
+    paint:{
+      'circle-radius':['interpolate',['linear'],['zoom'],9,3,12,6,16,11],
+      'circle-color':'#1A7A5A',
+      'circle-opacity':0.9,
+      'circle-stroke-width':2,
+      'circle-stroke-color':'#2ED89A'
+    }
+  });
+  map.on('click','buildings-circles',e=>showPopup(e));
+  map.on('click','buildings-pipeline',e=>showPopup(e));
+  map.on('mouseenter','buildings-circles',()=>{map.getCanvas().style.cursor='pointer'});
+  map.on('mouseleave','buildings-circles',()=>{map.getCanvas().style.cursor=''});
+  map.on('mouseenter','buildings-pipeline',()=>{map.getCanvas().style.cursor='pointer'});
+  map.on('mouseleave','buildings-pipeline',()=>{map.getCanvas().style.cursor=''});
+}
+
+function showPopup(e){
+  const f=e.features[0];
+  const bid=f.properties.id;
+  const b=buildings.find(x=>x.id===bid);
+  if(!b)return;
+  const waLink=`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(`Hola Solaris, vi "${b.n}" en el Roof Scanner. Me interesa una propuesta solar.`)}`;
+  const noteVal=notes[b.id]||'';
+  const isPip=b.pip?'active':'';
+  const html=`
+    <div class="popup-title">${b.n}</div>
+    <div class="popup-sub">${CAT_ICONS[b.c]||'📍'} ${CAT_LABELS[b.c]||b.c} · ${b.a.toLocaleString()} m² · Grado ${b.pr}</div>
+    <div class="popup-grid">
+      <div><div class="pg-label">Sistema</div><div class="pg-val">${b.kwp} kWp</div></div>
+      <div><div class="pg-label">Paneles</div><div class="pg-val">${Math.round(b.kwp/0.55)}</div></div>
+      <div><div class="pg-label">Generación anual</div><div class="pg-val">${b.ann.toLocaleString()} kWh</div></div>
+      <div><div class="pg-label">Ahorro anual</div><div class="pg-val">US$${b.sav.toLocaleString()}</div></div>
+      <div><div class="pg-label">Inversión</div><div class="pg-val">US$${b.inv.toLocaleString()}</div></div>
+      <div><div class="pg-label">Retorno</div><div class="pg-val">${b.pay} años</div></div>
+    </div>
+    <div class="popup-btns">
+      <a class="wa-btn" href="${waLink}" target="_blank">📱 WhatsApp</a>
+      <button class="proposal-btn" onclick="generateProposal(${b.id})">📄 Solicitar Propuesta</button>
+    </div>
+    <div class="popup-btns" style="margin-top:6px">
+      <button class="pip-toggle-btn ${isPip}" onclick="togglePipeline(${b.id},this)">🟢 ${b.pip?'En Pipeline':'Agregar al Pipeline'}</button>
+    </div>
+    <textarea class="note-area" placeholder="Agregar notas..." onchange="saveNote(${b.id},this.value)">${noteVal}</textarea>
+  `;
+  new maplibregl.Popup({maxWidth:'360px'}).setLngLat(e.lngLat).setHTML(html).addTo(map);
+}
+
+// ── Sidebar: Buildings ──
+function getFilteredBuildings(){
+  return buildings.filter(b=>{
+    if(currentFilter.priority!=='all'&&b.pr!==currentFilter.priority)return false;
+    if(currentFilter.category&&b.c!==currentFilter.category)return false;
+    if(b.a<currentFilter.minSize)return false;
+    if(currentFilter.pipeline&&!b.pip)return false;
+    if(currentFilter.search){
+      const q=currentFilter.search.toLowerCase();
+      if(!b.n.toLowerCase().includes(q)&&!b.c.toLowerCase().includes(q))return false;
+    }
+    return true;
+  });
+}
+
+function sortBuildings(list){
+  const s=document.getElementById('sortSelect').value;
+  return[...list].sort((a,b)=>{
+    if(s==='kwp')return b.kwp-a.kwp;
+    if(s==='area')return b.a-a.a;
+    if(s==='savings')return b.sav-a.sav;
+    if(s==='payback')return a.pay-b.pay;
+    if(s==='name')return a.n.localeCompare(b.n);
+    return 0;
+  });
+}
+
+function renderBuildings(){
+  const filtered=sortBuildings(getFilteredBuildings());
+  updateMapFilter(filtered);
+  const show=filtered.slice(0,200);
+  const container=document.getElementById('buildingList');
+  container.innerHTML=`<div style="padding:8px 12px;font-size:11px;opacity:0.5">${filtered.length} edificios${filtered.length>200?' (mostrando primeros 200)':''}</div>`+
+    show.map(b=>{
+      const isC=compareSet.has(b.id);
+      return`<div class="bldg-card ${isC?'selected':''}" onclick="flyTo(${b.lo},${b.la},${b.id})" data-id="${b.id}">
+        <div class="bldg-top">
+          <div class="bldg-name">${b.n}</div>
+          <div class="bldg-badge badge-${b.pr}">${b.pr}</div>
+        </div>
+        <div class="bldg-meta">${CAT_ICONS[b.c]||'📍'} ${CAT_LABELS[b.c]||b.c} · ${b.a.toLocaleString()} m²</div>
+        <div class="bldg-stats">
+          <span>${b.kwp} kWp</span> ·
+          <span>US$${b.sav.toLocaleString()}/año</span>
+          ${b.pip?'<span style="color:var(--accent)"> · 🟢</span>':''}
+        </div>
+        <div class="bldg-actions">
+          <button onclick="event.stopPropagation();toggleCompare(${b.id})" ${isC?'style="border-color:var(--gold);color:var(--gold)"':''}>⚖️</button>
+          <button class="${b.pip?'pip-on':''}" onclick="event.stopPropagation();togglePipelineFromList(${b.id})">🟢</button>
+        </div>
+      </div>`;
+    }).join('');
+}
+
+function updateMapFilter(filtered){
+  if(!map||!map.getLayer('buildings-circles'))return;
+  if(currentFilter.priority==='all'&&!currentFilter.category&&currentFilter.minSize===0&&!currentFilter.pipeline&&!currentFilter.search){
+    map.setFilter('buildings-circles',['==',['get','pip'],0]);
+    map.setFilter('buildings-pipeline',['==',['get','pip'],1]);
+  }else{
+    const ids=[...new Set(filtered.map(b=>b.id))];
+    map.setFilter('buildings-circles',['all',['==',['get','pip'],0],['in',['get','id'],['literal',ids]]]);
+    map.setFilter('buildings-pipeline',['all',['==',['get','pip'],1],['in',['get','id'],['literal',ids]]]);
+  }
+}
+
+function sortAndRender(){renderBuildings()}
+document.getElementById('searchInput').addEventListener('input',e=>{currentFilter.search=e.target.value;renderBuildings()});
+
+function filterPriority(pr,btn){
+  currentFilter.priority=pr;
+  document.querySelectorAll('.filters-bar [data-pr]').forEach(b=>b.classList.toggle('on',b.dataset.pr===pr));
+  renderBuildings();
+}
+function filterCat(cat,btn){
+  if(currentFilter.category===cat){currentFilter.category=null;btn.classList.remove('on')}
+  else{document.querySelectorAll('.filters-bar [data-cat]').forEach(b=>b.classList.remove('on'));currentFilter.category=cat;btn.classList.add('on')}
+  renderBuildings();
+}
+function filterSize(sz,btn){
+  if(currentFilter.minSize===sz){currentFilter.minSize=0;btn.classList.remove('on')}
+  else{document.querySelectorAll('.filters-bar [data-sz]').forEach(b=>b.classList.remove('on'));currentFilter.minSize=sz;btn.classList.add('on')}
+  renderBuildings();
+}
+function filterPipeline(btn){currentFilter.pipeline=!currentFilter.pipeline;btn.classList.toggle('on',currentFilter.pipeline);renderBuildings()}
+
+function flyTo(lng,lat,id){
+  map.flyTo({center:[lng,lat],zoom:17});
+  setTimeout(()=>{
+    const b=buildings.find(x=>x.id===id);
+    if(b)showPopup({features:[{properties:{id:b.id}}],lngLat:{lng:b.lo,lat:b.la}});
+  },500);
+}
+
+// ── Pipeline ──
+function togglePipeline(id,btn){
+  const b=buildings.find(x=>x.id===id);if(!b)return;
+  b.pip=b.pip?0:1;pipelineState[id]=b.pip;
+  localStorage.setItem('sa_pipeline',JSON.stringify(pipelineState));
+  if(btn){btn.classList.toggle('active',b.pip);btn.textContent=b.pip?'🟢 En Pipeline':'🟢 Agregar al Pipeline'}
+  refreshMapData();updateHeaderStats();
+}
+function togglePipelineFromList(id){
+  const b=buildings.find(x=>x.id===id);if(!b)return;
+  b.pip=b.pip?0:1;pipelineState[id]=b.pip;
+  localStorage.setItem('sa_pipeline',JSON.stringify(pipelineState));
+  refreshMapData();updateHeaderStats();renderBuildings();
+}
+function refreshMapData(){
+  const src=map.getSource('buildings');if(!src)return;
+  src.setData({type:'FeatureCollection',features:buildings.map(b=>({
+    type:'Feature',geometry:{type:'Point',coordinates:[b.lo,b.la]},
+    properties:{id:b.id,pr:b.pr,kwp:b.kwp,pip:b.pip,a:b.a,n:b.n,c:b.c}
+  }))});
+}
+
+// ── Notes ──
+function saveNote(id,val){notes[id]=val;localStorage.setItem('sa_notes',JSON.stringify(notes))}
+
+// ── Compare ──
+function toggleCompare(id){
+  if(compareSet.has(id))compareSet.delete(id);
+  else if(compareSet.size<3)compareSet.add(id);
+  document.getElementById('compareBar').classList.toggle('show',compareSet.size>0);
+  document.getElementById('cmpCount').textContent=compareSet.size;
+  renderBuildings();
+}
+function clearCompare(){compareSet.clear();document.getElementById('compareBar').classList.remove('show');renderBuildings()}
+function showCompare(){
+  if(compareSet.size<2)return;
+  const items=[...compareSet].map(id=>buildings.find(b=>b.id===id)).filter(Boolean);
+  document.getElementById('compareGrid').innerHTML=items.map(b=>`
+    <div class="compare-col">
+      <h4>${b.n}</h4>
+      <div class="cmp-row"><span class="cmp-label">Prioridad</span><span class="cmp-val">${b.pr}</span></div>
+      <div class="cmp-row"><span class="cmp-label">Categoría</span><span class="cmp-val">${CAT_LABELS[b.c]||b.c}</span></div>
+      <div class="cmp-row"><span class="cmp-label">Área</span><span class="cmp-val">${b.a.toLocaleString()} m²</span></div>
+      <div class="cmp-row"><span class="cmp-label">Sistema</span><span class="cmp-val">${b.kwp} kWp</span></div>
+      <div class="cmp-row"><span class="cmp-label">Paneles</span><span class="cmp-val">${Math.round(b.kwp/0.55)}</span></div>
+      <div class="cmp-row"><span class="cmp-label">Generación anual</span><span class="cmp-val">${b.ann.toLocaleString()} kWh</span></div>
+      <div class="cmp-row"><span class="cmp-label">Ahorro anual</span><span class="cmp-val">US$${b.sav.toLocaleString()}</span></div>
+      <div class="cmp-row"><span class="cmp-label">Inversión</span><span class="cmp-val">US$${b.inv.toLocaleString()}</span></div>
+      <div class="cmp-row"><span class="cmp-label">Retorno</span><span class="cmp-val">${b.pay} años</span></div>
+    </div>
+  `).join('');
+  document.getElementById('compareOverlay').classList.add('show');
+}
+function closeCompare(){document.getElementById('compareOverlay').classList.remove('show')}
+
+// ── Proposal ──
+function generateProposal(id){
+  const b=buildings.find(x=>x.id===id);if(!b)return;
+  const panels=Math.round(b.kwp/0.55);
+  const w=window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html><head><title>Propuesta Solar — ${b.n}</title>
+    <style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'DM Sans',Arial,sans-serif;padding:40px;max-width:800px;margin:0 auto;color:#333}
+    .header{text-align:center;margin-bottom:30px;border-bottom:3px solid #D4A843;padding-bottom:20px}
+    .logo-t{display:inline-block;width:44px;height:44px;background:#0B3D2E;border-radius:50%;text-align:center;line-height:44px;font-weight:800;font-size:14px;color:#D4A843;margin-bottom:8px}
+    h1{font-size:22px;color:#0B3D2E}h2{font-size:16px;color:#0B3D2E;margin:20px 0 10px;border-bottom:1px solid #ddd;padding-bottom:6px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;margin:10px 0}
+    .grid .label{font-size:12px;color:#888;text-transform:uppercase}.grid .val{font-size:15px;font-weight:600}
+    table{width:100%;border-collapse:collapse;margin:10px 0}th,td{padding:8px 12px;text-align:left;border-bottom:1px solid #eee}
+    th{background:#f5f5f5;font-size:12px;text-transform:uppercase;color:#888}
+    .cta{display:block;text-align:center;background:#0B3D2E;color:#D4A843;padding:14px;border-radius:8px;text-decoration:none;font-weight:700;font-size:16px;margin:30px 0}
+    .footer{text-align:center;font-size:11px;color:#888;margin-top:30px;border-top:1px solid #ddd;padding-top:15px}
+    @media print{.cta{display:none}}</style></head><body>
+    <div class="header"><div class="logo-t">SA</div><h1>Solaris Argentina — Propuesta Solar</h1><p style="color:#888;margin-top:4px">${new Date().toLocaleDateString('es-AR')}</p></div>
+    <h2>Datos del Inmueble</h2>
+    <div class="grid">
+      <div><div class="label">Inmueble</div><div class="val">${b.n}</div></div>
+      <div><div class="label">Categoría</div><div class="val">${CAT_LABELS[b.c]||b.c}</div></div>
+      <div><div class="label">Superficie de Techo</div><div class="val">${b.a.toLocaleString()} m²</div></div>
+      <div><div class="label">Grado de Prioridad</div><div class="val">${b.pr}</div></div>
+    </div>
+    <h2>Sistema Solar Propuesto</h2>
+    <div class="grid">
+      <div><div class="label">Potencia</div><div class="val">${b.kwp} kWp</div></div>
+      <div><div class="label">Paneles</div><div class="val">${panels} paneles</div></div>
+      <div><div class="label">Generación Anual</div><div class="val">${b.ann.toLocaleString()} kWh</div></div>
+      <div><div class="label">Ahorro Mensual</div><div class="val">US$${Math.round(b.sav/12).toLocaleString()}</div></div>
+      <div><div class="label">Ahorro Anual</div><div class="val">US$${b.sav.toLocaleString()}</div></div>
+      <div><div class="label">Retorno de Inversión</div><div class="val">${b.pay} años</div></div>
+    </div>
+    <h2>Inversión</h2>
+    <table><thead><tr><th>Concepto</th><th>Monto</th><th>Detalle</th></tr></thead><tbody>
+      <tr><td><strong>Sistema EPC (llave en mano)</strong></td><td>US$${b.inv.toLocaleString()}</td><td>US$${COST_PER_KWP}/kWp</td></tr>
+      <tr><td><strong>Ahorro anual estimado</strong></td><td>US$${b.sav.toLocaleString()}</td><td>Tarifa US$${TARIFF}/kWh</td></tr>
+      <tr><td><strong>Período de retorno</strong></td><td>${b.pay} años</td><td>Vida útil: 25+ años</td></tr>
+    </tbody></table>
+    <a class="cta" href="https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(`Hola Solaris, me interesa la propuesta solar para "${b.n}" (${b.kwp} kWp).`)}" target="_blank">📱 Contactar por WhatsApp</a>
+    <div class="footer">Solaris Argentina · Buenos Aires · Energía Propia<br>Generado por Roof Scanner Pro</div>
+    </body></html>`);
+}
+
+// ── Analytics ──
+function renderAnalytics(){
+  const totalKwp=buildings.reduce((s,b)=>s+b.kwp,0);
+  const totalSav=buildings.reduce((s,b)=>s+b.sav,0);
+  const totalInv=buildings.reduce((s,b)=>s+b.inv,0);
+  const pipCount=buildings.filter(b=>b.pip).length;
+  const prCounts={A:0,B:0,C:0,D:0};
+  buildings.forEach(b=>prCounts[b.pr]=(prCounts[b.pr]||0)+1);
+  const maxPr=Math.max(...Object.values(prCounts));
+  const catCounts={};
+  buildings.forEach(b=>catCounts[b.c]=(catCounts[b.c]||0)+1);
+  const catSorted=Object.entries(catCounts).sort((a,b)=>b[1]-a[1]);
+  const maxCat=catSorted.length?catSorted[0][1]:1;
+  const top10=[...buildings].sort((a,b)=>b.kwp-a.kwp).slice(0,10);
+
+  document.getElementById('analyticsContent').innerHTML=`
+    <h3>📊 Analíticas del Portafolio</h3>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="sv">${buildings.length}</div><div class="sl">Edificios</div></div>
+      <div class="stat-card"><div class="sv">${(totalKwp/1000).toFixed(1)}</div><div class="sl">MWp Potencial</div></div>
+      <div class="stat-card"><div class="sv">$${(totalInv/1000000).toFixed(1)}M</div><div class="sl">Valor EPC (USD)</div></div>
+      <div class="stat-card"><div class="sv">$${(totalSav/1000000).toFixed(2)}M</div><div class="sl">Ahorro Anual</div></div>
+      <div class="stat-card"><div class="sv">${Math.round(totalKwp*ANNUAL_KWH_PER_KWP*0.0005/1000)}K</div><div class="sl">Ton CO₂/año</div></div>
+      <div class="stat-card"><div class="sv">${pipCount}</div><div class="sl">Pipeline</div></div>
+    </div>
+    <div class="chart-section">
+      <h4>Distribución por Prioridad</h4>
+      ${['A','B','C','D'].map(pr=>`<div class="bar-row">
+        <div class="bar-label">Grado ${pr}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${(prCounts[pr]/maxPr*100)}%;background:${PRIORITY_COLORS[pr]}">${prCounts[pr]}</div></div>
+        <div class="bar-count">${prCounts[pr]}</div>
+      </div>`).join('')}
+    </div>
+    <div class="chart-section">
+      <h4>Por Categoría</h4>
+      ${catSorted.map(([cat,cnt])=>`<div class="bar-row">
+        <div class="bar-label">${CAT_ICONS[cat]||'📍'} ${(CAT_LABELS[cat]||cat).replace(/^. /,'')}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${(cnt/maxCat*100)}%;background:var(--gold)">${cnt}</div></div>
+        <div class="bar-count">${cnt}</div>
+      </div>`).join('')}
+    </div>
+    <div class="chart-section">
+      <h4>Top 10 por kWp</h4>
+      <ol class="top-list">${top10.map((b,i)=>`<li>
+        <span class="tl-rank">${i+1}</span>
+        <span class="tl-name">${b.n}</span>
+        <span class="tl-val">${b.kwp} kWp</span>
+      </li>`).join('')}</ol>
+    </div>
+  `;
+}
+
+// ── Tabs ──
+function switchTab(tab,btn){
+  document.querySelectorAll('.sidebar-tabs button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-buildings').style.display=tab==='buildings'?'':'none';
+  document.getElementById('tab-analytics').style.display=tab==='analytics'?'':'none';
+}
+
+// ── Header Stats ──
+function updateHeaderStats(){
+  const totalKwp=buildings.reduce((s,b)=>s+b.kwp,0);
+  const totalInv=buildings.reduce((s,b)=>s+b.inv,0);
+  const pipCount=buildings.filter(b=>b.pip).length;
+  document.getElementById('h-buildings').textContent=buildings.length;
+  document.getElementById('h-mwp').textContent=(totalKwp/1000).toFixed(1);
+  document.getElementById('h-value').textContent=(totalInv/1000000).toFixed(1);
+  document.getElementById('h-pipeline').textContent=pipCount;
+}
+
+// ── Keyboard shortcuts ──
+document.addEventListener('keydown',e=>{
+  if(e.key==='/'&&!e.ctrlKey&&document.activeElement.tagName!=='INPUT'){e.preventDefault();document.getElementById('searchInput').focus()}
+  if(e.key==='Escape')closeCompare();
+});
+</script>
+</body>
+</html>

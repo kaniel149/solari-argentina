@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solaris Argentina — Atlas Solar</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --green: #0B3D2E; --gold: #D4A843; --pearl: #FEFDFB; --dark: #0A0A0A; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--dark); color: #fff; min-height: 100vh; }
+  .container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
+  h1 { font-family: 'Playfair Display', serif; font-size: 32px; color: var(--pearl); text-align: center; margin-bottom: 8px; }
+  .subtitle { text-align: center; color: var(--gold); font-size: 14px; letter-spacing: 3px; margin-bottom: 40px; }
+  
+  .region-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+  .region-card {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px; padding: 24px; transition: all 0.3s; cursor: pointer;
+  }
+  .region-card:hover { background: rgba(255,255,255,0.08); transform: translateY(-4px); border-color: var(--gold); }
+  .region-card h3 { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--pearl); margin-bottom: 4px; }
+  .region-card .province { font-size: 12px; color: var(--gold); letter-spacing: 1px; margin-bottom: 16px; }
+  
+  .irradiation-bar { height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; margin-bottom: 8px; overflow: hidden; }
+  .irradiation-fill { height: 100%; border-radius: 4px; transition: width 1s ease; }
+  
+  .stat-row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; }
+  .stat-label { color: #888; }
+  .stat-value { color: var(--pearl); font-weight: 600; }
+  .stat-value.gold { color: var(--gold); }
+  
+  .divider { height: 1px; background: rgba(255,255,255,0.06); margin: 12px 0; }
+  
+  .legend { display: flex; gap: 20px; justify-content: center; margin-top: 30px; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #888; }
+  .legend-color { width: 12px; height: 12px; border-radius: 3px; }
+  
+  .note { text-align: center; font-size: 12px; color: #666; margin-top: 30px; max-width: 600px; margin-left: auto; margin-right: auto; }
+  
+  .brand { text-align: center; margin-top: 40px; font-size: 11px; color: var(--gold); letter-spacing: 4px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Atlas Solar Argentina</h1>
+<div class="subtitle">IRRADIACIÓN SOLAR POR REGIÓN</div>
+
+<div class="region-grid">
+
+  <div class="region-card">
+    <h3>Buenos Aires</h3>
+    <div class="province">PROVINCIA + CABA</div>
+    <div class="irradiation-bar"><div class="irradiation-fill" style="width:75%;background:linear-gradient(90deg,var(--green),var(--gold));"></div></div>
+    <div class="stat-row"><span class="stat-label">Irradiación</span><span class="stat-value gold">4.5 kWh/m²/día</span></div>
+    <div class="stat-row"><span class="stat-label">Generación anual (100kWp)</span><span class="stat-value">~160,000 kWh</span></div>
+    <div class="stat-row"><span class="stat-label">Horas sol pico</span><span class="stat-value">4.5 h/día</span></div>
+    <div class="divider"></div>
+    <div class="stat-row"><span class="stat-label">Potencial C&I</span><span class="stat-value gold">Muy Alto</span></div>
+    <div class="stat-row"><span class="stat-label">Carga nacional</span><span class="stat-value">33%</span></div>
+    <div class="stat-row"><span class="stat-label">Zonas clave</span><span class="stat-value">Tres de Febrero, Quilmes, La Matanza</span></div>
+  </div>
+
+  <div class="region-card">
+    <h3>Córdoba</h3>
+    <div class="province">CENTRO</div>
+    <div class="irradiation-bar"><div class="irradiation-fill" style="width:83%;background:linear-gradient(90deg,var(--green),var(--gold));"></div></div>
+    <div class="stat-row"><span class="stat-label">Irradiación</span><span class="stat-value gold">5.0 kWh/m²/día</span></div>
+    <div class="stat-row"><span class="stat-label">Generación anual (100kWp)</span><span class="stat-value">~178,000 kWh</span></div>
+    <div class="stat-row"><span class="stat-label">Horas sol pico</span><span class="stat-value">5.0 h/día</span></div>
+    <div class="divider"></div>
+    <div class="stat-row"><span class="stat-label">Potencial C&I</span><span class="stat-value gold">Alto</span></div>
+    <div class="stat-row"><span class="stat-label">Distribuidora</span><span class="stat-value">EPEC</span></div>
+    <div class="stat-row"><span class="stat-label">Mercado PPA</span><span class="stat-value">Activo</span></div>
+  </div>
+
+  <div class="region-card">
+    <h3>Mendoza / San Juan</h3>
+    <div class="province">CUYO</div>
+    <div class="irradiation-bar"><div class="irradiation-fill" style="width:92%;background:linear-gradient(90deg,var(--gold),#E8C76B);"></div></div>
+    <div class="stat-row"><span class="stat-label">Irradiación</span><span class="stat-value gold">5.5 kWh/m²/día</span></div>
+    <div class="stat-row"><span class="stat-label">Generación anual (100kWp)</span><span class="stat-value">~196,000 kWh</span></div>
+    <div class="stat-row"><span class="stat-label">Horas sol pico</span><span class="stat-value">5.5 h/día</span></div>
+    <div class="divider"></div>
+    <div class="stat-row"><span class="stat-label">Potencial C&I</span><span class="stat-value gold">Muy Alto</span></div>
+    <div class="stat-row"><span class="stat-label">Capacidad instalada</span><span class="stat-value">1,095 MW</span></div>
+    <div class="stat-row"><span class="stat-label">Mejor irradiación del país</span><span class="stat-value">⭐</span></div>
+  </div>
+
+  <div class="region-card">
+    <h3>Río Negro</h3>
+    <div class="province">PATAGONIA NORTE</div>
+    <div class="irradiation-bar"><div class="irradiation-fill" style="width:80%;background:linear-gradient(90deg,var(--green),var(--gold));"></div></div>
+    <div class="stat-row"><span class="stat-label">Irradiación</span><span class="stat-value gold">4.8 kWh/m²/día</span></div>
+    <div class="stat-row"><span class="stat-label">Generación anual (100kWp)</span><span class="stat-value">~171,000 kWh</span></div>
+    <div class="stat-row"><span class="stat-label">Horas sol pico</span><span class="stat-value">4.8 h/día</span></div>
+    <div class="divider"></div>
+    <div class="stat-row"><span class="stat-label">Potencial C&I</span><span class="stat-value gold">Alto</span></div>
+    <div class="stat-row"><span class="stat-label">Distribuidora</span><span class="stat-value">EDERSA</span></div>
+    <div class="stat-row"><span class="stat-label">Sector clave</span><span class="stat-value">Agroindustria (frutícola)</span></div>
+  </div>
+
+  <div class="region-card">
+    <h3>Santa Fe</h3>
+    <div class="province">LITORAL</div>
+    <div class="irradiation-bar"><div class="irradiation-fill" style="width:78%;background:linear-gradient(90deg,var(--green),var(--gold));"></div></div>
+    <div class="stat-row"><span class="stat-label">Irradiación</span><span class="stat-value gold">4.7 kWh/m²/día</span></div>
+    <div class="stat-row"><span class="stat-label">Generación anual (100kWp)</span><span class="stat-value">~167,000 kWh</span></div>
+    <div class="stat-row"><span class="stat-label">Horas sol pico</span><span class="stat-value">4.7 h/día</span></div>
+    <div class="divider"></div>
+    <div class="stat-row"><span class="stat-label">Potencial C&I</span><span class="stat-value gold">Alto</span></div>
+    <div class="stat-row"><span class="stat-label">Distribuidora</span><span class="stat-value">EPE</span></div>
+    <div class="stat-row"><span class="stat-label">Sector clave</span><span class="stat-value">Industrial, agro</span></div>
+  </div>
+
+  <div class="region-card">
+    <h3>NOA (Noroeste)</h3>
+    <div class="province">SALTA · JUJUY · TUCUMÁN</div>
+    <div class="irradiation-bar"><div class="irradiation-fill" style="width:95%;background:linear-gradient(90deg,var(--gold),#FFD700);"></div></div>
+    <div class="stat-row"><span class="stat-label">Irradiación</span><span class="stat-value gold">5.8 kWh/m²/día</span></div>
+    <div class="stat-row"><span class="stat-label">Generación anual (100kWp)</span><span class="stat-value">~207,000 kWh</span></div>
+    <div class="stat-row"><span class="stat-label">Horas sol pico</span><span class="stat-value">5.8 h/día</span></div>
+    <div class="divider"></div>
+    <div class="stat-row"><span class="stat-label">Potencial C&I</span><span class="stat-value gold">Alto</span></div>
+    <div class="stat-row"><span class="stat-label">Capacidad instalada</span><span class="stat-value">869 MW</span></div>
+    <div class="stat-row"><span class="stat-label">Sector clave</span><span class="stat-value">Minería, agro, litio</span></div>
+  </div>
+
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-color" style="background:var(--green);"></div> Bueno (4.0-4.5)</div>
+  <div class="legend-item"><div class="legend-color" style="background:var(--gold);"></div> Muy Bueno (4.5-5.5)</div>
+  <div class="legend-item"><div class="legend-color" style="background:#FFD700;"></div> Excelente (5.5+)</div>
+</div>
+
+<div class="note">
+  Datos de irradiación basados en promedios anuales (Global Solar Atlas / NASA POWER). La generación real depende de orientación, inclinación, sombreado y eficiencia del equipo. Solicite un análisis personalizado para su ubicación específica.
+</div>
+
+<div class="brand">SOLARIS ARGENTINA · ENERGÍA PROPIA</div>
+
+</div>
+</body>
+</html>

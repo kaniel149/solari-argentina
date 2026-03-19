@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solaris Argentina — One Pager</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  @page { size: A4; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: #f5f5f5; }
+  .page {
+    width: 210mm; min-height: 297mm; margin: 20px auto; background: #FEFDFB;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1); position: relative; overflow: hidden;
+  }
+  .header {
+    background: linear-gradient(135deg, #0B3D2E, #1a6b4a); color: #FEFDFB;
+    padding: 30px 35px; display: flex; justify-content: space-between; align-items: center;
+  }
+  .header h1 { font-family: 'Playfair Display', serif; font-size: 26px; letter-spacing: 2px; }
+  .header .tagline { font-size: 10px; color: #D4A843; letter-spacing: 5px; margin-top: 4px; }
+  .header .contact { text-align: right; font-size: 10px; line-height: 1.8; opacity: 0.8; }
+  
+  .body { padding: 25px 35px; }
+  
+  .intro { font-size: 13px; color: #555; line-height: 1.7; margin-bottom: 20px; border-left: 3px solid #D4A843; padding-left: 16px; }
+  
+  .section-title {
+    font-family: 'Playfair Display', serif; font-size: 15px; color: #0B3D2E;
+    border-bottom: 2px solid #D4A843; padding-bottom: 4px; margin: 20px 0 12px;
+  }
+  
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+  .stat-box { text-align: center; padding: 12px 8px; background: #F3F4F6; border-radius: 8px; }
+  .stat-box .num { font-family: 'Playfair Display', serif; font-size: 22px; color: #0B3D2E; font-weight: 800; }
+  .stat-box .lab { font-size: 9px; color: #888; margin-top: 2px; }
+  
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  
+  .card { background: #F9FAFB; border-radius: 8px; padding: 14px; border: 1px solid #E5E7EB; }
+  .card h3 { font-size: 12px; color: #0B3D2E; font-weight: 700; margin-bottom: 6px; }
+  .card ul { padding-left: 14px; font-size: 10px; color: #666; line-height: 1.8; }
+  .card p { font-size: 10px; color: #666; line-height: 1.7; }
+  
+  .highlight-card { background: linear-gradient(135deg, #0B3D2E, #1a6b4a); color: #FEFDFB; border: none; }
+  .highlight-card h3 { color: #D4A843; }
+  .highlight-card ul, .highlight-card p { color: rgba(254,253,251,0.85); }
+  
+  table { width: 100%; border-collapse: collapse; font-size: 10px; margin-top: 8px; }
+  th { background: #0B3D2E; color: #FEFDFB; padding: 6px 10px; text-align: left; font-weight: 600; }
+  td { padding: 5px 10px; border-bottom: 1px solid #E5E7EB; color: #555; }
+  
+  .footer {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: #0B3D2E; color: #FEFDFB; padding: 12px 35px;
+    display: flex; justify-content: space-between; align-items: center; font-size: 9px;
+  }
+  .footer .gold { color: #D4A843; font-weight: 600; letter-spacing: 3px; }
+  
+  .print-btn {
+    position: fixed; bottom: 20px; right: 20px; background: #D4A843; color: #0B3D2E;
+    border: none; padding: 12px 24px; border-radius: 8px; font-weight: 700; cursor: pointer;
+    font-family: 'DM Sans'; font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+  @media print { .print-btn { display: none; } body { background: white; } .page { box-shadow: none; margin: 0; } }
+</style>
+</head>
+<body>
+
+<button class="print-btn" onclick="window.print()">Print / PDF</button>
+
+<div class="page">
+  <div class="header">
+    <div>
+      <h1>SOLARIS ARGENTINA</h1>
+      <div class="tagline">OWN YOUR ENERGY</div>
+    </div>
+    <div class="contact">
+      Kaniel Tordjman — Presidente<br>
+      k@kanielt.com · kanielt.com<br>
+      Buenos Aires, Argentina
+    </div>
+  </div>
+
+  <div class="body">
+    <div class="intro">
+      Solaris Argentina delivers end-to-end solar energy solutions for businesses and industries: design, installation, financing, and 24/7 monitoring powered by proprietary technology. Over 500 international installations back our expertise.
+    </div>
+
+    <div class="stats">
+      <div class="stat-box"><div class="num">500+</div><div class="lab">International Installations</div></div>
+      <div class="stat-box"><div class="num">70%</div><div class="lab">Electricity Savings</div></div>
+      <div class="stat-box"><div class="num">4-6</div><div class="lab">Years Payback</div></div>
+      <div class="stat-box"><div class="num">25+</div><div class="lab">Years System Lifespan</div></div>
+    </div>
+
+    <div class="section-title">Our Services</div>
+    <div class="two-col" style="margin-bottom:16px;">
+      <div class="card">
+        <h3>⚡ Rooftop Solar Installation</h3>
+        <ul>
+          <li>Custom design with PVsyst simulation</li>
+          <li>Tier 1 equipment (Jinko Solar, Huawei, Sineng)</li>
+          <li>Flat roofs, pitched roofs, and carports</li>
+          <li>Commissioning and training</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>📊 Solar OS — 24/7 Monitoring</h3>
+        <ul>
+          <li>Real-time dashboard per site</li>
+          <li>Automatic alerts (WhatsApp, email)</li>
+          <li>Monthly generation reports</li>
+          <li>Performance guarantee included</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-title">Example Case: 100 kWp System</div>
+    <table>
+      <tr><th>Item</th><th>Value</th></tr>
+      <tr><td>Total Investment</td><td><strong>USD 60,000 – 70,000</strong></td></tr>
+      <tr><td>Annual Generation</td><td>~160,000 kWh</td></tr>
+      <tr><td>Annual Savings</td><td><strong>USD 24,000 – 32,000</strong></td></tr>
+      <tr><td>Return on Investment</td><td>4–6 years</td></tr>
+      <tr><td>25-Year Savings</td><td><strong>USD 500,000 – 800,000</strong></td></tr>
+      <tr><td>DSCR (if financed)</td><td>1.3 – 1.8x</td></tr>
+    </table>
+
+    <div class="section-title">Financing Options</div>
+    <div class="two-col" style="margin-bottom:16px;">
+      <div class="highlight-card card">
+        <h3>🏦 EcoLeasing — Banco Comafi</h3>
+        <ul>
+          <li>Up to 100% system financing</li>
+          <li>Monthly payment lower than your electric bill</li>
+          <li>Tax benefits (VAT + Income Tax)</li>
+          <li>No upfront investment</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Other Options</h3>
+        <ul>
+          <li><strong>Direct purchase:</strong> Highest long-term ROI</li>
+          <li><strong>PPA:</strong> Fixed rate per kWh, no investment</li>
+          <li><strong>FODIS:</strong> Government-backed guarantees</li>
+          <li><strong>I-REC:</strong> Additional green certificates</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-title">Why Solaris Argentina?</div>
+    <div class="two-col">
+      <div class="card">
+        <h3>International Experience</h3>
+        <p>Over 500 installations in Israel (Navitas Solar), active operations in Panama, and expansion into Argentina. Proven expertise in emerging markets.</p>
+      </div>
+      <div class="card">
+        <h3>Proprietary Technology</h3>
+        <p>Solar OS — monitoring and management platform developed in-house. Integration with SolarEdge, Huawei, and Sungrow. Full control over your investment.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>KANIEL TORD LLC — Florida, USA</span>
+    <span class="gold">OWN YOUR ENERGY</span>
+    <span>k@kanielt.com · kanielt.com</span>
+  </div>
+</div>
+
+</body>
+</html>

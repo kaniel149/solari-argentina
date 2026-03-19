@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מחשבון מימון — סולאריס ארגנטינה</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0A0A0A;--green:#0B3D2E;--gold:#D4A843;--pearl:#FEFDFB;--card:#141414;--card-border:#1E1E1E;--text:#FEFDFB;--text-muted:#8A8A8A;--green-light:#134D3A;--gold-dim:rgba(212,168,67,0.15)}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;direction:rtl}
+h1,h2,h3,h4{font-family:'Playfair Display',serif;font-weight:600}
+.container{max-width:1100px;margin:0 auto;padding:24px 16px}
+header{text-align:center;padding:48px 0 32px;border-bottom:1px solid var(--card-border)}
+header h1{font-size:clamp(1.8rem,4vw,2.6rem);color:var(--pearl);margin-bottom:8px}
+header p{color:var(--text-muted);font-size:1rem}
+.logo-bar{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:16px}
+.logo-bar .dot{width:10px;height:10px;background:var(--gold);border-radius:50%}
+.logo-bar span{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--gold);letter-spacing:2px;text-transform:uppercase}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:32px}
+@media(max-width:768px){.grid{grid-template-columns:1fr}}
+
+.card{background:var(--card);border:1px solid var(--card-border);border-radius:12px;padding:28px}
+.card h3{color:var(--gold);font-size:1.15rem;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--card-border)}
+
+label{display:block;font-size:0.85rem;color:var(--text-muted);margin-bottom:6px;font-weight:500}
+input[type="number"],select{width:100%;padding:12px 14px;background:#1A1A1A;border:1px solid var(--card-border);border-radius:8px;color:var(--pearl);font-size:1rem;font-family:'DM Sans',sans-serif;transition:border-color .2s;text-align:right}
+input[type="number"]:focus,select:focus{outline:none;border-color:var(--gold)}
+.field{margin-bottom:18px}
+
+.toggle-row{display:flex;gap:16px;margin-bottom:18px;flex-wrap:wrap}
+.toggle-btn{flex:1;padding:10px;border:1px solid var(--card-border);border-radius:8px;background:transparent;color:var(--text-muted);font-family:'DM Sans',sans-serif;font-size:0.9rem;cursor:pointer;transition:all .2s;text-align:center;min-width:80px}
+.toggle-btn.active{background:var(--green);border-color:var(--green-light);color:var(--pearl)}
+
+.switch-row{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.switch{position:relative;width:44px;height:24px;cursor:pointer}
+.switch input{display:none}
+.switch .slider{position:absolute;inset:0;background:#333;border-radius:12px;transition:.3s}
+.switch input:checked+.slider{background:var(--green)}
+.switch .slider::before{content:'';position:absolute;width:18px;height:18px;background:var(--pearl);border-radius:50%;top:3px;right:3px;transition:.3s}
+.switch input:checked+.slider::before{transform:translateX(-20px)}
+
+.btn-calc{width:100%;padding:14px;background:linear-gradient(135deg,var(--green),var(--green-light));border:none;border-radius:8px;color:var(--pearl);font-size:1rem;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;transition:transform .15s,box-shadow .15s;margin-top:8px}
+.btn-calc:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(11,61,46,0.4)}
+
+.results{grid-column:1/-1}
+.results-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:28px}
+.stat{background:var(--card);border:1px solid var(--card-border);border-radius:10px;padding:20px;text-align:center}
+.stat .value{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--gold);margin-bottom:4px}
+.stat .label{font-size:0.8rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px}
+
+.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:24px}
+@media(max-width:768px){.chart-row{grid-template-columns:1fr}}
+.chart-card{background:var(--card);border:1px solid var(--card-border);border-radius:12px;padding:24px}
+.chart-card h4{color:var(--pearl);margin-bottom:16px;font-size:1rem}
+canvas{max-height:300px}
+
+.leasing-compare{background:var(--gold-dim);border:1px solid rgba(212,168,67,0.3);border-radius:10px;padding:20px;margin-top:16px}
+.leasing-compare h4{color:var(--gold);margin-bottom:12px}
+.compare-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
+.compare-row:last-child{border-bottom:none}
+.compare-label{color:var(--text-muted);font-size:0.9rem}
+.compare-value{color:var(--pearl);font-weight:600}
+.compare-value.savings{color:#4ADE80}
+
+.btn-pdf{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:var(--gold);border:none;border-radius:8px;color:var(--bg);font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;font-size:0.95rem;margin-top:20px;transition:opacity .2s}
+.btn-pdf:hover{opacity:0.85}
+
+.hidden{display:none}
+@media print{body{background:#fff;color:#000}.card,.stat,.chart-card{border-color:#ddd;background:#fff}.stat .value{color:var(--green)}header{border-bottom-color:#ddd}}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="logo-bar"><div class="dot"></div><span>Solaris Argentina</span><div class="dot"></div></div>
+    <h1>מחשבון מימון סולארי</h1>
+    <p>סמלצו את ההשקעה שלכם באנרגיה סולארית עם אפשרויות המימון הטובות ביותר</p>
+  </header>
+
+  <div class="grid">
+    <div class="card">
+      <h3>פרמטרים של המערכת</h3>
+      <div class="field">
+        <label>גודל מערכת (kWp)</label>
+        <input type="number" id="systemSize" value="50" min="1" step="1">
+      </div>
+      <div class="field">
+        <label>חשבון חשמל חודשי (USD)</label>
+        <input type="number" id="monthlyBill" value="2000" min="1" step="10">
+      </div>
+      <div class="field">
+        <label>עלות לוואט (USD/W)</label>
+        <input type="number" id="costPerWatt" value="0.62" min="0.40" max="1.00" step="0.01">
+      </div>
+      <div class="field">
+        <label>שיעור היוון שנתי (%)</label>
+        <input type="number" id="discountRate" value="8" min="1" max="30" step="0.5">
+      </div>
+      <div class="field">
+        <label>עליית תעריף שנתית (%)</label>
+        <input type="number" id="tariffEscalation" value="3" min="0" max="20" step="0.5">
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>אפשרויות</h3>
+      <div class="field">
+        <label>סוג מימון</label>
+        <div class="toggle-row" id="finType">
+          <button class="toggle-btn active" data-val="cash">מזומן</button>
+          <button class="toggle-btn" data-val="leasing">ליסינג</button>
+          <button class="toggle-btn" data-val="ppa">PPA</button>
+        </div>
+      </div>
+
+      <div id="leasingOpts" class="hidden">
+        <div class="field">
+          <label>תקופת ליסינג (שנים)</label>
+          <input type="number" id="leaseTerm" value="5" min="1" max="10">
+        </div>
+        <div class="field">
+          <label>ריבית שנתית ליסינג (%)</label>
+          <input type="number" id="leaseRate" value="24" min="1" max="50" step="0.5">
+        </div>
+        <div class="field">
+          <label>אחוז מימון (%)</label>
+          <input type="number" id="leaseFinancing" value="100" min="10" max="100" step="5">
+        </div>
+      </div>
+
+      <div id="ppaOpts" class="hidden">
+        <div class="field">
+          <label>תעריף PPA קבוע (USD/kWh)</label>
+          <input type="number" id="ppaRate" value="0.08" min="0.01" max="0.30" step="0.01">
+        </div>
+        <div class="field">
+          <label>תעריף נוכחי (USD/kWh)</label>
+          <input type="number" id="currentTariff" value="0.12" min="0.01" max="0.50" step="0.01">
+        </div>
+      </div>
+
+      <div class="switch-row">
+        <label class="switch"><input type="checkbox" id="ivaToggle"><span class="slider"></span></label>
+        <span style="font-size:0.9rem">כלול מע"מ (21%)</span>
+      </div>
+
+      <div class="switch-row">
+        <label class="switch"><input type="checkbox" id="currencyToggle"><span class="slider"></span></label>
+        <span style="font-size:0.9rem" id="currencyLabel">הצג ב-ARS (שער: <input type="number" id="exchangeRate" value="1200" min="1" style="width:80px;padding:4px 8px;display:inline;font-size:0.85rem;text-align:right">)</span>
+      </div>
+
+      <button class="btn-calc" onclick="calculate()">חשב</button>
+    </div>
+
+    <div class="results hidden" id="resultsSection">
+      <div class="card" style="grid-column:1/-1">
+        <h3>תוצאות הניתוח</h3>
+        <div class="results-grid" id="statsGrid"></div>
+
+        <div id="leasingCompare" class="leasing-compare hidden"></div>
+        <div id="ppaCompare" class="leasing-compare hidden"></div>
+
+        <div class="chart-row">
+          <div class="chart-card">
+            <h4>תזרים מזומנים מצטבר (25 שנה)</h4>
+            <canvas id="cashflowChart"></canvas>
+          </div>
+          <div class="chart-card">
+            <h4>חיסכון שנתי מול עלות</h4>
+            <canvas id="savingsChart"></canvas>
+          </div>
+        </div>
+
+        <button class="btn-pdf" onclick="window.print()">📄 הורדה כ-PDF</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('.toggle-row').forEach(row => {
+  row.querySelectorAll('.toggle-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      row.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const v = btn.dataset.val;
+      document.getElementById('leasingOpts').classList.toggle('hidden', v !== 'leasing');
+      document.getElementById('ppaOpts').classList.toggle('hidden', v !== 'ppa');
+    });
+  });
+});
+
+let cashflowChartInst = null, savingsChartInst = null;
+
+function getFinType() {
+  return document.querySelector('#finType .toggle-btn.active').dataset.val;
+}
+
+function fmt(n, dec=0) {
+  const showARS = document.getElementById('currencyToggle').checked;
+  const tc = parseFloat(document.getElementById('exchangeRate').value) || 1200;
+  const val = showARS ? n * tc : n;
+  const prefix = showARS ? 'ARS ' : 'USD ';
+  return prefix + val.toLocaleString('he-IL', {minimumFractionDigits: dec, maximumFractionDigits: dec});
+}
+
+function fmtPct(n) { return n.toFixed(1) + '%'; }
+
+function calculateIRR(cashflows, guess = 0.1) {
+  const maxIter = 100; const tol = 1e-6;
+  let rate = guess;
+  for (let i = 0; i < maxIter; i++) {
+    let npv = 0, dnpv = 0;
+    for (let t = 0; t < cashflows.length; t++) {
+      const d = Math.pow(1 + rate, t);
+      npv += cashflows[t] / d;
+      if (t > 0) dnpv -= t * cashflows[t] / Math.pow(1 + rate, t + 1);
+    }
+    if (Math.abs(dnpv) < 1e-12) break;
+    const newRate = rate - npv / dnpv;
+    if (Math.abs(newRate - rate) < tol) return newRate;
+    rate = newRate;
+  }
+  return rate;
+}
+
+function calculate() {
+  const size = parseFloat(document.getElementById('systemSize').value) || 50;
+  const bill = parseFloat(document.getElementById('monthlyBill').value) || 2000;
+  const cpw = parseFloat(document.getElementById('costPerWatt').value) || 0.62;
+  const dr = (parseFloat(document.getElementById('discountRate').value) || 8) / 100;
+  const esc = (parseFloat(document.getElementById('tariffEscalation').value) || 3) / 100;
+  const iva = document.getElementById('ivaToggle').checked ? 1.21 : 1;
+  const finType = getFinType();
+
+  const totalCostBase = size * 1000 * cpw;
+  const totalCost = totalCostBase * iva;
+  const annualGen = size * 1600;
+  const annualBill = bill * 12;
+  const effectiveTariff = annualBill / (annualGen > 0 ? annualGen * 1.2 : 1);
+  const annualSavings = Math.min(annualBill * 0.65, annualGen * effectiveTariff);
+
+  const years = 25;
+  let cashflows = [-totalCost];
+  let cumCashflow = [-totalCost];
+  let payback = null;
+  let npv = -totalCost;
+
+  for (let y = 1; y <= years; y++) {
+    const degradation = 1 - 0.005 * (y - 1);
+    const saving = annualSavings * degradation * Math.pow(1 + esc, y - 1);
+    cashflows.push(saving);
+    npv += saving / Math.pow(1 + dr, y);
+    const cum = (cumCashflow[y - 1] || -totalCost) + saving;
+    cumCashflow.push(cum);
+    if (payback === null && cum >= 0) payback = y;
+  }
+
+  const irr = calculateIRR(cashflows);
+  const avgAnnualDebt = totalCost / 5;
+  const dscr = annualSavings / (avgAnnualDebt > 0 ? avgAnnualDebt : 1);
+
+  let stats = [
+    {label: 'השקעה כוללת', value: fmt(totalCost)},
+    {label: 'ייצור שנתי', value: annualGen.toLocaleString('he-IL') + ' kWh'},
+    {label: 'חיסכון שנתי', value: fmt(annualSavings)},
+    {label: 'החזר השקעה', value: payback ? payback + ' שנים' : 'מעל 25 שנה'},
+    {label: 'NPV (25 שנה)', value: fmt(npv)},
+    {label: 'IRR', value: isFinite(irr) ? fmtPct(irr * 100) : 'N/A'},
+    {label: 'DSCR', value: dscr.toFixed(2) + 'x'},
+  ];
+
+  document.getElementById('statsGrid').innerHTML = stats.map(s => `<div class="stat"><div class="value">${s.value}</div><div class="label">${s.label}</div></div>`).join('');
+
+  const lc = document.getElementById('leasingCompare');
+  const pc = document.getElementById('ppaCompare');
+  lc.classList.add('hidden');
+  pc.classList.add('hidden');
+
+  if (finType === 'leasing') {
+    const term = parseFloat(document.getElementById('leaseTerm').value) || 5;
+    const rate = (parseFloat(document.getElementById('leaseRate').value) || 24) / 100;
+    const finPct = (parseFloat(document.getElementById('leaseFinancing').value) || 100) / 100;
+    const principal = totalCost * finPct;
+    const mr = rate / 12;
+    const n = term * 12;
+    const monthly = principal * (mr * Math.pow(1 + mr, n)) / (Math.pow(1 + mr, n) - 1);
+    const monthlySaving = annualSavings / 12;
+
+    lc.classList.remove('hidden');
+    lc.innerHTML = `<h4>השוואת ליסינג — Banco Comafi EcoLeasing</h4>
+      <div class="compare-row"><span class="compare-label">סכום מימון</span><span class="compare-value">${fmt(principal)}</span></div>
+      <div class="compare-row"><span class="compare-label">תשלום חודשי ליסינג</span><span class="compare-value">${fmt(monthly)}</span></div>
+      <div class="compare-row"><span class="compare-label">חשבון חשמל נוכחי</span><span class="compare-value">${fmt(bill)}</span></div>
+      <div class="compare-row"><span class="compare-label">חיסכון חודשי משוער</span><span class="compare-value">${fmt(monthlySaving)}</span></div>
+      <div class="compare-row"><span class="compare-label">מאזן חודשי (חיסכון - תשלום)</span><span class="compare-value ${monthlySaving - monthly > 0 ? 'savings' : ''}">${fmt(monthlySaving - monthly)}</span></div>
+      <div class="compare-row"><span class="compare-label">תקופה</span><span class="compare-value">${term} שנים</span></div>`;
+  }
+
+  if (finType === 'ppa') {
+    const ppaR = parseFloat(document.getElementById('ppaRate').value) || 0.08;
+    const curT = parseFloat(document.getElementById('currentTariff').value) || 0.12;
+    const ppaCost = annualGen * ppaR;
+    const curCost = annualGen * curT;
+
+    pc.classList.remove('hidden');
+    pc.innerHTML = `<h4>השוואת PPA</h4>
+      <div class="compare-row"><span class="compare-label">תעריף PPA קבוע</span><span class="compare-value">${fmt(ppaR, 4)}/kWh</span></div>
+      <div class="compare-row"><span class="compare-label">תעריף נוכחי</span><span class="compare-value">${fmt(curT, 4)}/kWh</span></div>
+      <div class="compare-row"><span class="compare-label">עלות שנתית PPA</span><span class="compare-value">${fmt(ppaCost)}</span></div>
+      <div class="compare-row"><span class="compare-label">עלות שנתית נוכחית</span><span class="compare-value">${fmt(curCost)}</span></div>
+      <div class="compare-row"><span class="compare-label">חיסכון שנתי עם PPA</span><span class="compare-value savings">${fmt(curCost - ppaCost)}</span></div>
+      <div class="compare-row"><span class="compare-label">חיסכון ב-25 שנה</span><span class="compare-value savings">${fmt((curCost - ppaCost) * 25)}</span></div>`;
+  }
+
+  const labels = Array.from({length: years + 1}, (_, i) => i);
+
+  if (cashflowChartInst) cashflowChartInst.destroy();
+  cashflowChartInst = new Chart(document.getElementById('cashflowChart'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: 'תזרים מצטבר (USD)',
+        data: cumCashflow,
+        borderColor: '#D4A843',
+        backgroundColor: 'rgba(212,168,67,0.1)',
+        fill: true, tension: 0.3, pointRadius: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {legend: {labels: {color: '#FEFDFB'}}},
+      scales: {
+        x: {title: {display: true, text: 'שנה', color: '#8A8A8A'}, ticks: {color: '#8A8A8A'}, grid: {color: 'rgba(255,255,255,0.05)'}},
+        y: {title: {display: true, text: 'USD', color: '#8A8A8A'}, ticks: {color: '#8A8A8A'}, grid: {color: 'rgba(255,255,255,0.05)'}}
+      }
+    }
+  });
+
+  const savingsData = [];
+  for (let y = 1; y <= Math.min(10, years); y++) {
+    const degradation = 1 - 0.005 * (y - 1);
+    savingsData.push(annualSavings * degradation * Math.pow(1 + esc, y - 1));
+  }
+
+  if (savingsChartInst) savingsChartInst.destroy();
+  savingsChartInst = new Chart(document.getElementById('savingsChart'), {
+    type: 'bar',
+    data: {
+      labels: Array.from({length: 10}, (_, i) => 'שנה ' + (i + 1)),
+      datasets: [{
+        label: 'חיסכון שנתי (USD)',
+        data: savingsData,
+        backgroundColor: 'rgba(11,61,46,0.7)',
+        borderColor: '#0B3D2E',
+        borderWidth: 1,
+        borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {legend: {labels: {color: '#FEFDFB'}}},
+      scales: {
+        x: {ticks: {color: '#8A8A8A'}, grid: {color: 'rgba(255,255,255,0.05)'}},
+        y: {ticks: {color: '#8A8A8A'}, grid: {color: 'rgba(255,255,255,0.05)'}}
+      }
+    }
+  });
+
+  document.getElementById('resultsSection').classList.remove('hidden');
+  document.getElementById('resultsSection').scrollIntoView({behavior: 'smooth'});
+}
+</script>
+</body>
+</html>

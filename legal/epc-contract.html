@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contrato EPC — Solaris Argentina</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--green:#0B3D2E;--gold:#D4A843;--pearl:#FEFDFB;--bg:#0A0A0A;--card:#141414;--card-border:#1E1E1E;--text:#FEFDFB;--text-muted:#8A8A8A}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.8}
+h1,h2,h3{font-family:'Playfair Display',serif;font-weight:600}
+
+.screen-only{display:block}
+.container{max-width:900px;margin:0 auto;padding:24px 16px}
+
+/* Header bar (screen) */
+.top-bar{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid var(--card-border);margin-bottom:32px}
+.top-bar .brand{font-family:'Playfair Display',serif;color:var(--gold);font-size:1.1rem;letter-spacing:2px;text-transform:uppercase}
+.btn-print{padding:10px 24px;background:var(--gold);border:none;border-radius:6px;color:var(--bg);font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;font-size:0.9rem;transition:opacity .2s}
+.btn-print:hover{opacity:0.85}
+
+/* Contract body */
+.contract{background:var(--card);border:1px solid var(--card-border);border-radius:12px;padding:48px 40px}
+@media(max-width:600px){.contract{padding:24px 16px}}
+
+.contract-header{text-align:center;margin-bottom:40px;padding-bottom:28px;border-bottom:2px solid var(--gold)}
+.contract-header h1{font-size:1.6rem;color:var(--pearl);margin-bottom:4px}
+.contract-header h2{font-size:1.1rem;color:var(--gold);font-weight:400;margin-bottom:12px}
+.contract-header p{color:var(--text-muted);font-size:0.85rem}
+
+.section{margin-bottom:32px}
+.section h3{color:var(--gold);font-size:1.05rem;margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid var(--card-border)}
+.section p,.section li{color:rgba(254,253,251,0.85);font-size:0.92rem;margin-bottom:8px}
+.section ol,.section ul{padding-left:24px}
+.section ol li{margin-bottom:6px}
+
+.fill{background:rgba(212,168,67,0.1);border:1px dashed rgba(212,168,67,0.4);border-radius:4px;padding:4px 12px;display:inline-block;min-width:180px;color:var(--gold);font-style:italic}
+.fill-block{background:rgba(212,168,67,0.08);border:1px dashed rgba(212,168,67,0.3);border-radius:6px;padding:12px 16px;margin:8px 0;color:var(--text-muted);font-style:italic}
+
+.clause{margin-bottom:20px}
+.clause-num{color:var(--gold);font-weight:700;margin-right:6px}
+
+table.payment{width:100%;border-collapse:collapse;margin:12px 0}
+table.payment th,table.payment td{padding:10px 14px;text-align:left;border:1px solid var(--card-border);font-size:0.88rem}
+table.payment th{background:var(--green);color:var(--pearl);font-weight:600}
+table.payment td{color:rgba(254,253,251,0.8)}
+
+.signatures{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:48px;padding-top:24px;border-top:2px solid var(--card-border)}
+.sig-block{text-align:center}
+.sig-block .line{border-bottom:1px solid var(--text-muted);height:60px;margin-bottom:8px}
+.sig-block p{color:var(--text-muted);font-size:0.82rem}
+
+.annexes{margin-top:40px;padding-top:24px;border-top:2px solid var(--gold)}
+.annexes h3{color:var(--gold);margin-bottom:16px}
+.annex-item{background:rgba(11,61,46,0.1);border:1px solid rgba(11,61,46,0.2);border-radius:8px;padding:16px;margin-bottom:12px}
+.annex-item h4{color:var(--pearl);font-family:'Playfair Display',serif;margin-bottom:6px;font-size:0.95rem}
+.annex-item p{color:var(--text-muted);font-size:0.85rem}
+
+/* Print styles */
+@media print{
+  body{background:#fff;color:#000;font-size:11pt;line-height:1.6}
+  .screen-only,.top-bar{display:none!important}
+  .contract{background:#fff;border:none;padding:0;border-radius:0}
+  .contract-header{border-bottom-color:#0B3D2E}
+  .contract-header h1{color:#000}
+  .contract-header h2{color:#0B3D2E}
+  .contract-header p{color:#666}
+  .section h3{color:#0B3D2E;border-bottom-color:#ddd}
+  .section p,.section li{color:#222}
+  .fill{background:#f5f5f0;border-color:#999;color:#0B3D2E}
+  .fill-block{background:#f9f9f5;border-color:#bbb;color:#666}
+  table.payment th{background:#0B3D2E;color:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  table.payment td{color:#222;border-color:#ccc}
+  .signatures{border-top-color:#999}
+  .sig-block .line{border-bottom-color:#666}
+  .sig-block p{color:#666}
+  .annexes{border-top-color:#0B3D2E}
+  .annex-item{background:#f5f5f0;border-color:#ccc}
+  .annex-item h4{color:#000}
+  .annex-item p{color:#666}
+  .clause-num{color:#0B3D2E}
+  .gold-print{color:#0B3D2E!important}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="top-bar screen-only">
+    <span class="brand">Solaris Argentina</span>
+    <button class="btn-print" onclick="window.print()">🖨 Imprimir / PDF</button>
+  </div>
+
+  <div class="contract">
+    <div class="contract-header">
+      <h1>CONTRATO DE INGENIERÍA, PROCURA Y CONSTRUCCIÓN (EPC)</h1>
+      <h2>Sistema de Generación Fotovoltaica Conectado a Red</h2>
+      <p>En la Ciudad Autónoma de Buenos Aires, a los <span class="fill">[día]</span> días del mes de <span class="fill">[mes]</span> de <span class="fill">[año]</span></p>
+    </div>
+
+    <!-- PARTES -->
+    <div class="section">
+      <h3>ARTÍCULO 1 — LAS PARTES</h3>
+      <div class="clause">
+        <p><span class="clause-num">1.1</span> <strong>EL CONTRATISTA:</strong> SOLARIS ARGENTINA S.A.S., CUIT <span class="fill">[CUIT]</span>, con domicilio legal en <span class="fill">[domicilio Solaris]</span>, Ciudad Autónoma de Buenos Aires, representada por <span class="fill">[nombre representante]</span>, en su carácter de <span class="fill">[cargo]</span>, en adelante "SOLARIS" o "EL CONTRATISTA".</p>
+      </div>
+      <div class="clause">
+        <p><span class="clause-num">1.2</span> <strong>EL COMITENTE:</strong> <span class="fill">[razón social o nombre completo del cliente]</span>, CUIT/DNI <span class="fill">[CUIT/DNI]</span>, con domicilio en <span class="fill">[domicilio del cliente]</span>, representada por <span class="fill">[nombre representante]</span>, en adelante "EL COMITENTE".</p>
+      </div>
+    </div>
+
+    <!-- CONSIDERANDOS -->
+    <div class="section">
+      <h3>ARTÍCULO 2 — CONSIDERANDOS</h3>
+      <div class="clause">
+        <p><span class="clause-num">2.1</span> Que EL COMITENTE desea instalar un sistema de generación de energía eléctrica a partir de fuente solar fotovoltaica en su establecimiento ubicado en <span class="fill">[dirección de la instalación]</span>.</p>
+      </div>
+      <div class="clause">
+        <p><span class="clause-num">2.2</span> Que SOLARIS es una empresa especializada en el diseño, provisión e instalación de sistemas fotovoltaicos conectados a red, con experiencia comprobable en el mercado argentino.</p>
+      </div>
+      <div class="clause">
+        <p><span class="clause-num">2.3</span> Que el presente contrato se enmarca dentro de lo establecido por la Ley Nacional N° 27.191 de Régimen de Fomento Nacional para el uso de Fuentes Renovables de Energía y sus normas reglamentarias, así como en las disposiciones del Fondo para el Desarrollo de Energías Renovables (FODIS) según resulte aplicable.</p>
+      </div>
+    </div>
+
+    <!-- OBJETO -->
+    <div class="section">
+      <h3>ARTÍCULO 3 — OBJETO DEL CONTRATO</h3>
+      <div class="clause">
+        <p><span class="clause-num">3.1</span> SOLARIS se compromete a realizar, bajo la modalidad "llave en mano" (EPC — Engineering, Procurement & Construction), el diseño, provisión de equipos y materiales, instalación, puesta en marcha y conexión a red de un sistema fotovoltaico con las siguientes características:</p>
+        <ul>
+          <li>Potencia nominal: <span class="fill">[potencia] kWp</span></li>
+          <li>Cantidad de módulos: <span class="fill">[cantidad]</span> unidades</li>
+          <li>Tipo de módulo: <span class="fill">[marca y modelo]</span> — Tier 1 (BloombergNEF)</li>
+          <li>Inversor(es): <span class="fill">[marca y modelo]</span> — String inverter</li>
+          <li>Estructura de montaje: <span class="fill">[tipo: coplanar/inclinada]</span></li>
+          <li>Generación anual estimada: <span class="fill">[generación] kWh/año</span></li>
+        </ul>
+      </div>
+      <div class="clause">
+        <p><span class="clause-num">3.2</span> El alcance incluye:</p>
+        <ol>
+          <li>Estudio de factibilidad técnica y relevamiento del sitio</li>
+          <li>Ingeniería de detalle y diseño del sistema</li>
+          <li>Provisión de todos los equipos, materiales y componentes</li>
+          <li>Transporte e instalación completa</li>
+          <li>Conexión eléctrica al tablero principal</li>
+          <li>Trámites ante la distribuidora para la conexión a red (medidor bidireccional)</li>
+          <li>Puesta en marcha y pruebas de funcionamiento</li>
+          <li>Capacitación básica al personal del COMITENTE</li>
+          <li>Entrega de documentación técnica (planos as-built, manuales, garantías)</li>
+          <li>Gestión ante FODIS para habilitación como Usuario-Generador, si corresponde</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- PRECIO -->
+    <div class="section">
+      <h3>ARTÍCULO 4 — PRECIO Y FORMA DE PAGO</h3>
+      <div class="clause">
+        <p><span class="clause-num">4.1</span> El precio total del contrato asciende a <strong>USD <span class="fill">[monto en dólares estadounidenses]</span></strong> (Dólares Estadounidenses <span class="fill">[monto en letras]</span>), más IVA (21%) según corresponda.</p>
+      </div>
+      <div class="clause">
+        <p><span class="clause-num">4.2</span> Los pagos en moneda local (ARS) se realizarán al tipo de cambio vendedor del Banco de la Nación Argentina vigente al día hábil inmediatamente anterior a la fecha de cada pago.</p>
+      </div>
+      <div class="clause">
+        <p><span class="clause-num">4.3</span> El pago se realizará según el siguiente cronograma:</p>
+        <table class="payment">
+          <tr><th>Hito</th><th>Porcentaje</th><th>Monto (USD)</th><th>Condición</th></tr>
+          <tr><td>Anticipo</td><td>40%</td><td><span class="fill">[monto]</span></td><td>A la firma del contrato</td></tr>
+          <tr><td>Segundo pago</td><td>30%</td><td><span class="fill">[monto]</span></td><td>Arribo de equipos al sitio</td></tr>
+          <tr><td>Tercer pago</td><td>25%</td><td><span class="fill">[monto]</span></td><td>Finalización de instalación mecánica y eléctrica</td></tr>
+          <tr><td>Pago final</td><td>5%</td><td><span class="fill">[monto]</span></td><td>Puesta en marcha y entrega de documentación</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- PLAZOS -->
+    <div class="section">
+      <h3>ARTÍCULO 5 — PLAZOS</h3>
+      <div class="clause">
+        <p><span class="clause-num">5.1</span> El plazo total de ejecución de la obra será de <span class="fill">[plazo] días corridos</span> contados a partir de la recepción del anticipo por parte de SOLARIS.</p>
+      </div>
+      <div class="clause">
+        <p><span class="clause-num">5.2</span> El cronograma estimado es:</p>
+        <ul>
+          <li>Ingeniería y pedido de materiales: <span class="fill">[X]</span> semanas</li>
+          <li>Fabricación y transporte de equipos: <span class="fill">[X]</span> semanas</li>
+          <li>Instalación en sitio: <span class="fill">[X]</span> semanas</li>
+          <li>Conexión a red y puesta en marcha: <span class="fill">[X]</span> semanas</li>
+        </ul>
+      </div>
+      <div class="clause">
+        <p><span class="clause-num">5.3</span> Los plazos podrán extenderse por causas no imputables a SOLARIS, incluyendo pero no limitándose a: demoras de la distribuidora eléctrica, condiciones climáticas adversas, demoras aduaneras y situaciones de fuerza mayor.</p>
+      </div>
+    </div>
+
+    <!-- GARANTÍAS -->
+    <div class="section">
+      <h3>ARTÍCULO 6 — GARANTÍAS</h3>
+      <div class="clause">
+        <p><span class="clause-num">6.1</span> <strong>Módulos fotovoltaicos:</strong></p>
+        <ul>
+          <li>Garantía de producto: 12 (doce) años</li>
+          <li>Garantía de rendimiento lineal: 25 (veinticinco) años, con degradación máxima del 0,5% anual y potencia mínima del 84,8% al año 25</li>
+        </ul>
+      </div>
+      <div class="clause">
+        <p><span class="clause-num">6.2</span> <strong>Inversores:</strong></p>
+        <ul>
+          <li>Garantía de fábrica: 5 (cinco) años</li>
+          <li>Extensión opcional de garantía disponible hasta 15 (quince) años mediante contrato adicional con el fabricante</li>
+        </ul>
+      </div>
+      <div class="clause">
+        <p><span class="clause-num">6.3</span> <strong>Estructura de montaje:</strong> Garantía contra defectos de fabricación y corrosión por 10 (diez) años.</p>
+      </div>
+      <div class="clause">
+        <p><span class="clause-num">6.4</span> <strong>Mano de obra e instalación:</strong> SOLARIS garantiza la correcta instalación del sistema por un período de 2 (dos) años a partir de la puesta en marcha.</p>
+      </div>
+    </div>
+
+    <!-- PERFORMANCE -->
+    <div class="section">
+      <h3>ARTÍCULO 7 — GARANTÍA DE RENDIMIENTO</h3>
+      <div class="clause">
+        <p><span class="clause-num">7.1</span> SOLARIS garantiza que el sistema generará al menos el 90% (noventa por ciento) de la energía anual estimada en el Artículo 3.1, medida durante el primer año completo de operación y ajustada por condiciones de irradiación reales.</p>
+      </div>
+      <div class="clause">
+        <p><span class="clause-num">7.2</span> En caso de incumplimiento de la garantía de rendimiento no atribuible a causas ajenas al sistema (sombreado sobreviniente, modificaciones edilicias, falta de mantenimiento por parte del COMITENTE), SOLARIS realizará las acciones correctivas necesarias sin costo adicional.</p>
+      </div>
+    </div>
+
+    <!-- OBLIGACIONES -->
+    <div class="section">
+      <h3>ARTÍCULO 8 — OBLIGACIONES DE LAS PARTES</h3>
+      <div class="clause">
+        <p><span class="clause-num">8.1</span> <strong>Obligaciones de SOLARIS:</strong></p>
+        <ol>
+          <li>Ejecutar la obra conforme a las normas técnicas aplicables (IRAM, IEC, NEC)</li>
+          <li>Proveer equipos nuevos, originales y con certificaciones vigentes</li>
+          <li>Mantener vigente un seguro de responsabilidad civil durante la ejecución de la obra</li>
+          <li>Disponer de personal calificado y con las habilitaciones correspondientes</li>
+          <li>Cumplir con las normas de seguridad e higiene en el trabajo</li>
+          <li>Gestionar los permisos y habilitaciones necesarios ante la distribuidora</li>
+        </ol>
+      </div>
+      <div class="clause">
+        <p><span class="clause-num">8.2</span> <strong>Obligaciones del COMITENTE:</strong></p>
+        <ol>
+          <li>Proveer acceso al sitio de instalación en los horarios acordados</li>
+          <li>Garantizar que la estructura del techo/cubierta soporta el peso del sistema</li>
+          <li>Realizar los pagos en los plazos establecidos</li>
+          <li>Proveer punto de conexión eléctrica según indicaciones de SOLARIS</li>
+          <li>No realizar modificaciones al sistema sin autorización escrita de SOLARIS</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- SEGUROS -->
+    <div class="section">
+      <h3>ARTÍCULO 9 — SEGUROS</h3>
+      <div class="clause">
+        <p><span class="clause-num">9.1</span> SOLARIS mantendrá durante la ejecución de la obra las siguientes coberturas:</p>
+        <ul>
+          <li>Seguro de responsabilidad civil por daños a terceros</li>
+          <li>Seguro de riesgo del trabajo (ART) para todo su personal</li>
+          <li>Seguro de transporte de los equipos</li>
+        </ul>
+      </div>
+      <div class="clause">
+        <p><span class="clause-num">9.2</span> Se recomienda al COMITENTE contratar un seguro de todo riesgo para el sistema fotovoltaico una vez recibida la obra.</p>
+      </div>
+    </div>
+
+    <!-- FUERZA MAYOR -->
+    <div class="section">
+      <h3>ARTÍCULO 10 — FUERZA MAYOR</h3>
+      <div class="clause">
+        <p><span class="clause-num">10.1</span> Ninguna de las partes será responsable por el incumplimiento de sus obligaciones cuando dicho incumplimiento sea consecuencia de eventos de fuerza mayor o caso fortuito, conforme a lo establecido en los artículos 1730 y 1731 del Código Civil y Comercial de la Nación.</p>
+      </div>
+      <div class="clause">
+        <p><span class="clause-num">10.2</span> Se considerarán eventos de fuerza mayor, entre otros: catástrofes naturales, epidemias, pandemias, conflictos bélicos, actos de terrorismo, restricciones gubernamentales a la importación, modificaciones regulatorias que afecten sustancialmente el objeto del contrato.</p>
+      </div>
+      <div class="clause">
+        <p><span class="clause-num">10.3</span> La parte afectada deberá notificar a la otra dentro de los 10 (diez) días hábiles de producido el evento.</p>
+      </div>
+    </div>
+
+    <!-- RESOLUCIÓN -->
+    <div class="section">
+      <h3>ARTÍCULO 11 — RESOLUCIÓN DEL CONTRATO</h3>
+      <div class="clause">
+        <p><span class="clause-num">11.1</span> Cualquiera de las partes podrá resolver el contrato en caso de incumplimiento grave de la otra parte, previa intimación fehaciente con un plazo de 15 (quince) días hábiles para subsanar el incumplimiento.</p>
+      </div>
+      <div class="clause">
+        <p><span class="clause-num">11.2</span> En caso de resolución por causa imputable a SOLARIS, ésta restituirá al COMITENTE los montos abonados en proporción al avance de obra no ejecutado. En caso de resolución por causa imputable al COMITENTE, éste abonará a SOLARIS los trabajos efectivamente realizados más una indemnización del 10% sobre el saldo no ejecutado.</p>
+      </div>
+    </div>
+
+    <!-- JURISDICCIÓN -->
+    <div class="section">
+      <h3>ARTÍCULO 12 — JURISDICCIÓN Y LEY APLICABLE</h3>
+      <div class="clause">
+        <p><span class="clause-num">12.1</span> El presente contrato se rige por las disposiciones del Código Civil y Comercial de la Nación Argentina y demás normativa aplicable, incluyendo la Ley N° 27.191 y sus reglamentaciones.</p>
+      </div>
+      <div class="clause">
+        <p><span class="clause-num">12.2</span> Para cualquier controversia derivada del presente contrato, las partes se someten a la jurisdicción de los Tribunales Ordinarios en lo Comercial de la Ciudad Autónoma de Buenos Aires, renunciando a cualquier otro fuero o jurisdicción que pudiera corresponderles.</p>
+      </div>
+    </div>
+
+    <!-- DISPOSICIONES GENERALES -->
+    <div class="section">
+      <h3>ARTÍCULO 13 — DISPOSICIONES GENERALES</h3>
+      <div class="clause">
+        <p><span class="clause-num">13.1</span> Toda modificación al presente contrato deberá constar por escrito y ser firmada por ambas partes.</p>
+      </div>
+      <div class="clause">
+        <p><span class="clause-num">13.2</span> Las notificaciones entre las partes se realizarán a los domicilios indicados en el Artículo 1, considerándose válidas las realizadas por carta documento, correo electrónico con acuse de recibo, o cualquier otro medio fehaciente.</p>
+      </div>
+      <div class="clause">
+        <p><span class="clause-num">13.3</span> La nulidad o inaplicabilidad de cualquier cláusula del presente no afectará la validez de las restantes disposiciones.</p>
+      </div>
+      <div class="clause">
+        <p><span class="clause-num">13.4</span> El presente contrato se firma en dos (2) ejemplares de idéntico tenor y a un solo efecto.</p>
+      </div>
+    </div>
+
+    <!-- FIRMAS -->
+    <div class="signatures">
+      <div class="sig-block">
+        <div class="line"></div>
+        <p><strong>POR SOLARIS ARGENTINA S.A.S.</strong></p>
+        <p>Nombre: ________________________</p>
+        <p>DNI: ________________________</p>
+        <p>Cargo: ________________________</p>
+      </div>
+      <div class="sig-block">
+        <div class="line"></div>
+        <p><strong>POR EL COMITENTE</strong></p>
+        <p>Nombre: ________________________</p>
+        <p>DNI: ________________________</p>
+        <p>Cargo: ________________________</p>
+      </div>
+    </div>
+
+    <!-- ANEXOS -->
+    <div class="annexes">
+      <h3>ANEXOS</h3>
+
+      <div class="annex-item">
+        <h4>ANEXO I — Lista de Equipos y Materiales</h4>
+        <p>Detalle completo de módulos, inversores, estructura, cableado, protecciones, medidor bidireccional y demás componentes del sistema.</p>
+        <div class="fill-block">[Completar con especificaciones técnicas de cada componente]</div>
+      </div>
+
+      <div class="annex-item">
+        <h4>ANEXO II — Especificaciones Técnicas</h4>
+        <p>Fichas técnicas (datasheets) de módulos e inversores. Diagrama unifilar. Esquema de conexión. Layout de la instalación.</p>
+        <div class="fill-block">[Adjuntar documentación técnica]</div>
+      </div>
+
+      <div class="annex-item">
+        <h4>ANEXO III — Cronograma de Pagos</h4>
+        <p>Detalle de fechas estimadas para cada hito de pago conforme al Artículo 4.</p>
+        <div class="fill-block">[Completar con fechas específicas]</div>
+      </div>
+
+      <div class="annex-item">
+        <h4>ANEXO IV — Plano del Sitio</h4>
+        <p>Plano de ubicación de los módulos, recorrido del cableado, punto de conexión al tablero principal e inyección a red.</p>
+        <div class="fill-block">[Adjuntar plano de la instalación]</div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

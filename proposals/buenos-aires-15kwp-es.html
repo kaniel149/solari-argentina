@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Propuesta Solar 15 kWp — Solaris Argentina</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green: #0B3D2E;
+  --green-light: #145A42;
+  --gold: #D4A843;
+  --gold-light: #E8C96A;
+  --pearl: #FEFDFB;
+  --dark-bg: #0A0F0D;
+  --dark-card: #111916;
+  --dark-card-alt: #162019;
+  --text-primary: #E8E6E1;
+  --text-secondary: #A8A49C;
+  --text-muted: #6B6860;
+  --border: #1E2A24;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--dark-bg);
+  color: var(--text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  max-width: 210mm;
+  min-height: 297mm;
+  margin: 0 auto 2rem;
+  padding: 48px;
+  background: var(--dark-bg);
+  position: relative;
+  overflow: hidden;
+}
+
+.page::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--green), var(--gold), var(--green));
+}
+
+/* Typography */
+h1 { font-family: 'Playfair Display', serif; font-size: 2.8rem; font-weight: 700; color: var(--pearl); line-height: 1.15; }
+h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 600; color: var(--gold); margin-bottom: 1rem; }
+h3 { font-family: 'DM Sans', sans-serif; font-size: 1.1rem; font-weight: 600; color: var(--pearl); margin-bottom: 0.5rem; }
+h4 { font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 500; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 0.75rem; }
+
+.gold { color: var(--gold); }
+.green { color: var(--green-light); }
+
+/* Cover page */
+.cover {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: calc(297mm - 96px);
+}
+
+.cover-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.logo-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 2px;
+}
+
+.logo-sub {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.cover-date {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-align: right;
+}
+
+.cover-main {
+  padding: 4rem 0;
+}
+
+.cover-main h1 {
+  margin-bottom: 1rem;
+}
+
+.cover-main .subtitle {
+  font-size: 1.15rem;
+  color: var(--text-secondary);
+  max-width: 500px;
+  line-height: 1.7;
+}
+
+.cover-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--green), var(--green-light));
+  color: var(--gold);
+  padding: 8px 20px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin-top: 1.5rem;
+}
+
+.cover-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.cover-stat {
+  background: var(--dark-card);
+  padding: 24px;
+  text-align: center;
+}
+
+.cover-stat .value {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.cover-stat .unit {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.cover-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-top: 1px solid var(--border);
+  padding-top: 24px;
+}
+
+.cover-footer-col {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.8;
+}
+
+/* Cards & sections */
+.card {
+  background: var(--dark-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 28px;
+  margin-bottom: 1.25rem;
+}
+
+.card-accent {
+  border-left: 3px solid var(--gold);
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.section-number {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--green), var(--green-light));
+  color: var(--gold);
+  font-weight: 700;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Tables */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.data-table th {
+  text-align: left;
+  padding: 10px 16px;
+  background: var(--dark-card-alt);
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--border);
+}
+
+.data-table td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-primary);
+}
+
+.data-table tr:last-child td { border-bottom: none; }
+
+.data-table .highlight { color: var(--gold); font-weight: 600; }
+
+/* Bill analysis */
+.bill-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.bill-card {
+  background: var(--dark-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 24px;
+  text-align: center;
+}
+
+.bill-card.before { border-top: 3px solid #C0392B; }
+.bill-card.after { border-top: 3px solid var(--gold); }
+
+.bill-amount {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 8px 0 4px;
+}
+
+.bill-card.before .bill-amount { color: #E74C3C; }
+.bill-card.after .bill-amount { color: var(--gold); }
+
+.bill-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.bill-detail {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-top: 8px;
+}
+
+/* Savings bar */
+.savings-bar {
+  background: var(--dark-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.savings-bar .label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.savings-bar .amount {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  color: var(--gold);
+  font-weight: 700;
+}
+
+/* Chart concept */
+.chart-container {
+  padding: 20px 0;
+}
+
+.chart-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 120px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+
+.chart-bar {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.chart-bar .bar {
+  width: 100%;
+  max-width: 28px;
+  border-radius: 3px 3px 0 0;
+  transition: height 0.3s;
+}
+
+.chart-bar .bar.current { background: #C0392B; }
+.chart-bar .bar.solar { background: var(--gold); }
+
+.chart-bar .month {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  position: absolute;
+  bottom: 4px;
+}
+
+.chart-legend {
+  display: flex;
+  gap: 24px;
+  margin-top: 12px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.chart-legend span::before {
+  content: '';
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+.chart-legend .leg-current::before { background: #C0392B; }
+.chart-legend .leg-solar::before { background: var(--gold); }
+
+/* ROI highlight */
+.roi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 1.25rem;
+}
+
+.roi-item {
+  background: var(--dark-card);
+  padding: 20px;
+  text-align: center;
+}
+
+.roi-item .val {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.roi-item .lbl {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Timeline */
+.timeline {
+  position: relative;
+  padding-left: 40px;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 14px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 28px;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -32px;
+  top: 6px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: 2px solid var(--dark-bg);
+}
+
+.timeline-item h3 { font-size: 1rem; }
+
+.timeline-item .time {
+  font-size: 0.8rem;
+  color: var(--gold);
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.timeline-item p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+/* Warranty grid */
+.warranty-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.warranty-item {
+  background: var(--dark-card-alt);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+}
+
+.warranty-item .years {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.warranty-item .type {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* Signature */
+.sig-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.sig-box {
+  border-top: 2px solid var(--border);
+  padding-top: 16px;
+}
+
+.sig-box .name {
+  font-weight: 600;
+  color: var(--pearl);
+  margin-bottom: 2px;
+}
+
+.sig-box .role {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.sig-line {
+  height: 60px;
+  border-bottom: 1px dashed var(--text-muted);
+  margin-bottom: 8px;
+}
+
+/* Zero injection callout */
+.callout {
+  background: linear-gradient(135deg, rgba(11,61,46,0.3), rgba(11,61,46,0.1));
+  border: 1px solid var(--green-light);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 1.25rem;
+}
+
+.callout-title {
+  color: var(--gold);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.callout p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+/* Financing */
+.finance-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.finance-option {
+  background: var(--dark-card-alt);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.finance-option.recommended {
+  border-color: var(--gold);
+  position: relative;
+}
+
+.finance-option.recommended::after {
+  content: 'RECOMENDADO';
+  position: absolute;
+  top: -10px;
+  right: 16px;
+  background: var(--gold);
+  color: var(--green);
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 10px;
+  border-radius: 3px;
+  letter-spacing: 1px;
+}
+
+.finance-option h3 { margin-bottom: 12px; }
+
+.finance-detail {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+/* Print button */
+.print-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--gold);
+  color: var(--green);
+  border: none;
+  padding: 14px 28px;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(212,168,67,0.3);
+  z-index: 1000;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.print-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(212,168,67,0.4);
+}
+
+/* Page numbers */
+.page-number {
+  position: absolute;
+  bottom: 24px;
+  right: 48px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Print styles */
+@media print {
+  body { background: white; color: #1a1a1a; }
+  .page {
+    background: white;
+    margin: 0;
+    padding: 20mm;
+    page-break-after: always;
+    box-shadow: none;
+    min-height: auto;
+    height: 257mm;
+    overflow: hidden;
+  }
+  .page::before { background: linear-gradient(90deg, var(--green), var(--gold), var(--green)); }
+  .card, .bill-card, .cover-stat, .roi-item, .finance-option, .warranty-item {
+    background: #f8f7f5;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .dark-card-alt { background: #f0efed; }
+  .print-btn { display: none; }
+  h1, h3, .cover-stat .value, .bill-amount, .roi-item .val, .warranty-item .years, .savings-bar .amount {
+    color: var(--green) !important;
+  }
+  h2, .gold, .callout-title, .timeline-item .time, .cover-badge {
+    color: var(--gold) !important;
+  }
+  .text-primary, .data-table td, p, .timeline-item p, .finance-detail, .callout p {
+    color: #333 !important;
+  }
+  .text-secondary, .text-muted, .cover-footer-col, .cover-date, .page-number, .bill-label, .roi-item .lbl, .bill-detail {
+    color: #666 !important;
+  }
+  .data-table th { background: #e8e7e5 !important; color: #555 !important; }
+  .chart-bar .bar.current { background: #C0392B !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .chart-bar .bar.solar { background: var(--gold) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .bill-card.before .bill-amount { color: #C0392B !important; }
+  .bill-card.after .bill-amount { color: var(--gold) !important; }
+  .bill-card.before { border-top-color: #C0392B !important; }
+  .bill-card.after { border-top-color: var(--gold) !important; }
+  .callout { background: #f0f7f4 !important; }
+
+  @page { size: A4; margin: 0; }
+}
+
+@media (max-width: 768px) {
+  .page { padding: 24px; }
+  h1 { font-size: 2rem; }
+  .cover-stats, .bill-grid, .roi-grid, .finance-grid, .warranty-grid, .sig-grid {
+    grid-template-columns: 1fr;
+  }
+  .roi-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- PAGE 1: COVER -->
+<div class="page">
+  <div class="cover">
+    <div class="cover-header">
+      <div>
+        <div class="logo-text">SOLARIS</div>
+        <div class="logo-sub">Argentina — Energía Solar</div>
+      </div>
+      <div class="cover-date">
+        Marzo 2026<br>
+        <span style="font-size:0.75rem;">Ref: BA-15K-2026-003</span>
+      </div>
+    </div>
+
+    <div class="cover-main">
+      <h4>Propuesta Técnico-Económica</h4>
+      <h1>Sistema Solar<br>Fotovoltaico <span class="gold">15 kWp</span></h1>
+      <p class="subtitle">
+        Solución de autoconsumo sin inyección para su local comercial 
+        en Parque Centenario, Capital Federal. Reducción inmediata 
+        del costo energético sin trámites regulatorios.
+      </p>
+      <div class="cover-badge">ZERO INJECTION — SIN PERMISOS</div>
+    </div>
+
+    <div class="cover-stats">
+      <div class="cover-stat">
+        <div class="value">91%</div>
+        <div class="unit">Cobertura del consumo</div>
+      </div>
+      <div class="cover-stat">
+        <div class="value">~3 años</div>
+        <div class="unit">Retorno de inversión</div>
+      </div>
+      <div class="cover-stat">
+        <div class="value">USD 85K</div>
+        <div class="unit">Ahorro a 25 años</div>
+      </div>
+    </div>
+
+    <div class="cover-footer">
+      <div class="cover-footer-col">
+        <strong style="color:var(--pearl);">Solaris Argentina</strong><br>
+        KANIEL TORD LLC<br>
+        Buenos Aires, Argentina
+      </div>
+      <div class="cover-footer-col" style="text-align:right;">
+        Preparado para:<br>
+        <strong style="color:var(--pearl);">Cliente Comercial</strong><br>
+        Parque Centenario, CABA
+      </div>
+    </div>
+  </div>
+  <div class="page-number">1 / 4</div>
+</div>
+
+<!-- PAGE 2: TECHNICAL + FINANCIAL -->
+<div class="page">
+  <div class="section-header">
+    <div class="section-number">1</div>
+    <h2>Análisis de su Factura Actual</h2>
+  </div>
+
+  <div class="card card-accent" style="margin-bottom:1.25rem;">
+    <h4>Desglose Factura Edesur — Tarifa T1G General</h4>
+    <table class="data-table">
+      <tr><th>Concepto</th><th style="text-align:right">Importe (ARS)</th></tr>
+      <tr><td>Cargo Fijo</td><td style="text-align:right">$15.675</td></tr>
+      <tr><td>Cargo Variable (1.800 kWh)</td><td style="text-align:right">$234.441</td></tr>
+      <tr><td>IVA (27%)</td><td style="text-align:right">$67.531</td></tr>
+      <tr><td>Percepciones (17,145%)</td><td style="text-align:right">$42.875</td></tr>
+      <tr><td>Contribución Municipal (6,383%)</td><td style="text-align:right">$14.162</td></tr>
+      <tr><td><strong>Total Mensual</strong></td><td style="text-align:right" class="highlight"><strong>$374.684</strong></td></tr>
+    </table>
+  </div>
+
+  <div class="bill-grid">
+    <div class="bill-card before">
+      <div class="bill-label">Costo Mensual Actual</div>
+      <div class="bill-amount">USD 330</div>
+      <div class="bill-detail">ARS $374.684/mes<br>ARS $4.496.208/año</div>
+    </div>
+    <div class="bill-card after">
+      <div class="bill-label">Costo con Solar</div>
+      <div class="bill-amount">USD 55</div>
+      <div class="bill-detail">Solo cargo fijo + 9% restante<br>Ahorro: USD 275/mes</div>
+    </div>
+  </div>
+
+  <div class="savings-bar">
+    <div>
+      <div class="label">Ahorro anual estimado</div>
+    </div>
+    <div class="amount">USD 3.400</div>
+  </div>
+
+  <div class="section-header" style="margin-top:0.5rem;">
+    <div class="section-number">2</div>
+    <h2>Especificación Técnica</h2>
+  </div>
+
+  <div class="card">
+    <table class="data-table">
+      <tr><th>Componente</th><th>Detalle</th></tr>
+      <tr><td>Potencia del Sistema</td><td class="highlight">15 kWp</td></tr>
+      <tr><td>Paneles Solares</td><td>21× Jinko JKM715N (715W) — Tier 1</td></tr>
+      <tr><td>Inversor</td><td>1× Sineng SN15PT (15 kW)</td></tr>
+      <tr><td>Montaje</td><td>Estructura coplanar / techo plano</td></tr>
+      <tr><td>Generación Anual</td><td class="highlight">~19.700 kWh/año</td></tr>
+      <tr><td>Irradiación Solar</td><td>4,5 kWh/m²/día (Buenos Aires)</td></tr>
+      <tr><td>Factor de Rendimiento</td><td>80% (pérdidas por temp., cableado, polvo)</td></tr>
+      <tr><td>Cobertura del Consumo</td><td class="highlight">~91% del consumo anual</td></tr>
+      <tr><td>Tipo de Conexión</td><td>Autoconsumo — Zero Injection</td></tr>
+    </table>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">¿Qué es Zero Injection (Sin Inyección)?</div>
+    <p>El sistema está diseñado para consumir toda la energía generada dentro de su local, sin inyectar excedentes a la red de Edesur. Esto elimina la necesidad de permisos, medidores bidireccionales, y trámites regulatorios. La instalación es directa y operativa desde el primer día.</p>
+  </div>
+
+  <div class="page-number">2 / 4</div>
+</div>
+
+<!-- PAGE 3: FINANCIALS + TIMELINE + WARRANTY -->
+<div class="page">
+  <div class="section-header">
+    <div class="section-number">3</div>
+    <h2>Análisis Financiero</h2>
+  </div>
+
+  <div class="roi-grid">
+    <div class="roi-item">
+      <div class="val">USD 9.750</div>
+      <div class="lbl">Inversión Total</div>
+    </div>
+    <div class="roi-item">
+      <div class="val">USD 3.400</div>
+      <div class="lbl">Ahorro Anual</div>
+    </div>
+    <div class="roi-item">
+      <div class="val">~2,9 años</div>
+      <div class="lbl">Payback</div>
+    </div>
+    <div class="roi-item">
+      <div class="val">USD 85K</div>
+      <div class="lbl">Ahorro 25 años</div>
+    </div>
+  </div>
+
+  <!-- Monthly chart concept -->
+  <div class="card">
+    <h4>Comparativa mensual: antes y después</h4>
+    <div class="chart-container">
+      <div class="chart-bars">
+        <div class="chart-bar"><div class="bar current" style="height:85px"></div><div class="bar solar" style="height:12px"></div><span class="month">Ene</span></div>
+        <div class="chart-bar"><div class="bar current" style="height:80px"></div><div class="bar solar" style="height:10px"></div><span class="month">Feb</span></div>
+        <div class="chart-bar"><div class="bar current" style="height:72px"></div><div class="bar solar" style="height:14px"></div><span class="month">Mar</span></div>
+        <div class="chart-bar"><div class="bar current" style="height:60px"></div><div class="bar solar" style="height:18px"></div><span class="month">Abr</span></div>
+        <div class="chart-bar"><div class="bar current" style="height:50px"></div><div class="bar solar" style="height:20px"></div><span class="month">May</span></div>
+        <div class="chart-bar"><div class="bar current" style="height:45px"></div><div class="bar solar" style="height:22px"></div><span class="month">Jun</span></div>
+        <div class="chart-bar"><div class="bar current" style="height:48px"></div><div class="bar solar" style="height:22px"></div><span class="month">Jul</span></div>
+        <div class="chart-bar"><div class="bar current" style="height:55px"></div><div class="bar solar" style="height:18px"></div><span class="month">Ago</span></div>
+        <div class="chart-bar"><div class="bar current" style="height:65px"></div><div class="bar solar" style="height:15px"></div><span class="month">Sep</span></div>
+        <div class="chart-bar"><div class="bar current" style="height:75px"></div><div class="bar solar" style="height:13px"></div><span class="month">Oct</span></div>
+        <div class="chart-bar"><div class="bar current" style="height:82px"></div><div class="bar solar" style="height:11px"></div><span class="month">Nov</span></div>
+        <div class="chart-bar"><div class="bar current" style="height:88px"></div><div class="bar solar" style="height:10px"></div><span class="month">Dic</span></div>
+      </div>
+      <div class="chart-legend">
+        <span class="leg-current">Sin solar (actual)</span>
+        <span class="leg-solar">Con solar (proyectado)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-header">
+    <div class="section-number">4</div>
+    <h2>Opciones de Financiamiento</h2>
+  </div>
+
+  <div class="finance-grid">
+    <div class="finance-option recommended">
+      <h3>Pago de Contado</h3>
+      <div class="finance-detail">
+        Inversión: <strong class="gold">USD 9.750</strong><br>
+        Payback: ~2,9 años<br>
+        ROI 25 años: 870%<br>
+        Sin intereses ni costos financieros
+      </div>
+    </div>
+    <div class="finance-option">
+      <h3>Comafi EcoLeasing</h3>
+      <div class="finance-detail">
+        Hasta 60 cuotas<br>
+        Tasa preferencial eco-sustentable<br>
+        El ahorro mensual cubre la cuota<br>
+        Consultar condiciones vigentes
+      </div>
+    </div>
+  </div>
+
+  <div class="page-number">3 / 4</div>
+</div>
+
+<!-- PAGE 4: TIMELINE + WARRANTY + SIGNATURE -->
+<div class="page">
+  <div class="section-header">
+    <div class="section-number">5</div>
+    <h2>Cronograma de Instalación</h2>
+  </div>
+
+  <div class="card" style="margin-bottom:1.5rem;">
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="time">Semana 1</div>
+        <h3>Relevamiento Técnico</h3>
+        <p>Visita al sitio, medición del techo, análisis de tablero eléctrico y consumos.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="time">Semana 2</div>
+        <h3>Ingeniería y Diseño</h3>
+        <p>Diseño del sistema, layout de paneles, diagrama unifilar, selección final de equipos.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="time">Semana 3-4</div>
+        <h3>Logística y Provisión</h3>
+        <p>Importación o retiro de equipos desde depósito. Preparación de materiales.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="time">Semana 5</div>
+        <h3>Instalación</h3>
+        <p>Montaje de estructura, paneles, inversor y cableado. Duración: 2-3 días hábiles.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="time">Semana 5-6</div>
+        <h3>Puesta en Marcha</h3>
+        <p>Testeo, configuración del inversor, conexión al tablero, capacitación del cliente.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-header">
+    <div class="section-number">6</div>
+    <h2>Garantías</h2>
+  </div>
+
+  <div class="warranty-grid" style="margin-bottom:2rem;">
+    <div class="warranty-item">
+      <div class="years">25</div>
+      <div class="type">Paneles — Rendimiento<br>(≥80% potencia nominal)</div>
+    </div>
+    <div class="warranty-item">
+      <div class="years">12</div>
+      <div class="type">Paneles — Producto<br>(defectos de fabricación)</div>
+    </div>
+    <div class="warranty-item">
+      <div class="years">10</div>
+      <div class="type">Inversor<br>(garantía de fábrica)</div>
+    </div>
+  </div>
+
+  <h2>Aceptación de la Propuesta</h2>
+  <p style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:0.5rem;">
+    Esta propuesta tiene validez de 15 días corridos a partir de la fecha de emisión. 
+    Los precios están expresados en dólares estadounidenses y pueden variar según tipo de cambio al momento de la contratación.
+  </p>
+
+  <div class="sig-grid">
+    <div class="sig-box">
+      <div class="sig-line"></div>
+      <div class="name">Rubén Freidman</div>
+      <div class="role">CEO — Solaris Argentina</div>
+    </div>
+    <div class="sig-box">
+      <div class="sig-line"></div>
+      <div class="name">Cliente</div>
+      <div class="role">Representante Legal / Propietario</div>
+    </div>
+  </div>
+
+  <div style="margin-top:2.5rem; padding-top:1.5rem; border-top:1px solid var(--border); display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted);">
+    <div>
+      <strong style="color:var(--gold);">SOLARIS ARGENTINA</strong> — KANIEL TORD LLC<br>
+      CEO: Rubén Freidman · Presidente: Kaniel Tordjman
+    </div>
+    <div style="text-align:right;">
+      Buenos Aires, Argentina<br>
+      info@solarisargentina.com
+    </div>
+  </div>
+
+  <div class="page-number">4 / 4</div>
+</div>
+
+<button class="print-btn" onclick="window.print()">Imprimir Propuesta</button>
+
+</body>
+</html>

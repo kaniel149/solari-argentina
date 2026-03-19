@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ROI Calculator — Solaris Argentina</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0A0A0A;--green:#0B3D2E;--gold:#D4A843;--pearl:#FEFDFB;--card:#141414;--card-border:#1E1E1E;--text:#FEFDFB;--text-muted:#8A8A8A;--green-light:#134D3A;--gold-dim:rgba(212,168,67,0.15)}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+h1,h2,h3,h4{font-family:'Playfair Display',serif;font-weight:600}
+.container{max-width:1000px;margin:0 auto;padding:24px 16px}
+header{text-align:center;padding:48px 0 32px;border-bottom:1px solid var(--card-border)}
+header h1{font-size:clamp(1.8rem,4vw,2.6rem);color:var(--pearl);margin-bottom:8px}
+header p{color:var(--text-muted);font-size:1rem}
+.logo-bar{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:16px}
+.logo-bar .dot{width:10px;height:10px;background:var(--gold);border-radius:50%}
+.logo-bar span{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--gold);letter-spacing:2px;text-transform:uppercase}
+
+.card{background:var(--card);border:1px solid var(--card-border);border-radius:12px;padding:28px;margin-top:28px}
+.card h3{color:var(--gold);font-size:1.15rem;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--card-border)}
+
+label{display:block;font-size:0.85rem;color:var(--text-muted);margin-bottom:6px;font-weight:500}
+input[type="number"],select{width:100%;padding:12px 14px;background:#1A1A1A;border:1px solid var(--card-border);border-radius:8px;color:var(--pearl);font-size:1rem;font-family:'DM Sans',sans-serif;transition:border-color .2s}
+input:focus,select:focus{outline:none;border-color:var(--gold)}
+.field{margin-bottom:18px}
+
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 20px}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr}}
+
+.btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--green),var(--green-light));border:none;border-radius:8px;color:var(--pearl);font-size:1rem;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;transition:transform .15s,box-shadow .15s;margin-top:8px}
+.btn:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(11,61,46,0.4)}
+
+.results-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:24px}
+.stat{background:#1A1A1A;border:1px solid var(--card-border);border-radius:10px;padding:18px;text-align:center}
+.stat .value{font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--gold);margin-bottom:4px}
+.stat .label{font-size:0.78rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px}
+
+.green-box{background:var(--green);border-radius:10px;padding:20px;text-align:center;margin-top:20px}
+.green-box h4{color:var(--pearl);margin-bottom:8px}
+.green-box .big{font-size:2rem;color:var(--gold);font-family:'Playfair Display',serif}
+.green-box p{color:rgba(254,253,251,0.7);font-size:0.85rem;margin-top:4px}
+
+.chart-container{background:var(--card);border:1px solid var(--card-border);border-radius:12px;padding:24px;margin-top:24px}
+.chart-container h4{color:var(--pearl);margin-bottom:16px;font-size:1rem}
+canvas{max-height:280px}
+
+.cta-section{text-align:center;margin-top:36px;padding:40px 20px;background:var(--gold-dim);border:1px solid rgba(212,168,67,0.3);border-radius:12px}
+.cta-section h3{color:var(--gold);margin-bottom:12px;font-size:1.4rem}
+.cta-section p{color:var(--text-muted);margin-bottom:20px}
+.btn-cta{display:inline-block;padding:16px 40px;background:var(--gold);border:none;border-radius:8px;color:var(--bg);font-size:1.1rem;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;text-decoration:none;transition:transform .15s}
+.btn-cta:hover{transform:translateY(-2px)}
+
+.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="logo-bar"><div class="dot"></div><span>Solaris Argentina</span><div class="dot"></div></div>
+    <h1>Return on Investment Calculator</h1>
+    <p>Estimate the savings and profitability of a solar system for your business</p>
+  </header>
+
+  <div class="card">
+    <h3>Your Business Data</h3>
+    <div class="form-grid">
+      <div class="field">
+        <label>Available Roof Area (m²)</label>
+        <input type="number" id="roofArea" value="500" min="10" step="10">
+      </div>
+      <div class="field">
+        <label>Location</label>
+        <select id="location">
+          <option value="4.5">Buenos Aires</option>
+          <option value="5.0">Córdoba</option>
+          <option value="5.5">Mendoza</option>
+          <option value="4.8">Río Negro</option>
+          <option value="4.7">Santa Fe</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Monthly Consumption (kWh)</label>
+        <input type="number" id="consumption" value="10000" min="100" step="100">
+      </div>
+      <div class="field">
+        <label>Current Tariff (USD/kWh)</label>
+        <input type="number" id="tariff" value="0.10" min="0.01" max="1" step="0.01">
+      </div>
+    </div>
+    <button class="btn" onclick="calcROI()">Calculate ROI</button>
+  </div>
+
+  <div id="results" class="hidden">
+    <div class="card">
+      <h3>Results</h3>
+      <div class="results-grid" id="statsGrid"></div>
+
+      <div class="green-box">
+        <h4>Total Savings Over 25 Years</h4>
+        <div class="big" id="lifetimeSavings">—</div>
+        <p id="co2text">—</p>
+      </div>
+    </div>
+
+    <div class="chart-container">
+      <h4>Cumulative Savings vs Investment</h4>
+      <canvas id="roiChart"></canvas>
+    </div>
+
+    <div class="cta-section">
+      <h3>Ready to Save?</h3>
+      <p>Our team will prepare a personalized proposal at no obligation</p>
+      <a class="btn-cta" href="mailto:info@solarisargentina.com?subject=Solar%20Proposal%20Request">Request a Proposal</a>
+    </div>
+  </div>
+</div>
+
+<script>
+let roiChartInst = null;
+
+function fmt(n) { return 'USD ' + n.toLocaleString('en-US', {maximumFractionDigits: 0}); }
+
+function calcROI() {
+  const roof = parseFloat(document.getElementById('roofArea').value) || 500;
+  const irr = parseFloat(document.getElementById('location').value) || 4.5;
+  const consumption = parseFloat(document.getElementById('consumption').value) || 10000;
+  const tariff = parseFloat(document.getElementById('tariff').value) || 0.10;
+
+  const systemSize = roof / 5;
+  const annualGen = systemSize * irr * 365 * 0.80;
+  const solarCoverage = Math.min(1, annualGen / (consumption * 12));
+  const annualSavings = consumption * 12 * solarCoverage * tariff;
+  const systemCost = systemSize * 1000 * 0.62;
+  const payback = annualSavings > 0 ? systemCost / annualSavings : 99;
+
+  let lifetimeSavings = 0;
+  const cumSavings = [0];
+  for (let y = 1; y <= 25; y++) {
+    const deg = 1 - 0.005 * (y - 1);
+    const save = annualSavings * deg * Math.pow(1.03, y - 1);
+    lifetimeSavings += save;
+    cumSavings.push(lifetimeSavings);
+  }
+
+  const co2 = annualGen * 0.0005 * 25;
+  const irecs = Math.floor(annualGen / 1000);
+
+  const stats = [
+    {label: 'System Size', value: systemSize.toFixed(0) + ' kWp'},
+    {label: 'System Cost', value: fmt(systemCost)},
+    {label: 'Annual Generation', value: annualGen.toLocaleString('en-US', {maximumFractionDigits: 0}) + ' kWh'},
+    {label: 'Solar Coverage', value: (solarCoverage * 100).toFixed(0) + '%'},
+    {label: 'Annual Savings', value: fmt(annualSavings)},
+    {label: 'Payback', value: payback < 25 ? payback.toFixed(1) + ' years' : '>25 years'},
+    {label: 'CO₂ Avoided (25 yrs)', value: co2.toFixed(0) + ' tons'},
+    {label: 'I-RECs / year', value: irecs.toLocaleString('en-US')},
+  ];
+
+  document.getElementById('statsGrid').innerHTML = stats.map(s =>
+    `<div class="stat"><div class="value">${s.value}</div><div class="label">${s.label}</div></div>`
+  ).join('');
+
+  document.getElementById('lifetimeSavings').textContent = fmt(lifetimeSavings);
+  document.getElementById('co2text').textContent = `Equivalent to planting ${Math.round(co2 * 15)} trees`;
+
+  const labels = Array.from({length: 26}, (_, i) => i);
+  if (roiChartInst) roiChartInst.destroy();
+  roiChartInst = new Chart(document.getElementById('roiChart'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Cumulative Savings',
+          data: cumSavings,
+          borderColor: '#4ADE80',
+          backgroundColor: 'rgba(74,222,128,0.1)',
+          fill: true, tension: 0.3, pointRadius: 2
+        },
+        {
+          label: 'Investment',
+          data: labels.map(() => systemCost),
+          borderColor: '#D4A843',
+          borderDash: [6, 4],
+          pointRadius: 0
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {legend: {labels: {color: '#FEFDFB'}}},
+      scales: {
+        x: {title: {display: true, text: 'Year', color: '#8A8A8A'}, ticks: {color: '#8A8A8A'}, grid: {color: 'rgba(255,255,255,0.05)'}},
+        y: {title: {display: true, text: 'USD', color: '#8A8A8A'}, ticks: {color: '#8A8A8A'}, grid: {color: 'rgba(255,255,255,0.05)'}}
+      }
+    }
+  });
+
+  document.getElementById('results').classList.remove('hidden');
+  document.getElementById('results').scrollIntoView({behavior: 'smooth'});
+}
+</script>
+</body>
+</html>

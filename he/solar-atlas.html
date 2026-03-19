@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>סולאריס ארגנטינה — אטלס סולארי</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --green: #0B3D2E; --gold: #D4A843; --pearl: #FEFDFB; --dark: #0A0A0A; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--dark); color: #fff; min-height: 100vh; direction: rtl; }
+  .container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
+  h1 { font-family: 'Playfair Display', serif; font-size: 32px; color: var(--pearl); text-align: center; margin-bottom: 8px; }
+  .subtitle { text-align: center; color: var(--gold); font-size: 14px; letter-spacing: 3px; margin-bottom: 40px; }
+  
+  .region-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+  .region-card {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px; padding: 24px; transition: all 0.3s; cursor: pointer;
+  }
+  .region-card:hover { background: rgba(255,255,255,0.08); transform: translateY(-4px); border-color: var(--gold); }
+  .region-card h3 { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--pearl); margin-bottom: 4px; }
+  .region-card .province { font-size: 12px; color: var(--gold); letter-spacing: 1px; margin-bottom: 16px; }
+  
+  .irradiation-bar { height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; margin-bottom: 8px; overflow: hidden; }
+  .irradiation-fill { height: 100%; border-radius: 4px; transition: width 1s ease; }
+  
+  .stat-row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; }
+  .stat-label { color: #888; }
+  .stat-value { color: var(--pearl); font-weight: 600; }
+  .stat-value.gold { color: var(--gold); }
+  
+  .divider { height: 1px; background: rgba(255,255,255,0.06); margin: 12px 0; }
+  
+  .legend { display: flex; gap: 20px; justify-content: center; margin-top: 30px; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #888; }
+  .legend-color { width: 12px; height: 12px; border-radius: 3px; }
+  
+  .note { text-align: center; font-size: 12px; color: #666; margin-top: 30px; max-width: 600px; margin-left: auto; margin-right: auto; }
+  
+  .brand { text-align: center; margin-top: 40px; font-size: 11px; color: var(--gold); letter-spacing: 4px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>אטלס סולארי ארגנטינה</h1>
+<div class="subtitle">קרינת שמש לפי אזור</div>
+
+<div class="region-grid">
+
+  <div class="region-card">
+    <h3>בואנוס איירס</h3>
+    <div class="province">מחוז + עיר הבירה</div>
+    <div class="irradiation-bar"><div class="irradiation-fill" style="width:75%;background:linear-gradient(90deg,var(--green),var(--gold));"></div></div>
+    <div class="stat-row"><span class="stat-label">קרינה</span><span class="stat-value gold">4.5 kWh/m²/יום</span></div>
+    <div class="stat-row"><span class="stat-label">ייצור שנתי (100kWp)</span><span class="stat-value">~160,000 kWh</span></div>
+    <div class="stat-row"><span class="stat-label">שעות שמש שיא</span><span class="stat-value">4.5 שע'/יום</span></div>
+    <div class="divider"></div>
+    <div class="stat-row"><span class="stat-label">פוטנציאל מסחרי</span><span class="stat-value gold">גבוה מאוד</span></div>
+    <div class="stat-row"><span class="stat-label">נתח צריכה ארצי</span><span class="stat-value">33%</span></div>
+    <div class="stat-row"><span class="stat-label">אזורים מרכזיים</span><span class="stat-value">טרס דה פבררו, קילמס, לה מטנסה</span></div>
+  </div>
+
+  <div class="region-card">
+    <h3>קורדובה</h3>
+    <div class="province">מרכז</div>
+    <div class="irradiation-bar"><div class="irradiation-fill" style="width:83%;background:linear-gradient(90deg,var(--green),var(--gold));"></div></div>
+    <div class="stat-row"><span class="stat-label">קרינה</span><span class="stat-value gold">5.0 kWh/m²/יום</span></div>
+    <div class="stat-row"><span class="stat-label">ייצור שנתי (100kWp)</span><span class="stat-value">~178,000 kWh</span></div>
+    <div class="stat-row"><span class="stat-label">שעות שמש שיא</span><span class="stat-value">5.0 שע'/יום</span></div>
+    <div class="divider"></div>
+    <div class="stat-row"><span class="stat-label">פוטנציאל מסחרי</span><span class="stat-value gold">גבוה</span></div>
+    <div class="stat-row"><span class="stat-label">מפיץ</span><span class="stat-value">EPEC</span></div>
+    <div class="stat-row"><span class="stat-label">שוק PPA</span><span class="stat-value">פעיל</span></div>
+  </div>
+
+  <div class="region-card">
+    <h3>מנדוסה / סן חואן</h3>
+    <div class="province">קויו</div>
+    <div class="irradiation-bar"><div class="irradiation-fill" style="width:92%;background:linear-gradient(90deg,var(--gold),#E8C76B);"></div></div>
+    <div class="stat-row"><span class="stat-label">קרינה</span><span class="stat-value gold">5.5 kWh/m²/יום</span></div>
+    <div class="stat-row"><span class="stat-label">ייצור שנתי (100kWp)</span><span class="stat-value">~196,000 kWh</span></div>
+    <div class="stat-row"><span class="stat-label">שעות שמש שיא</span><span class="stat-value">5.5 שע'/יום</span></div>
+    <div class="divider"></div>
+    <div class="stat-row"><span class="stat-label">פוטנציאל מסחרי</span><span class="stat-value gold">גבוה מאוד</span></div>
+    <div class="stat-row"><span class="stat-label">הספק מותקן</span><span class="stat-value">1,095 MW</span></div>
+    <div class="stat-row"><span class="stat-label">הקרינה הטובה ביותר בארץ</span><span class="stat-value">⭐</span></div>
+  </div>
+
+  <div class="region-card">
+    <h3>ריו נגרו</h3>
+    <div class="province">פטגוניה צפונית</div>
+    <div class="irradiation-bar"><div class="irradiation-fill" style="width:80%;background:linear-gradient(90deg,var(--green),var(--gold));"></div></div>
+    <div class="stat-row"><span class="stat-label">קרינה</span><span class="stat-value gold">4.8 kWh/m²/יום</span></div>
+    <div class="stat-row"><span class="stat-label">ייצור שנתי (100kWp)</span><span class="stat-value">~171,000 kWh</span></div>
+    <div class="stat-row"><span class="stat-label">שעות שמש שיא</span><span class="stat-value">4.8 שע'/יום</span></div>
+    <div class="divider"></div>
+    <div class="stat-row"><span class="stat-label">פוטנציאל מסחרי</span><span class="stat-value gold">גבוה</span></div>
+    <div class="stat-row"><span class="stat-label">מפיץ</span><span class="stat-value">EDERSA</span></div>
+    <div class="stat-row"><span class="stat-label">ענף מוביל</span><span class="stat-value">חקלאות (פירות)</span></div>
+  </div>
+
+  <div class="region-card">
+    <h3>סנטה פה</h3>
+    <div class="province">ליטוראל</div>
+    <div class="irradiation-bar"><div class="irradiation-fill" style="width:78%;background:linear-gradient(90deg,var(--green),var(--gold));"></div></div>
+    <div class="stat-row"><span class="stat-label">קרינה</span><span class="stat-value gold">4.7 kWh/m²/יום</span></div>
+    <div class="stat-row"><span class="stat-label">ייצור שנתי (100kWp)</span><span class="stat-value">~167,000 kWh</span></div>
+    <div class="stat-row"><span class="stat-label">שעות שמש שיא</span><span class="stat-value">4.7 שע'/יום</span></div>
+    <div class="divider"></div>
+    <div class="stat-row"><span class="stat-label">פוטנציאל מסחרי</span><span class="stat-value gold">גבוה</span></div>
+    <div class="stat-row"><span class="stat-label">מפיץ</span><span class="stat-value">EPE</span></div>
+    <div class="stat-row"><span class="stat-label">ענף מוביל</span><span class="stat-value">תעשייה, חקלאות</span></div>
+  </div>
+
+  <div class="region-card">
+    <h3>NOA (צפון-מערב)</h3>
+    <div class="province">סלטה · חוחוי · טוקומן</div>
+    <div class="irradiation-bar"><div class="irradiation-fill" style="width:95%;background:linear-gradient(90deg,var(--gold),#FFD700);"></div></div>
+    <div class="stat-row"><span class="stat-label">קרינה</span><span class="stat-value gold">5.8 kWh/m²/יום</span></div>
+    <div class="stat-row"><span class="stat-label">ייצור שנתי (100kWp)</span><span class="stat-value">~207,000 kWh</span></div>
+    <div class="stat-row"><span class="stat-label">שעות שמש שיא</span><span class="stat-value">5.8 שע'/יום</span></div>
+    <div class="divider"></div>
+    <div class="stat-row"><span class="stat-label">פוטנציאל מסחרי</span><span class="stat-value gold">גבוה</span></div>
+    <div class="stat-row"><span class="stat-label">הספק מותקן</span><span class="stat-value">869 MW</span></div>
+    <div class="stat-row"><span class="stat-label">ענף מוביל</span><span class="stat-value">כרייה, חקלאות, ליתיום</span></div>
+  </div>
+
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-color" style="background:var(--green);"></div> טוב (4.0-4.5)</div>
+  <div class="legend-item"><div class="legend-color" style="background:var(--gold);"></div> טוב מאוד (4.5-5.5)</div>
+  <div class="legend-item"><div class="legend-color" style="background:#FFD700;"></div> מצוין (5.5+)</div>
+</div>
+
+<div class="note">
+  נתוני הקרינה מבוססים על ממוצעים שנתיים (Global Solar Atlas / NASA POWER). הייצור בפועל תלוי בכיוון, שיפוע, הצללה ויעילות הציוד. בקשו ניתוח מותאם אישית למיקום שלכם.
+</div>
+
+<div class="brand">SOLARIS ARGENTINA · אנרגיה עצמאית</div>
+
+</div>
+</body>
+</html>

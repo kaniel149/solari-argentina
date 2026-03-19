@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solaris Argentina — Plan de Negocios Año 1 | Techos C&I</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--green:#0B3D2E;--gold:#D4A843;--pearl:#FEFDFB;--dark:#0A0A0A;--red:#DC2626;--blue:#3B82F6;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'DM Sans',sans-serif;background:#111;overflow:hidden;}
+  
+  .slide{width:100vw;height:100vh;display:none;flex-direction:column;justify-content:center;padding:60px 80px;position:relative;overflow:hidden;background:var(--dark);}
+  .slide.active{display:flex;}
+  .slide::after{content:'';position:absolute;top:0;right:0;width:35%;height:100%;background:linear-gradient(135deg,transparent,rgba(11,61,46,0.12));pointer-events:none;}
+  
+  .brand-mark{position:absolute;top:30px;left:40px;font-size:11px;color:var(--gold);letter-spacing:4px;font-weight:600;}
+  .slide-num{position:absolute;bottom:30px;right:40px;font-size:12px;color:#555;letter-spacing:2px;}
+  
+  h1{font-family:'Playfair Display',serif;font-size:48px;color:var(--pearl);line-height:1.2;max-width:800px;}
+  h2{font-family:'Playfair Display',serif;font-size:34px;color:var(--pearl);line-height:1.3;margin-bottom:20px;}
+  h3{font-family:'Playfair Display',serif;font-size:20px;color:var(--pearl);margin-bottom:12px;}
+  .gold{color:var(--gold);}
+  p{font-size:16px;color:#999;line-height:1.7;max-width:700px;margin-top:12px;}
+  .small{font-size:13px;color:#666;margin-top:8px;}
+  
+  .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:24px;max-width:900px;}
+  .stat-grid.three{grid-template-columns:repeat(3,1fr);}
+  .stat-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:24px;text-align:center;}
+  .stat-card .num{font-family:'Playfair Display',serif;font-size:36px;color:var(--gold);font-weight:800;}
+  .stat-card .lab{font-size:12px;color:#888;margin-top:6px;}
+  .stat-card.highlight{border-color:var(--gold);background:rgba(212,168,67,0.06);}
+  
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:20px;max-width:900px;}
+  .col-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:22px;}
+  .col-card h4{font-size:15px;color:var(--pearl);margin-bottom:10px;}
+  .col-card ul{padding-left:16px;color:#999;font-size:13px;line-height:2;}
+  .col-card.epc{border-left:4px solid var(--gold);}
+  .col-card.ppa{border-left:4px solid var(--green);}
+  
+  table{width:100%;max-width:900px;border-collapse:collapse;margin-top:16px;font-size:12px;}
+  th{background:var(--green);color:var(--pearl);padding:10px 14px;text-align:left;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:1px;}
+  td{padding:8px 14px;border-bottom:1px solid rgba(255,255,255,0.06);color:#ccc;}
+  tr:hover{background:rgba(255,255,255,0.02);}
+  .row-total{background:rgba(212,168,67,0.08) !important;font-weight:700;color:var(--gold);}
+  .row-total td{border-bottom:2px solid var(--gold);}
+  
+  .bar-chart{display:flex;gap:8px;align-items:flex-end;height:200px;margin-top:20px;max-width:900px;}
+  .bar-group{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
+  .bar{width:100%;border-radius:6px 6px 0 0;transition:height 1s ease;position:relative;}
+  .bar-label{font-size:10px;color:#888;writing-mode:horizontal-tb;}
+  .bar-value{font-size:10px;color:var(--gold);font-weight:600;text-align:center;}
+  .bar-month{font-size:10px;color:#666;margin-top:4px;}
+  
+  .timeline{display:flex;gap:0;margin-top:24px;max-width:900px;}
+  .phase{flex:1;padding:16px;border-top:4px solid;text-align:center;}
+  .phase h4{font-size:13px;color:var(--pearl);margin-bottom:4px;}
+  .phase .period{font-size:11px;color:var(--gold);font-weight:600;}
+  .phase .items{font-size:11px;color:#888;margin-top:8px;line-height:1.8;}
+  
+  .kpi-row{display:flex;gap:16px;margin-top:20px;flex-wrap:wrap;max-width:900px;}
+  .kpi{flex:1;min-width:120px;padding:16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;text-align:center;}
+  .kpi .val{font-family:'Playfair Display',serif;font-size:22px;color:var(--gold);font-weight:700;}
+  .kpi .label{font-size:10px;color:#888;margin-top:4px;text-transform:uppercase;letter-spacing:1px;}
+  
+  .risk-item{display:flex;gap:12px;margin:8px 0;align-items:flex-start;}
+  .risk-dot{width:8px;height:8px;border-radius:50%;margin-top:6px;flex-shrink:0;}
+  .risk-dot.high{background:var(--red);}
+  .risk-dot.med{background:var(--gold);}
+  .risk-dot.low{background:var(--green);}
+  .risk-text{font-size:13px;color:#999;line-height:1.6;}
+  .risk-text strong{color:var(--pearl);}
+
+  .nav{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:10;}
+  .dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.15);cursor:pointer;transition:all .3s;}
+  .dot.active{background:var(--gold);width:20px;border-radius:4px;}
+  .arrow{position:fixed;bottom:30px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;color:#999;font-size:14px;z-index:10;transition:all .2s;}
+  .arrow:hover{background:var(--gold);color:var(--dark);border-color:var(--gold);}
+  .arrow.left{left:40px;}
+  .arrow.right{right:40px;}
+</style>
+</head>
+<body>
+
+<!-- ═══ SLIDE 1: COVER ═══ -->
+<div class="slide active">
+  <div class="brand-mark">SOLARIS ARGENTINA</div>
+  <h1>Plan de Negocios<br><span class="gold">Año 1</span></h1>
+  <p>Techos comerciales e industriales (C&I)<br>80% EPC · 20% PPA</p>
+  <p style="color:var(--gold);font-size:13px;margin-top:30px;letter-spacing:3px;">MARZO 2026 — CONFIDENCIAL</p>
+  <p class="small">Rubén Freidman — CEO | Kaniel Tordjman — Presidente</p>
+  <div class="slide-num">01 / 12</div>
+</div>
+
+<!-- ═══ SLIDE 2: EXECUTIVE SUMMARY ═══ -->
+<div class="slide">
+  <div class="brand-mark">SOLARIS ARGENTINA</div>
+  <h2>Resumen <span class="gold">Ejecutivo</span></h2>
+  <div class="stat-grid">
+    <div class="stat-card highlight"><div class="num">2 MW</div><div class="lab">Capacidad Instalada Año 1</div></div>
+    <div class="stat-card"><div class="num">$1.2M</div><div class="lab">Revenue Total</div></div>
+    <div class="stat-card"><div class="num">35%</div><div class="lab">Margen Bruto</div></div>
+    <div class="stat-card"><div class="num">$420K</div><div class="lab">Utilidad Bruta</div></div>
+  </div>
+  <div class="two-col">
+    <div class="col-card epc">
+      <h4>EPC (80% del revenue)</h4>
+      <ul>
+        <li>~15 proyectos (80-200 kWp promedio)</li>
+        <li>Revenue: ~$960,000</li>
+        <li>Margen bruto: 30-35%</li>
+        <li>Cobro inmediato (hitos)</li>
+        <li>Sin riesgo operativo post-venta</li>
+      </ul>
+    </div>
+    <div class="col-card ppa">
+      <h4>PPA (20% del revenue)</h4>
+      <ul>
+        <li>~3 proyectos (100-200 kWp)</li>
+        <li>Revenue recurrente: ~$240K/año</li>
+        <li>Contratos 15-20 años</li>
+        <li>Tarifa: $0.10-0.12/kWh</li>
+        <li>Activos en balance: +$600K</li>
+      </ul>
+    </div>
+  </div>
+  <div class="slide-num">02 / 12</div>
+</div>
+
+<!-- ═══ SLIDE 3: MARKET OPPORTUNITY ═══ -->
+<div class="slide">
+  <div class="brand-mark">SOLARIS ARGENTINA</div>
+  <h2>Oportunidad de <span class="gold">Mercado</span></h2>
+  <div class="stat-grid">
+    <div class="stat-card"><div class="num">$4.7B</div><div class="lab">Mercado Total (2030)</div></div>
+    <div class="stat-card"><div class="num">&lt;2%</div><div class="lab">Penetración C&I Actual</div></div>
+    <div class="stat-card"><div class="num">200%+</div><div class="lab">Aumento Tarifas desde 2024</div></div>
+    <div class="stat-card"><div class="num">5.0</div><div class="lab">kWh/m²/día Irradiación</div></div>
+  </div>
+  <p>El mercado C&I de techos solares en Argentina está prácticamente sin explotar. Las tarifas eléctricas subieron más del 200% desde 2024, creando urgencia inmediata. Con zero injection, no se necesitan permisos — la barrera de entrada más baja posible.</p>
+  <div class="two-col">
+    <div class="col-card">
+      <h4>Segmentos Target Año 1</h4>
+      <ul>
+        <li>Agroindustria (Río Negro, Mendoza)</li>
+        <li>Manufactura (GBA, Córdoba)</li>
+        <li>Logística / Almacenes (GBA)</li>
+        <li>Retail / Shopping Centers</li>
+        <li>Hoteles / Hospitality</li>
+      </ul>
+    </div>
+    <div class="col-card">
+      <h4>Ventajas Competitivas</h4>
+      <ul>
+        <li>Solar OS — monitoreo 24/7 incluido</li>
+        <li>Banco Comafi — único financing partner</li>
+        <li>500+ instalaciones internacionales</li>
+        <li>Vertical: diseño + install + monitor</li>
+        <li>Zero injection = sin burocracia</li>
+      </ul>
+    </div>
+  </div>
+  <div class="slide-num">03 / 12</div>
+</div>
+
+<!-- ═══ SLIDE 4: BUSINESS MODEL ═══ -->
+<div class="slide">
+  <div class="brand-mark">SOLARIS ARGENTINA</div>
+  <h2>Modelo de <span class="gold">Negocio</span></h2>
+  <h3>Dos líneas de negocio complementarias</h3>
+  <table>
+    <tr><th></th><th>EPC (80%)</th><th>PPA (20%)</th></tr>
+    <tr><td>Modelo</td><td>Venta + instalación</td><td>Propiedad + venta de kWh</td></tr>
+    <tr><td>Revenue</td><td>One-time ($0.55-0.70/Wp)</td><td>Recurrente ($0.10-0.12/kWh)</td></tr>
+    <tr><td>Margen bruto</td><td>30-35%</td><td>40-50% (post-payback)</td></tr>
+    <tr><td>Cobro</td><td>Hitos (50/22/25/3)</td><td>Mensual</td></tr>
+    <tr><td>CapEx necesario</td><td>Bajo (prefinancia cliente)</td><td>Alto ($0.45-0.50/Wp)</td></tr>
+    <tr><td>Contrato</td><td>EPC (3-6 meses)</td><td>PPA (15-20 años)</td></tr>
+    <tr><td>Riesgo</td><td>Ejecución + cobro</td><td>Crédito + operativo</td></tr>
+    <tr><td>Activo generado</td><td>Ninguno</td><td>Sistema en balance</td></tr>
+    <tr class="row-total"><td>Proyectos Año 1</td><td>~15 proyectos</td><td>~3 proyectos</td></tr>
+  </table>
+  <p class="small">Estrategia: EPC genera cash flow y credibilidad. PPA construye activos recurrentes y valoración de empresa.</p>
+  <div class="slide-num">04 / 12</div>
+</div>
+
+<!-- ═══ SLIDE 5: PRICING & UNIT ECONOMICS ═══ -->
+<div class="slide">
+  <div class="brand-mark">SOLARIS ARGENTINA</div>
+  <h2>Precios y <span class="gold">Unit Economics</span></h2>
+  <h3>EPC — Ejemplo 150 kWp</h3>
+  <table>
+    <tr><th>Concepto</th><th>$/Wp</th><th>Total (150 kWp)</th><th>% Revenue</th></tr>
+    <tr><td>Precio de venta al cliente</td><td>$0.60</td><td>$90,000</td><td>100%</td></tr>
+    <tr><td>Equipamiento (paneles, inversores, estructura)</td><td>$0.32</td><td>$48,000</td><td>53%</td></tr>
+    <tr><td>Instalación (mano de obra + logística)</td><td>$0.08</td><td>$12,000</td><td>13%</td></tr>
+    <tr><td>Overhead (ingeniería, permisos, admin)</td><td>$0.03</td><td>$4,500</td><td>5%</td></tr>
+    <tr class="row-total"><td><strong>Margen bruto</strong></td><td><strong>$0.17</strong></td><td><strong>$25,500</strong></td><td><strong>28%</strong></td></tr>
+  </table>
+  <h3 style="margin-top:24px;">PPA — Ejemplo 150 kWp</h3>
+  <table>
+    <tr><th>Concepto</th><th>Valor</th></tr>
+    <tr><td>CapEx (costo total del sistema)</td><td>$67,500 ($0.45/Wp)</td></tr>
+    <tr><td>Generación anual</td><td>~240,000 kWh</td></tr>
+    <tr><td>Tarifa PPA</td><td>$0.10/kWh</td></tr>
+    <tr><td>Revenue anual</td><td>$24,000</td></tr>
+    <tr><td>O&M anual</td><td>$1,500 (2.2%)</td></tr>
+    <tr class="row-total"><td><strong>Cash flow neto anual</strong></td><td><strong>$22,500</strong></td></tr>
+    <tr><td>Payback simple</td><td>3.0 años</td></tr>
+    <tr><td>IRR (15 años)</td><td>~28%</td></tr>
+    <tr><td>Revenue total contrato (15 años)</td><td>$360,000</td></tr>
+  </table>
+  <div class="slide-num">05 / 12</div>
+</div>
+
+<!-- ═══ SLIDE 6: REVENUE PROJECTION ═══ -->
+<div class="slide">
+  <div class="brand-mark">SOLARIS ARGENTINA</div>
+  <h2>Proyección de <span class="gold">Revenue — Año 1</span></h2>
+  <table>
+    <tr><th>Trimestre</th><th>Proyectos EPC</th><th>Revenue EPC</th><th>Proyectos PPA</th><th>Revenue PPA (anual)</th><th>Revenue Total</th></tr>
+    <tr><td>Q1 (Abr-Jun)</td><td>2</td><td>$120,000</td><td>0</td><td>—</td><td>$120,000</td></tr>
+    <tr><td>Q2 (Jul-Sep)</td><td>4</td><td>$280,000</td><td>1</td><td>$24,000</td><td>$286,000</td></tr>
+    <tr><td>Q3 (Oct-Dic)</td><td>5</td><td>$320,000</td><td>1</td><td>$24,000</td><td>$332,000</td></tr>
+    <tr><td>Q4 (Ene-Mar)</td><td>4</td><td>$240,000</td><td>1</td><td>$24,000</td><td>$258,000</td></tr>
+    <tr class="row-total"><td><strong>Total Año 1</strong></td><td><strong>15</strong></td><td><strong>$960,000</strong></td><td><strong>3</strong></td><td><strong>$72,000</strong></td><td><strong>$1,032,000</strong></td></tr>
+  </table>
+  <div class="kpi-row">
+    <div class="kpi"><div class="val">$1.03M</div><div class="label">Revenue Año 1</div></div>
+    <div class="kpi"><div class="val">18</div><div class="label">Proyectos Totales</div></div>
+    <div class="kpi"><div class="val">2.0 MW</div><div class="label">Capacidad Instalada</div></div>
+    <div class="kpi"><div class="val">$72K</div><div class="label">Revenue Recurrente</div></div>
+    <div class="kpi"><div class="val">$600K</div><div class="label">Activos PPA</div></div>
+  </div>
+  <p class="small">Mix: 93% EPC + 7% PPA en Año 1. PPA crece a 30%+ en Año 2 a medida que se construye portfolio de activos.</p>
+  <div class="slide-num">06 / 12</div>
+</div>
+
+<!-- ═══ SLIDE 7: P&L ═══ -->
+<div class="slide">
+  <div class="brand-mark">SOLARIS ARGENTINA</div>
+  <h2>Estado de <span class="gold">Resultados — Año 1</span></h2>
+  <table>
+    <tr><th>Concepto</th><th>USD</th><th>% Revenue</th></tr>
+    <tr><td>Revenue EPC</td><td>$960,000</td><td>93%</td></tr>
+    <tr><td>Revenue PPA (recurrente)</td><td>$72,000</td><td>7%</td></tr>
+    <tr style="border-top:2px solid var(--gold);"><td><strong>Revenue Total</strong></td><td><strong>$1,032,000</strong></td><td><strong>100%</strong></td></tr>
+    <tr><td></td><td></td><td></td></tr>
+    <tr><td>Costo equipos (EPC)</td><td>($528,000)</td><td>51%</td></tr>
+    <tr><td>Costo instalación (EPC)</td><td>($120,000)</td><td>12%</td></tr>
+    <tr><td>CapEx PPA (3 sistemas)</td><td>($202,500)</td><td>20%</td></tr>
+    <tr><td>O&M PPA</td><td>($4,500)</td><td>0.4%</td></tr>
+    <tr class="row-total"><td><strong>Utilidad Bruta</strong></td><td><strong>$177,000</strong></td><td><strong>17%</strong></td></tr>
+    <tr><td></td><td></td><td></td></tr>
+    <tr><td>Salarios (CEO + PM + 2 técnicos)</td><td>($96,000)</td><td>9%</td></tr>
+    <tr><td>Marketing & Ads</td><td>($36,000)</td><td>3.5%</td></tr>
+    <tr><td>Oficina + Operaciones</td><td>($18,000)</td><td>1.7%</td></tr>
+    <tr><td>Legal + Contable</td><td>($12,000)</td><td>1.2%</td></tr>
+    <tr><td>Viajes + Logística</td><td>($15,000)</td><td>1.5%</td></tr>
+    <tr class="row-total"><td><strong>EBITDA</strong></td><td><strong>$0</strong></td><td><strong>0%</strong></td></tr>
+  </table>
+  <p class="small">Año 1 = breakeven operativo. Los 3 sistemas PPA quedan como activos ($600K valor). El verdadero profit viene de Año 2+ con pipeline construido y PPA generando recurrente.</p>
+  <div class="slide-num">07 / 12</div>
+</div>
+
+<!-- ═══ SLIDE 8: CASH FLOW ═══ -->
+<div class="slide">
+  <div class="brand-mark">SOLARIS ARGENTINA</div>
+  <h2>Cash Flow <span class="gold">Mensual — Año 1</span></h2>
+  <table style="font-size:11px;">
+    <tr><th>Mes</th><th>Ingresos EPC</th><th>Ingresos PPA</th><th>Gastos</th><th>Cash Flow</th><th>Acumulado</th></tr>
+    <tr><td>1 (Abr)</td><td>$0</td><td>$0</td><td>($20,000)</td><td>($20,000)</td><td>($20,000)</td></tr>
+    <tr><td>2 (May)</td><td>$30,000</td><td>$0</td><td>($25,000)</td><td>$5,000</td><td>($15,000)</td></tr>
+    <tr><td>3 (Jun)</td><td>$90,000</td><td>$0</td><td>($60,000)</td><td>$30,000</td><td>$15,000</td></tr>
+    <tr><td>4 (Jul)</td><td>$60,000</td><td>$0</td><td>($45,000)</td><td>$15,000</td><td>$30,000</td></tr>
+    <tr><td>5 (Ago)</td><td>$80,000</td><td>$2,000</td><td>($55,000)</td><td>$27,000</td><td>$57,000</td></tr>
+    <tr><td>6 (Sep)</td><td>$110,000</td><td>$2,000</td><td>($75,000)</td><td>$37,000</td><td>$94,000</td></tr>
+    <tr><td>7 (Oct)</td><td>$80,000</td><td>$4,000</td><td>($60,000)</td><td>$24,000</td><td>$118,000</td></tr>
+    <tr><td>8 (Nov)</td><td>$90,000</td><td>$4,000</td><td>($65,000)</td><td>$29,000</td><td>$147,000</td></tr>
+    <tr><td>9 (Dic)</td><td>$80,000</td><td>$4,000</td><td>($60,000)</td><td>$24,000</td><td>$171,000</td></tr>
+    <tr><td>10 (Ene)</td><td>$90,000</td><td>$6,000</td><td>($65,000)</td><td>$31,000</td><td>$202,000</td></tr>
+    <tr><td>11 (Feb)</td><td>$80,000</td><td>$6,000</td><td>($60,000)</td><td>$26,000</td><td>$228,000</td></tr>
+    <tr><td>12 (Mar)</td><td>$70,000</td><td>$6,000</td><td>($55,000)</td><td>$21,000</td><td>$249,000</td></tr>
+    <tr class="row-total"><td><strong>Total</strong></td><td><strong>$860,000</strong></td><td><strong>$34,000</strong></td><td><strong>($645,000)</strong></td><td><strong>$249,000</strong></td><td></td></tr>
+  </table>
+  <p class="small">Cash flow positivo desde Mes 3. CapEx PPA no incluido aquí (financiado por separado o capital propio). Working capital mínimo requerido: $50,000.</p>
+  <div class="slide-num">08 / 12</div>
+</div>
+
+<!-- ═══ SLIDE 9: GO-TO-MARKET ═══ -->
+<div class="slide">
+  <div class="brand-mark">SOLARIS ARGENTINA</div>
+  <h2>Go-to-Market <span class="gold">Año 1</span></h2>
+  <div class="timeline">
+    <div class="phase" style="border-color:#64748B;">
+      <h4>Fase 1</h4><div class="period">Mes 1-3</div>
+      <div class="items">Anchor projects<br>Comafi partnership<br>SWH referrals<br>Río Negro (572 kWp)<br>2-3 proyectos</div>
+    </div>
+    <div class="phase" style="border-color:var(--gold);">
+      <h4>Fase 2</h4><div class="period">Mes 4-6</div>
+      <div class="items">Digital marketing<br>Google + LinkedIn Ads<br>Outreach sequences<br>Blog SEO<br>5-6 proyectos</div>
+    </div>
+    <div class="phase" style="border-color:var(--green);">
+      <h4>Fase 3</h4><div class="period">Mes 7-9</div>
+      <div class="items">Channel partners<br>First PPA<br>Case studies<br>Referral engine<br>5-6 proyectos</div>
+    </div>
+    <div class="phase" style="border-color:#16A34A;">
+      <h4>Fase 4</h4><div class="period">Mes 10-12</div>
+      <div class="items">Scale operations<br>2nd PPA<br>Academy local<br>Repeat clients<br>4-5 proyectos</div>
+    </div>
+  </div>
+  <h3 style="margin-top:24px;">Canales de Adquisición</h3>
+  <div class="kpi-row">
+    <div class="kpi"><div class="val">40%</div><div class="label">Referrals + Partners</div></div>
+    <div class="kpi"><div class="val">25%</div><div class="label">Google Ads</div></div>
+    <div class="kpi"><div class="val">20%</div><div class="label">LinkedIn + Outreach</div></div>
+    <div class="kpi"><div class="val">10%</div><div class="label">Blog / SEO</div></div>
+    <div class="kpi"><div class="val">5%</div><div class="label">Events / Fairs</div></div>
+  </div>
+  <div class="slide-num">09 / 12</div>
+</div>
+
+<!-- ═══ SLIDE 10: TEAM ═══ -->
+<div class="slide">
+  <div class="brand-mark">SOLARIS ARGENTINA</div>
+  <h2><span class="gold">Equipo</span> — Año 1</h2>
+  <table>
+    <tr><th>Rol</th><th>Nombre</th><th>Responsabilidad</th><th>Costo Mensual</th></tr>
+    <tr><td><strong>CEO</strong></td><td>Rubén Freidman</td><td>Operaciones, ventas, desarrollo de negocio</td><td>$3,000</td></tr>
+    <tr><td><strong>Presidente</strong></td><td>Kaniel Tordjman</td><td>Estrategia, tecnología, Solar OS, partnerships internacionales</td><td>$3,000</td></tr>
+    <tr><td>Project Manager</td><td>TBD</td><td>Gestión de proyectos, logística, supervisión de instalación</td><td>$1,500</td></tr>
+    <tr><td>Técnico Senior</td><td>TBD (local)</td><td>Instalación eléctrica, commissioning</td><td>$500</td></tr>
+    <tr class="row-total"><td colspan="3"><strong>Total mensual (equipo fijo)</strong></td><td><strong>$8,000</strong></td></tr>
+  </table>
+  <p>Técnicos de instalación adicionales se contratan por proyecto (subcontratistas). Equipo administrativo/contable tercerizado.</p>
+  <div class="two-col" style="margin-top:16px;">
+    <div class="col-card">
+      <h4>Infraestructura</h4>
+      <ul>
+        <li>Oficina: cowork/virtual ($500/mes)</li>
+        <li>Herramientas: $5,000 (one-time)</li>
+        <li>Vehículo: alquiler por proyecto</li>
+        <li>Software: Solar OS + CRM ($200/mes)</li>
+      </ul>
+    </div>
+    <div class="col-card">
+      <h4>Terceros</h4>
+      <ul>
+        <li>Estudio contable: $500/mes</li>
+        <li>Ingeniero matriculado: por proyecto</li>
+        <li>Seguros: $200/mes</li>
+        <li>Agencia marketing: $500/mes</li>
+      </ul>
+    </div>
+  </div>
+  <div class="slide-num">10 / 12</div>
+</div>
+
+<!-- ═══ SLIDE 11: RISKS ═══ -->
+<div class="slide">
+  <div class="brand-mark">SOLARIS ARGENTINA</div>
+  <h2>Riesgos y <span class="gold">Mitigación</span></h2>
+  <div class="two-col">
+    <div>
+      <h3>Riesgos Identificados</h3>
+      <div class="risk-item"><div class="risk-dot high"></div><div class="risk-text"><strong>Tipo de cambio:</strong> Devaluación ARS impacta cobros en pesos. Mitigación: contratos en USD, cobro por hitos rápido.</div></div>
+      <div class="risk-item"><div class="risk-dot high"></div><div class="risk-text"><strong>Importación equipos:</strong> Restricciones, impuestos, demoras. Mitigación: Intermepro tiene stock local, estructura coplanar fabricación nacional.</div></div>
+      <div class="risk-item"><div class="risk-dot med"></div><div class="risk-text"><strong>Regulación:</strong> Ley 27.191 venció 2025, pendiente extensión. Mitigación: zero injection no requiere permisos.</div></div>
+      <div class="risk-item"><div class="risk-dot med"></div><div class="risk-text"><strong>Competencia:</strong> Incumbentes locales. Mitigación: Solar OS + Comafi financing = diferencial único.</div></div>
+      <div class="risk-item"><div class="risk-dot low"></div><div class="risk-text"><strong>Riesgo técnico:</strong> Errores de instalación. Mitigación: equipos Tier 1 + supervisión experimentada.</div></div>
+    </div>
+    <div>
+      <h3>Oportunidades</h3>
+      <div class="risk-item"><div class="risk-dot" style="background:#16A34A;"></div><div class="risk-text"><strong>Subsidios eliminados:</strong> Tarifas reales hacen solar más atractivo que nunca.</div></div>
+      <div class="risk-item"><div class="risk-dot" style="background:#16A34A;"></div><div class="risk-text"><strong>I-REC certificates:</strong> Ingreso adicional por certificados verdes.</div></div>
+      <div class="risk-item"><div class="risk-dot" style="background:#16A34A;"></div><div class="risk-text"><strong>Comafi partnership:</strong> Único canal bancario para rooftop — ventaja first-mover.</div></div>
+      <div class="risk-item"><div class="risk-dot" style="background:#16A34A;"></div><div class="risk-text"><strong>Net metering futuro:</strong> Si se aprueba, los sistemas instalados se revalorizan automáticamente.</div></div>
+      <div class="risk-item"><div class="risk-dot" style="background:#16A34A;"></div><div class="risk-text"><strong>Escala regional:</strong> Éxito en Río Negro abre Mendoza, Córdoba, Santa Fe.</div></div>
+    </div>
+  </div>
+  <div class="slide-num">11 / 12</div>
+</div>
+
+<!-- ═══ SLIDE 12: NEXT STEPS ═══ -->
+<div class="slide">
+  <div class="brand-mark">SOLARIS ARGENTINA</div>
+  <h2>Próximos <span class="gold">Pasos</span></h2>
+  <table>
+    <tr><th>#</th><th>Acción</th><th>Responsable</th><th>Plazo</th></tr>
+    <tr><td>1</td><td>Cerrar proyecto ancla Río Negro (572 kWp)</td><td>Rubén + Kaniel</td><td>Abril 2026</td></tr>
+    <tr><td>2</td><td>Formalizar partnership Banco Comafi EcoLeasing</td><td>Rubén</td><td>Abril 2026</td></tr>
+    <tr><td>3</td><td>Contratar Project Manager local</td><td>Rubén</td><td>Mayo 2026</td></tr>
+    <tr><td>4</td><td>Lanzar campaña digital (Google + LinkedIn)</td><td>Kaniel</td><td>Mayo 2026</td></tr>
+    <tr><td>5</td><td>Activar referrals SWH + otros engineering partners</td><td>Rubén</td><td>Junio 2026</td></tr>
+    <tr><td>6</td><td>Primer PPA (Q2 target)</td><td>Rubén + Kaniel</td><td>Agosto 2026</td></tr>
+    <tr><td>7</td><td>Deploy Solar OS Argentina instance</td><td>Kaniel</td><td>Junio 2026</td></tr>
+    <tr><td>8</td><td>Case study Río Negro → marketing materials</td><td>Kaniel</td><td>Julio 2026</td></tr>
+  </table>
+  <div style="margin-top:30px;padding:24px;background:linear-gradient(135deg,var(--green),#1a6b4a);border-radius:12px;max-width:700px;">
+    <h3 style="color:var(--gold);margin-bottom:8px;">Meta Año 1</h3>
+    <p style="color:var(--pearl);font-size:18px;margin:0;"><strong>18 proyectos · 2 MWp · $1M+ revenue · 3 activos PPA · Breakeven operativo</strong></p>
+  </div>
+  <div style="margin-top:24px;color:#888;font-size:14px;">
+    <strong style="color:var(--pearl);">Rubén Freidman</strong> — CEO · <strong style="color:var(--pearl);">Kaniel Tordjman</strong> — Presidente<br>
+    <span style="color:var(--gold);">k@kanielt.com · kanielt.com</span><br>
+    KANIEL TORD LLC — Florida, USA
+  </div>
+  <div class="slide-num">12 / 12</div>
+</div>
+
+<!-- Navigation -->
+<div class="nav" id="nav"></div>
+<div class="arrow left" onclick="prev()">←</div>
+<div class="arrow right" onclick="next()">→</div>
+
+<script>
+const slides=document.querySelectorAll('.slide');
+let current=0;
+function show(n){current=Math.max(0,Math.min(n,slides.length-1));slides.forEach((s,i)=>s.classList.toggle('active',i===current));document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===current));}
+function next(){show(current+1);}
+function prev(){show(current-1);}
+const nav=document.getElementById('nav');
+slides.forEach((_,i)=>{const d=document.createElement('div');d.className='dot'+(i===0?' active':'');d.onclick=()=>show(i);nav.appendChild(d);});
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' ')next();if(e.key==='ArrowLeft')prev();});
+let tx=0;document.addEventListener('touchstart',e=>tx=e.touches[0].clientX);
+document.addEventListener('touchend',e=>{const d=e.changedTouches[0].clientX-tx;if(d<-50)next();if(d>50)prev();});
+</script>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080, initial-scale=1">
+<title>Solaris Argentina — Ahorro</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1080px; height: 1080px;
+    background: #0A0A0A;
+    font-family: 'DM Sans', sans-serif;
+    color: #FEFDFB;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Solar panel grid pattern */
+  .panel-pattern {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(135deg, rgba(11,61,46,0.15) 0%, transparent 50%),
+      linear-gradient(315deg, rgba(212,168,67,0.08) 0%, transparent 50%);
+    z-index: 0;
+  }
+  .panel-pattern::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      repeating-linear-gradient(0deg, transparent, transparent 58px, rgba(11,61,46,0.12) 58px, rgba(11,61,46,0.12) 60px),
+      repeating-linear-gradient(90deg, transparent, transparent 88px, rgba(11,61,46,0.12) 88px, rgba(11,61,46,0.12) 90px);
+    opacity: 0.5;
+  }
+
+  /* Radial glow behind the number */
+  .glow {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -60%);
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(212,168,67,0.18) 0%, rgba(212,168,67,0.04) 40%, transparent 70%);
+    z-index: 1;
+  }
+
+  .content {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    height: 100%;
+    padding: 60px;
+    text-align: center;
+  }
+
+  .tagline-top {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: rgba(254,253,251,0.5);
+    margin-bottom: 40px;
+  }
+
+  .big-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 280px;
+    font-weight: 900;
+    line-height: 0.85;
+    color: #D4A843;
+    text-shadow:
+      0 0 60px rgba(212,168,67,0.5),
+      0 0 120px rgba(212,168,67,0.25),
+      0 0 200px rgba(212,168,67,0.1);
+    margin-bottom: 10px;
+  }
+
+  .main-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    font-weight: 700;
+    color: #FEFDFB;
+    line-height: 1.2;
+    margin-bottom: 20px;
+  }
+
+  .sub-text {
+    font-size: 28px;
+    font-weight: 400;
+    color: rgba(254,253,251,0.6);
+    margin-bottom: 60px;
+  }
+
+  .bottom-bar {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 36px 60px;
+    background: linear-gradient(0deg, rgba(11,61,46,0.4) 0%, transparent 100%);
+    z-index: 3;
+  }
+
+  .brand {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #FEFDFB;
+  }
+
+  .cta {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #D4A843;
+    letter-spacing: 1px;
+  }
+
+  /* Watermark */
+  .watermark {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) rotate(-30deg);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 100px;
+    font-weight: 700;
+    letter-spacing: 20px;
+    text-transform: uppercase;
+    color: rgba(254,253,251,0.02);
+    white-space: nowrap;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .energia-badge {
+    position: absolute;
+    top: 40px; right: 60px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(212,168,67,0.6);
+    z-index: 3;
+    border: 1px solid rgba(212,168,67,0.3);
+    padding: 8px 16px;
+  }
+</style>
+</head>
+<body>
+  <div class="panel-pattern"></div>
+  <div class="glow"></div>
+  <div class="watermark">SOLARIS ARGENTINA</div>
+
+  <div class="energia-badge">Energía Propia</div>
+
+  <div class="content">
+    <div class="tagline-top">Paneles Solares Comerciales</div>
+    <div class="big-number">70%</div>
+    <div class="main-text">de ahorro en su<br>factura eléctrica</div>
+    <div class="sub-text">Paneles solares para su empresa</div>
+  </div>
+
+  <div class="bottom-bar">
+    <div class="brand">Solaris Argentina</div>
+    <div class="cta">Estimación gratuita →</div>
+  </div>
+</body>
+</html>

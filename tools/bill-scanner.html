@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analizador de Factura Eléctrica — Solaris Argentina</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0A0A0A;--green:#0B3D2E;--gold:#D4A843;--pearl:#FEFDFB;--card:#141414;--card-border:#1E1E1E;--text:#FEFDFB;--text-muted:#8A8A8A;--green-light:#134D3A;--gold-dim:rgba(212,168,67,0.15)}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+h1,h2,h3,h4{font-family:'Playfair Display',serif;font-weight:600}
+.container{max-width:800px;margin:0 auto;padding:24px 16px}
+header{text-align:center;padding:48px 0 32px;border-bottom:1px solid var(--card-border)}
+header h1{font-size:clamp(1.8rem,4vw,2.4rem);color:var(--pearl);margin-bottom:8px}
+header p{color:var(--text-muted);font-size:1rem}
+.logo-bar{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:16px}
+.logo-bar .dot{width:10px;height:10px;background:var(--gold);border-radius:50%}
+.logo-bar span{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--gold);letter-spacing:2px;text-transform:uppercase}
+
+.card{background:var(--card);border:1px solid var(--card-border);border-radius:12px;padding:28px;margin-top:28px}
+.card h3{color:var(--gold);font-size:1.15rem;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--card-border)}
+
+label{display:block;font-size:0.85rem;color:var(--text-muted);margin-bottom:6px;font-weight:500}
+input[type="number"]{width:100%;padding:12px 14px;background:#1A1A1A;border:1px solid var(--card-border);border-radius:8px;color:var(--pearl);font-size:1rem;font-family:'DM Sans',sans-serif;transition:border-color .2s}
+input:focus{outline:none;border-color:var(--gold)}
+.field{margin-bottom:18px}
+
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:500px){.form-row{grid-template-columns:1fr}}
+
+.btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--green),var(--green-light));border:none;border-radius:8px;color:var(--pearl);font-size:1rem;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;transition:transform .15s;margin-top:8px}
+.btn:hover{transform:translateY(-1px)}
+
+.results-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:24px}
+.stat{background:#1A1A1A;border:1px solid var(--card-border);border-radius:10px;padding:18px;text-align:center}
+.stat .value{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--gold);margin-bottom:4px}
+.stat .label{font-size:0.78rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px}
+
+.compare-section{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:24px}
+@media(max-width:500px){.compare-section{grid-template-columns:1fr}}
+.compare-card{border-radius:10px;padding:24px;text-align:center}
+.compare-card.current{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3)}
+.compare-card.solar{background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.3)}
+.compare-card .big{font-size:1.8rem;font-family:'Playfair Display',serif;margin:8px 0}
+.compare-card.current .big{color:#EF4444}
+.compare-card.solar .big{color:#4ADE80}
+.compare-card p{color:var(--text-muted);font-size:0.85rem}
+.compare-card h4{color:var(--pearl)}
+
+.savings-banner{background:var(--green);border-radius:10px;padding:24px;text-align:center;margin-top:20px}
+.savings-banner h4{color:var(--pearl);margin-bottom:4px}
+.savings-banner .big{font-size:2.2rem;color:var(--gold);font-family:'Playfair Display',serif}
+.savings-banner .sub{color:rgba(254,253,251,0.6);font-size:0.85rem;margin-top:4px}
+
+.chart-card{background:var(--card);border:1px solid var(--card-border);border-radius:12px;padding:24px;margin-top:24px}
+.chart-card h4{color:var(--pearl);margin-bottom:16px}
+canvas{max-height:260px}
+
+.recommend{background:var(--gold-dim);border:1px solid rgba(212,168,67,0.3);border-radius:10px;padding:20px;margin-top:20px;text-align:center}
+.recommend h4{color:var(--gold);margin-bottom:8px}
+.recommend .sys{font-size:1.6rem;color:var(--pearl);font-family:'Playfair Display',serif}
+.recommend p{color:var(--text-muted);font-size:0.85rem;margin-top:6px}
+
+.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="logo-bar"><div class="dot"></div><span>Solaris Argentina</span><div class="dot"></div></div>
+    <h1>Analizador de Factura Eléctrica</h1>
+    <p>Ingresá los datos de tu factura y descubrí cuánto podés ahorrar con energía solar</p>
+  </header>
+
+  <div class="card">
+    <h3>Datos de tu Factura</h3>
+    <div class="form-row">
+      <div class="field">
+        <label>Consumo mensual (kWh)</label>
+        <input type="number" id="kwhMonth" value="5000" min="1" step="100">
+      </div>
+      <div class="field">
+        <label>Costo mensual (USD)</label>
+        <input type="number" id="costMonth" value="600" min="1" step="10">
+      </div>
+    </div>
+    <button class="btn" onclick="analyze()">Analizar Factura</button>
+  </div>
+
+  <div id="results" class="hidden">
+    <div class="card">
+      <h3>Diagnóstico</h3>
+      <div class="results-grid" id="statsGrid"></div>
+
+      <div class="compare-section">
+        <div class="compare-card current">
+          <h4>Costo Anual Actual</h4>
+          <div class="big" id="annualCurrent">—</div>
+          <p>Sin solar</p>
+        </div>
+        <div class="compare-card solar">
+          <h4>Costo Anual con Solar</h4>
+          <div class="big" id="annualSolar">—</div>
+          <p>Con sistema fotovoltaico</p>
+        </div>
+      </div>
+
+      <div class="savings-banner">
+        <h4>Tu Ahorro Anual Estimado</h4>
+        <div class="big" id="annualSavings">—</div>
+        <div class="sub" id="savingsPct">—</div>
+      </div>
+
+      <div class="recommend">
+        <h4>Sistema Recomendado</h4>
+        <div class="sys" id="recSystem">—</div>
+        <p id="recDetail">—</p>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h4>Comparación Mensual: Actual vs Solar</h4>
+      <canvas id="compareChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<script>
+let chartInst = null;
+
+function fmt(n) { return 'USD ' + n.toLocaleString('es-AR', {maximumFractionDigits: 0}); }
+
+function analyze() {
+  const kwh = parseFloat(document.getElementById('kwhMonth').value) || 5000;
+  const cost = parseFloat(document.getElementById('costMonth').value) || 600;
+
+  const effectiveTariff = cost / kwh;
+  const annualSpend = cost * 12;
+  const annualKwh = kwh * 12;
+
+  // Solar savings range 40-70%, use 55% median
+  const savingsLow = annualSpend * 0.40;
+  const savingsHigh = annualSpend * 0.70;
+  const savingsMid = annualSpend * 0.55;
+  const solarCost = annualSpend - savingsMid;
+
+  // Recommended system: cover ~60% of consumption
+  const targetKwh = annualKwh * 0.60;
+  const recSizeKwp = targetKwh / 1600; // 1600 kWh/kWp/yr
+  const systemCost = recSizeKwp * 1000 * 0.62;
+  const payback = systemCost / savingsMid;
+
+  const stats = [
+    {label: 'Tarifa Efectiva', value: 'USD ' + effectiveTariff.toFixed(4) + '/kWh'},
+    {label: 'Gasto Anual', value: fmt(annualSpend)},
+    {label: 'Consumo Anual', value: annualKwh.toLocaleString('es-AR') + ' kWh'},
+    {label: 'Ahorro Potencial', value: '40% — 70%'},
+  ];
+
+  document.getElementById('statsGrid').innerHTML = stats.map(s =>
+    `<div class="stat"><div class="value">${s.value}</div><div class="label">${s.label}</div></div>`
+  ).join('');
+
+  document.getElementById('annualCurrent').textContent = fmt(annualSpend);
+  document.getElementById('annualSolar').textContent = fmt(solarCost);
+  document.getElementById('annualSavings').textContent = fmt(savingsMid);
+  document.getElementById('savingsPct').textContent = `Entre ${fmt(savingsLow)} y ${fmt(savingsHigh)} dependiendo del dimensionamiento`;
+
+  document.getElementById('recSystem').textContent = recSizeKwp.toFixed(0) + ' kWp';
+  document.getElementById('recDetail').textContent = `Inversión estimada: ${fmt(systemCost)} · Payback: ${payback.toFixed(1)} años`;
+
+  // Monthly comparison chart
+  const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  // Seasonal variation (summer higher solar)
+  const seasonFactor = [0.55,0.58,0.52,0.48,0.40,0.35,0.35,0.40,0.48,0.52,0.55,0.58];
+  const currentMonthly = months.map(() => cost);
+  const solarMonthly = months.map((_, i) => cost * (1 - seasonFactor[i]));
+
+  if (chartInst) chartInst.destroy();
+  chartInst = new Chart(document.getElementById('compareChart'), {
+    type: 'bar',
+    data: {
+      labels: months,
+      datasets: [
+        {label: 'Factura actual', data: currentMonthly, backgroundColor: 'rgba(239,68,68,0.6)', borderRadius: 4},
+        {label: 'Factura con solar', data: solarMonthly, backgroundColor: 'rgba(74,222,128,0.6)', borderRadius: 4}
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {legend: {labels: {color: '#FEFDFB'}}},
+      scales: {
+        x: {ticks: {color: '#8A8A8A'}, grid: {color: 'rgba(255,255,255,0.05)'}},
+        y: {title: {display: true, text: 'USD/mes', color: '#8A8A8A'}, ticks: {color: '#8A8A8A'}, grid: {color: 'rgba(255,255,255,0.05)'}}
+      }
+    }
+  });
+
+  document.getElementById('results').classList.remove('hidden');
+  document.getElementById('results').scrollIntoView({behavior: 'smooth'});
+}
+</script>
+</body>
+</html>

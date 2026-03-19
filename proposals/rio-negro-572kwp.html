@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Propuesta Solar — Planta Empacadora de Frutas, Río Negro | Solaris Argentina</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  @page{size:A4;margin:0;}
+  :root{--green:#0B3D2E;--gold:#D4A843;--pearl:#FEFDFB;--dark:#0A0A0A;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'DM Sans',sans-serif;background:#f5f5f5;color:#333;}
+
+  .page{width:210mm;min-height:297mm;margin:20px auto;background:var(--pearl);position:relative;box-shadow:0 4px 24px rgba(0,0,0,0.12);overflow:hidden;}
+  
+  /* Cover Page */
+  .cover{background:linear-gradient(160deg,var(--dark) 0%,var(--green) 100%);color:var(--pearl);min-height:297mm;display:flex;flex-direction:column;justify-content:center;padding:60px;position:relative;}
+  .cover::before{content:'';position:absolute;top:0;right:0;width:50%;height:100%;background:linear-gradient(135deg,transparent,rgba(212,168,67,0.08));pointer-events:none;}
+  .cover .brand{font-size:14px;color:var(--gold);letter-spacing:6px;font-weight:600;margin-bottom:40px;}
+  .cover h1{font-family:'Playfair Display',serif;font-size:42px;line-height:1.2;margin-bottom:16px;}
+  .cover .gold{color:var(--gold);}
+  .cover .subtitle{font-size:18px;opacity:0.7;margin-bottom:40px;line-height:1.6;}
+  .cover .meta{font-size:13px;opacity:0.5;line-height:2;}
+  .cover .badge{display:inline-block;padding:6px 16px;border:1px solid var(--gold);border-radius:20px;font-size:11px;color:var(--gold);letter-spacing:2px;margin-top:30px;}
+
+  /* Content Pages */
+  .content-page{padding:40px 50px;min-height:297mm;position:relative;}
+  .page-header{display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:2px solid var(--gold);margin-bottom:30px;}
+  .page-header h2{font-family:'Playfair Display',serif;font-size:22px;color:var(--green);}
+  .page-header .page-brand{font-size:10px;color:var(--gold);letter-spacing:3px;}
+
+  h3{font-family:'Playfair Display',serif;font-size:16px;color:var(--green);margin:24px 0 10px;padding-bottom:4px;border-bottom:1px solid #E5E7EB;}
+  p{font-size:12px;line-height:1.8;margin-bottom:10px;}
+  
+  table{width:100%;border-collapse:collapse;margin:12px 0 20px;font-size:11px;}
+  th{background:var(--green);color:var(--pearl);padding:8px 12px;text-align:left;font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:1px;}
+  td{padding:7px 12px;border-bottom:1px solid #E5E7EB;}
+  tr:nth-child(even){background:rgba(11,61,46,0.03);}
+  .highlight-row{background:rgba(212,168,67,0.1) !important;font-weight:600;}
+  
+  .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0 24px;}
+  .stat-box{text-align:center;padding:16px 8px;background:rgba(11,61,46,0.04);border-radius:8px;border:1px solid rgba(11,61,46,0.08);}
+  .stat-box .num{font-family:'Playfair Display',serif;font-size:24px;color:var(--green);font-weight:800;}
+  .stat-box .lab{font-size:9px;color:#888;margin-top:4px;text-transform:uppercase;letter-spacing:1px;}
+  
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  .info-card{background:#F9FAFB;border-radius:8px;padding:16px;border:1px solid #E5E7EB;}
+  .info-card h4{font-size:12px;color:var(--green);font-weight:700;margin-bottom:8px;}
+  .info-card ul{padding-left:14px;font-size:11px;color:#555;line-height:2;}
+  
+  .gold-box{background:linear-gradient(135deg,var(--green),#1a6b4a);border-radius:10px;padding:20px;color:var(--pearl);margin:16px 0;}
+  .gold-box h4{color:var(--gold);font-size:13px;margin-bottom:8px;}
+  .gold-box p,.gold-box li{color:rgba(254,253,251,0.85);font-size:11px;}
+  .gold-box ul{padding-left:14px;line-height:2;}
+  
+  .timeline{display:flex;gap:0;margin:16px 0;}
+  .phase{flex:1;padding:12px;border-top:3px solid var(--gold);text-align:center;}
+  .phase h4{font-size:11px;color:var(--green);margin-bottom:2px;}
+  .phase .period{font-size:10px;color:var(--gold);font-weight:600;}
+  .phase .desc{font-size:9px;color:#888;margin-top:4px;}
+  
+  .signature-block{margin-top:40px;display:grid;grid-template-columns:1fr 1fr;gap:40px;}
+  .sig-area{padding-top:60px;border-top:1px solid #333;text-align:center;font-size:11px;color:#666;}
+  
+  .page-footer{position:absolute;bottom:0;left:0;right:0;padding:10px 50px;display:flex;justify-content:space-between;font-size:8px;color:#999;border-top:1px solid #E5E7EB;background:var(--pearl);}
+  .page-footer .gold{color:var(--gold);letter-spacing:2px;font-weight:600;}
+  
+  .disclaimer{font-size:9px;color:#999;line-height:1.6;margin-top:20px;padding-top:12px;border-top:1px solid #E5E7EB;}
+  
+  .print-controls{position:fixed;bottom:20px;right:20px;display:flex;gap:8px;z-index:100;}
+  .print-btn{background:var(--gold);color:var(--dark);border:none;padding:12px 24px;border-radius:8px;font-weight:700;cursor:pointer;font-family:'DM Sans';font-size:14px;box-shadow:0 4px 12px rgba(0,0,0,0.2);}
+  .lang-btn{background:var(--green);color:var(--pearl);border:none;padding:12px 16px;border-radius:8px;font-weight:600;cursor:pointer;font-family:'DM Sans';font-size:12px;}
+  
+  @media print{
+    .print-controls{display:none;}
+    body{background:white;}
+    .page{box-shadow:none;margin:0;page-break-after:always;}
+  }
+</style>
+</head>
+<body>
+
+<div class="print-controls">
+  <button class="print-btn" onclick="window.print()">Imprimir / PDF</button>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- PAGE 1: COVER                                -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="page cover">
+  <div class="brand">SOLARIS ARGENTINA</div>
+  <h1>Propuesta Solar<br><span class="gold">572 kWp</span></h1>
+  <div class="subtitle">
+    Planta Empacadora de Frutas<br>
+    General Paz Km 7, Villa Regina, Río Negro
+  </div>
+  <div class="meta">
+    Preparado para: Planta Empacadora de Frutas<br>
+    Preparado por: Rubén Freidman — CEO, Solaris Argentina<br>
+    Fecha: Marzo 2026<br>
+    Referencia: SA-2026-001<br>
+    Validez: 30 días
+  </div>
+  <div class="badge">CONFIDENCIAL</div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- PAGE 2: EXECUTIVE SUMMARY                    -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="page content-page">
+  <div class="page-header">
+    <h2>Resumen Ejecutivo</h2>
+    <div class="page-brand">SOLARIS ARGENTINA</div>
+  </div>
+
+  <p>Solaris Argentina tiene el agrado de presentar esta propuesta para la instalación de un sistema fotovoltaico de <strong>572 kWp</strong> en la planta empacadora de frutas de <strong>San Juan del Mirasol S.A.</strong> ubicada en Villa Regina, Río Negro.</p>
+
+  <p>Según el análisis detallado de su factura EDERSA (Tarifa T2N_2BTb), identificamos que <strong>29.4% de su factura mensual de ARS 22.4M es reducible con energía solar</strong>, generando un ahorro estimado de <strong>ARS 5.0-5.5M por mes</strong> (USD ~$4,400-4,850/mes).</p>
+
+  <div class="stat-grid">
+    <div class="stat-box"><div class="num">572</div><div class="lab">kWp instalados</div></div>
+    <div class="stat-box"><div class="num">$278K</div><div class="lab">Inversión total</div></div>
+    <div class="stat-box"><div class="num">$53K</div><div class="lab">Ahorro anual est.</div></div>
+    <div class="stat-box"><div class="num">5.3</div><div class="lab">Años de retorno</div></div>
+  </div>
+
+  <div class="gold-box">
+    <h4>¿Por qué ahora?</h4>
+    <ul>
+      <li>Tarifas eléctricas en aumento constante (+200% desde 2024)</li>
+      <li>Río Negro: irradiación solar de 4.8 kWh/m²/día — excelente para generación</li>
+      <li>Sistema zero injection: sin necesidad de permisos ni trámites de generador</li>
+      <li>Financiamiento disponible vía Banco Comafi EcoLeasing</li>
+      <li>Retorno en menos de 7 años, ahorro por 25+ años</li>
+    </ul>
+  </div>
+
+  <h3>Análisis de su Factura Eléctrica</h3>
+  <table>
+    <tr><th>Componente</th><th>ARS/mes</th><th>% Factura</th><th>Reducible con Solar</th></tr>
+    <tr><td>Energía Resto (07:00-18:00)</td><td>3,993,187</td><td>17.8%</td><td style="color:#16A34A;font-weight:600;">✅ Sí — ventana solar directa</td></tr>
+    <tr><td>Cargo Uso Transporte</td><td>1,076,467</td><td>4.8%</td><td style="color:#16A34A;font-weight:600;">✅ Parcialmente</td></tr>
+    <tr><td>Impuestos sobre cargos variables</td><td>~1,535,070</td><td>6.8%</td><td style="color:#16A34A;font-weight:600;">✅ Proporcional</td></tr>
+    <tr class="highlight-row"><td><strong>Total Reducible</strong></td><td><strong>~6,604,724</strong></td><td><strong>29.4%</strong></td><td></td></tr>
+    <tr><td>Cargo Uso de Red (capacidad)</td><td>6,579,728</td><td>29.3%</td><td style="color:#DC2626;">No — cargo fijo por kW</td></tr>
+    <tr><td>Energía Punta (18-23h)</td><td>1,467,036</td><td>6.5%</td><td style="color:#DC2626;">No — fuera de horas solares</td></tr>
+    <tr><td>Energía Valle (23-07h)</td><td>1,610,255</td><td>7.2%</td><td style="color:#DC2626;">No — nocturno</td></tr>
+    <tr><td>Otros fijos + impuestos asociados</td><td>~6,170,188</td><td>27.6%</td><td style="color:#DC2626;">No</td></tr>
+  </table>
+  <div class="gold-box">
+    <h4>Resultado del Análisis</h4>
+    <p>Su tarifa T2N_2BTb tiene una estructura horaria (Resto/Punta/Valle) y un alto componente fijo. El sistema solar de 572 kWp cubre ~85% del bloque Resto (07:00-18:00), generando un <strong>ahorro mensual estimado de ARS 5.0-5.5 millones</strong> (~USD 4,400-4,850/mes). Nota: El ahorro se presenta en ARS absoluto mensual, no como % de factura total, dado el alto componente fijo no reducible.</p>
+  </div>
+
+  <h3>Alcance del Proyecto</h3>
+  <div class="two-col">
+    <div class="info-card">
+      <h4>Incluido</h4>
+      <ul>
+        <li>800 paneles Jinko 715W (Tier 1)</li>
+        <li>4 inversores Sineng SN100PT (100kW)</li>
+        <li>800 estructuras coplanares</li>
+        <li>Sistema de monitoreo Sineng S-Dongle</li>
+        <li>Dispositivo de inyección cero</li>
+        <li>Materiales de instalación</li>
+        <li>Montaje e instalación completa</li>
+        <li>Puesta en marcha y configuración</li>
+        <li>Capacitación O&M</li>
+        <li>Monitoreo 24/7 via Solar OS</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h4>No incluido</h4>
+      <ul>
+        <li>Ingeniería de detalle</li>
+        <li>Trámites de Usuario Generador</li>
+        <li>Ingeniero Matriculado</li>
+        <li>Línea de vida (provisoria/definitiva)</li>
+        <li>Informe de seguridad e higiene</li>
+        <li>Obra civil no mencionada</li>
+        <li>Bases de hormigón</li>
+        <li>Grúas especiales</li>
+        <li>Transformadores, relés, medidores</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>SA-2026-001 | Planta Empacadora, Río Negro</span>
+    <span class="gold">ENERGÍA PROPIA</span>
+    <span>Página 2</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- PAGE 3: TECHNICAL SPECS                      -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="page content-page">
+  <div class="page-header">
+    <h2>Especificaciones Técnicas</h2>
+    <div class="page-brand">SOLARIS ARGENTINA</div>
+  </div>
+
+  <h3>Equipamiento Principal</h3>
+  <table>
+    <tr><th>Componente</th><th>Modelo</th><th>Cantidad</th><th>Especificación</th></tr>
+    <tr><td>Paneles solares</td><td>Jinko JKM715N-66HL5-BDV</td><td>800 unidades</td><td>715 Wp, bifacial, N-type, HOT technology</td></tr>
+    <tr><td>Inversores</td><td>Sineng SN100PT</td><td>4 unidades</td><td>100 kW, trifásico, 5 MPPT</td></tr>
+    <tr><td>Estructuras</td><td>Coplanares para chapa trapezoidal</td><td>800 unidades</td><td>Aluminio anodizado, acero inox</td></tr>
+    <tr><td>Monitoreo</td><td>Sineng S-Dongle</td><td>1 unidad</td><td>WiFi/4G, datos en tiempo real</td></tr>
+    <tr><td>Anti-inyección</td><td>Dispositivo de inyección cero</td><td>1 unidad</td><td>Previene exportación a red</td></tr>
+  </table>
+
+  <h3>Paneles — Jinko JKM715N-66HL5-BDV</h3>
+  <div class="two-col">
+    <div>
+      <table>
+        <tr><th colspan="2">Especificaciones Eléctricas</th></tr>
+        <tr><td>Potencia máxima (Pmax)</td><td><strong>715 Wp</strong></td></tr>
+        <tr><td>Eficiencia del módulo</td><td>22.26%</td></tr>
+        <tr><td>Voltaje en circuito abierto (Voc)</td><td>46.33V</td></tr>
+        <tr><td>Corriente de cortocircuito (Isc)</td><td>19.62A</td></tr>
+        <tr><td>Voltaje máximo del sistema</td><td>1,500V DC</td></tr>
+        <tr><td>Tipo de celda</td><td>N-type monocristalina</td></tr>
+      </table>
+    </div>
+    <div>
+      <table>
+        <tr><th colspan="2">Garantías</th></tr>
+        <tr><td>Garantía del producto</td><td><strong>15 años</strong></td></tr>
+        <tr><td>Garantía de potencia lineal</td><td><strong>30 años</strong></td></tr>
+        <tr><td>Degradación año 1</td><td>2% máximo</td></tr>
+        <tr><td>Degradación anual (año 2+)</td><td>0.4% por año</td></tr>
+        <tr><td>Potencia mínima año 30</td><td>87.40%</td></tr>
+        <tr><td>Certificación</td><td>Tier 1 Bloomberg</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <h3>Inversores — Sineng SN100PT</h3>
+  <table>
+    <tr><th>Especificación</th><th>Valor</th></tr>
+    <tr><td>Potencia nominal AC</td><td>100 kW</td></tr>
+    <tr><td>Eficiencia máxima</td><td>98.6%</td></tr>
+    <tr><td>MPPT trackers</td><td>5</td></tr>
+    <tr><td>Rango MPPT</td><td>200-1,000V</td></tr>
+    <tr><td>Voltaje máximo DC</td><td>1,100V</td></tr>
+    <tr><td>Comunicación</td><td>RS485, WiFi, Ethernet</td></tr>
+    <tr><td>Protección</td><td>IP66, protección contra sobretensión</td></tr>
+    <tr><td>Garantía del producto</td><td><strong>5 años</strong> (extensible)</td></tr>
+  </table>
+
+  <h3>Potencia Total del Sistema</h3>
+  <table>
+    <tr><th>Componente</th><th>Potencia</th></tr>
+    <tr><td>Potencia DC (paneles)</td><td>572 kWp (800 × 715 Wp)</td></tr>
+    <tr><td>Potencia AC (inversores)</td><td>400 kW (4 × 100 kW)</td></tr>
+    <tr class="highlight-row"><td>DC:AC Ratio</td><td>1.43 (óptimo para maximizar generación)</td></tr>
+  </table>
+
+  <div class="page-footer">
+    <span>SA-2026-001 | Planta Empacadora, Río Negro</span>
+    <span class="gold">ENERGÍA PROPIA</span>
+    <span>Página 3</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- PAGE 4: FINANCIAL ANALYSIS                   -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="page content-page">
+  <div class="page-header">
+    <h2>Análisis Financiero</h2>
+    <div class="page-brand">SOLARIS ARGENTINA</div>
+  </div>
+
+  <h3>Inversión</h3>
+  <table>
+    <tr><th>Concepto</th><th>Valor</th></tr>
+    <tr><td>Precio del sistema (equipos + instalación)</td><td><strong>USD 278,737</strong></td></tr>
+    <tr><td>Precio por Wp</td><td>USD 0.49/Wp</td></tr>
+    <tr><td>IVA (21%)</td><td>USD 58,535</td></tr>
+    <tr class="highlight-row"><td>Total con IVA</td><td><strong>USD 337,272</strong></td></tr>
+  </table>
+
+  <h3>Generación y Ahorro Estimado</h3>
+  <table>
+    <tr><th>Parámetro</th><th>Valor</th><th>Nota</th></tr>
+    <tr><td>Irradiación solar (Río Negro)</td><td>4.8 kWh/m²/día</td><td>Promedio anual</td></tr>
+    <tr><td>Performance Ratio</td><td>80%</td><td>Incluye pérdidas por temperatura, cableado, suciedad</td></tr>
+    <tr><td>Generación anual estimada</td><td><strong>802,000 kWh</strong></td><td>572 kWp × 4.8 × 365 × 0.80</td></tr>
+    <tr><td>Ahorro mensual (análisis factura)</td><td><strong>ARS 5.0-5.5M/mes</strong></td><td>29.4% de factura ARS 22.4M</td></tr>
+    <tr class="highlight-row"><td>Ahorro anual estimado</td><td><strong>USD 53,000 - 58,000</strong></td><td>~ARS 60-66M/año</td></tr>
+    <tr><td>CO₂ evitado por año</td><td>401 toneladas</td><td>Factor emisión Argentina: 0.5 tCO₂/MWh</td></tr>
+  </table>
+
+  <h3>Retorno de Inversión</h3>
+  <table>
+    <tr><th>Escenario</th><th>Tarifa</th><th>Ahorro anual</th><th>Payback</th><th>Ahorro 25 años</th></tr>
+    <tr><td>Conservador</td><td>ARS 5.0M/mes</td><td>$48,000</td><td>5.8 años</td><td>$1,200,000</td></tr>
+    <tr class="highlight-row"><td>Base</td><td>ARS 5.25M/mes</td><td>$53,000</td><td>5.3 años</td><td>$1,325,000</td></tr>
+    <tr><td>Optimista</td><td>ARS 5.5M/mes</td><td>$58,000</td><td>4.8 años</td><td>$1,450,000</td></tr>
+  </table>
+  <p style="font-size:10px;color:#999;">*Sin considerar aumento tarifario. Con escalator del 3% anual, el payback se reduce 1-2 años.</p>
+
+  <h3>Condiciones de Pago</h3>
+  <table>
+    <tr><th>Hito</th><th>Porcentaje</th><th>Monto (USD)</th><th>Momento</th></tr>
+    <tr><td>Anticipo</td><td>50%</td><td>$139,369</td><td>Firma del contrato</td></tr>
+    <tr><td>Entrega de materiales</td><td>22%</td><td>$61,322</td><td>Contra entrega de equipos</td></tr>
+    <tr><td>Avance de instalación</td><td>25%</td><td>$69,684</td><td>Avance de obra</td></tr>
+    <tr><td>Puesta en marcha</td><td>3%</td><td>$8,362</td><td>Contra PEM (commissioning)</td></tr>
+    <tr class="highlight-row"><td><strong>Total</strong></td><td><strong>100%</strong></td><td><strong>$278,737</strong></td><td>+ IVA 21%</td></tr>
+  </table>
+
+  <div class="gold-box">
+    <h4>Opción: Financiamiento vía Banco Comafi EcoLeasing</h4>
+    <ul>
+      <li>Financiamiento hasta 100% del sistema</li>
+      <li>Cuota mensual estimada: USD 4,500-5,500/mes (60 meses)</li>
+      <li>La cuota es menor que el ahorro mensual en electricidad</li>
+      <li>Beneficios fiscales: deducción IVA + amortización acelerada</li>
+      <li>Cash-flow positivo desde el mes 1</li>
+    </ul>
+  </div>
+
+  <div class="page-footer">
+    <span>SA-2026-001 | Planta Empacadora, Río Negro</span>
+    <span class="gold">ENERGÍA PROPIA</span>
+    <span>Página 4</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- PAGE 5: TIMELINE + GUARANTEE + SIGNATURE     -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="page content-page">
+  <div class="page-header">
+    <h2>Cronograma, Garantías y Términos</h2>
+    <div class="page-brand">SOLARIS ARGENTINA</div>
+  </div>
+
+  <h3>Cronograma Estimado</h3>
+  <div class="timeline">
+    <div class="phase"><h4>Semana 1-2</h4><div class="period">Ingeniería</div><div class="desc">Diseño, PVsyst, planos</div></div>
+    <div class="phase"><h4>Semana 3-4</h4><div class="period">Procurement</div><div class="desc">Pedido y entrega paneles + inversores</div></div>
+    <div class="phase"><h4>Semana 5-8</h4><div class="period">Estructuras</div><div class="desc">Fabricación 30-45 días</div></div>
+    <div class="phase"><h4>Semana 8-10</h4><div class="period">Instalación</div><div class="desc">Montaje, cableado, conexión</div></div>
+    <div class="phase"><h4>Semana 11</h4><div class="period">PEM</div><div class="desc">Commissioning, pruebas, capacitación</div></div>
+  </div>
+  <p><strong>Tiempo total estimado: 10-12 semanas</strong> desde la firma del contrato y anticipo.</p>
+
+  <h3>Plazos de Entrega de Equipos</h3>
+  <table>
+    <tr><th>Equipo</th><th>Plazo</th><th>Nota</th></tr>
+    <tr><td>Paneles Jinko</td><td>En stock</td><td>Salvo venta previa</td></tr>
+    <tr><td>Inversores Sineng</td><td>En stock</td><td>Salvo venta previa</td></tr>
+    <tr><td>Estructuras</td><td>30-45 días</td><td>Desde aprobación de ingeniería</td></tr>
+    <tr><td>Materiales varios</td><td>10-15 días</td><td>Cables, conectores, accesorios</td></tr>
+  </table>
+
+  <h3>Garantías</h3>
+  <table>
+    <tr><th>Componente</th><th>Garantía</th><th>Detalle</th></tr>
+    <tr><td>Paneles (producto)</td><td><strong>15 años</strong></td><td>Defectos de fabricación</td></tr>
+    <tr><td>Paneles (potencia)</td><td><strong>30 años</strong></td><td>87.40% mínimo al año 30 (0.4%/año degradación)</td></tr>
+    <tr><td>Inversores</td><td><strong>5 años</strong></td><td>Extensible a 10 años (cotizar aparte)</td></tr>
+    <tr><td>Estructuras</td><td>10 años</td><td>Integridad estructural</td></tr>
+    <tr><td>Mano de obra</td><td>2 años</td><td>Instalación y conexiones</td></tr>
+    <tr><td>Monitoreo Solar OS</td><td>Incluido</td><td>Primer año incluido, luego USD 100/mes</td></tr>
+  </table>
+
+  <h3>Moneda y Ajuste de Precios</h3>
+  <p>Precios expresados en Dólares Estadounidenses (USD). La conversión a Pesos Argentinos se realizará según la cotización "tipo vendedor billete" del Banco de la Nación Argentina vigente al día de efectivo pago de cada factura.</p>
+  <p>En caso de cambios en la legislación tributaria o impositiva posterior a esta propuesta, los precios podrán ser ajustados proporcionalmente.</p>
+
+  <h3>Proveedor de Equipos</h3>
+  <div class="info-card">
+    <h4>Intermepro S.A.</h4>
+    <ul>
+      <li>Master Distributor para LATAM: Schneider Electric, Sineng, Jinko</li>
+      <li>Contacto: Camila Luoni — Key Account Manager Global</li>
+      <li>Web: www.intermepro.com | Email: info@intermepro.com</li>
+      <li>Operaciones en Argentina, Brasil, Uruguay, USA</li>
+    </ul>
+  </div>
+
+  <h3>Próximos Pasos</h3>
+  <table>
+    <tr><th>#</th><th>Paso</th><th>Responsable</th></tr>
+    <tr><td>1</td><td>Visita técnica al sitio (sin costo)</td><td>Solaris Argentina</td></tr>
+    <tr><td>2</td><td>Estudio de sombras y análisis estructural del techo</td><td>Solaris Argentina</td></tr>
+    <tr><td>3</td><td>Diseño personalizado con simulación PVsyst</td><td>Solaris Argentina</td></tr>
+    <tr><td>4</td><td>Propuesta definitiva con ingeniería de detalle</td><td>Solaris Argentina</td></tr>
+    <tr><td>5</td><td>Firma de contrato EPC y anticipo (50%)</td><td>Ambas partes</td></tr>
+    <tr><td>6</td><td>Inicio de obras</td><td>Solaris Argentina</td></tr>
+  </table>
+
+  <div class="signature-block">
+    <div class="sig-area">
+      <strong>Rubén Freidman</strong><br>
+      CEO — Solaris Argentina<br>
+      k@kanielt.com · kanielt.com<br>
+      KANIEL TORD LLC — Florida, USA
+    </div>
+    <div class="sig-area">
+      <strong>_________________________</strong><br>
+      Nombre y cargo<br>
+      Planta Empacadora de Frutas<br>
+      Villa Regina, Río Negro
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    Esta propuesta es confidencial y está destinada exclusivamente al receptor indicado. Su contenido no constituye una oferta vinculante y está sujeta a la firma de un contrato EPC definitivo. Validez: 30 días desde la fecha de emisión. Los precios no incluyen IVA (21%). Jurisdicción: Tribunales Ordinarios de la Ciudad Autónoma de Buenos Aires.
+  </div>
+
+  <div class="page-footer">
+    <span>SA-2026-001 | Planta Empacadora, Río Negro</span>
+    <span class="gold">ENERGÍA PROPIA</span>
+    <span>Página 5</span>
+  </div>
+</div>
+
+</body>
+</html>
